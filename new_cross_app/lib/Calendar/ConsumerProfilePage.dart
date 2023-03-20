@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import '../firebase_options.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 
@@ -25,27 +25,23 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
+  _CalendarState();
+  late List<String> eventNameCollection;
+  late List<Meeting> appointments;
+  CalendarController calendarController = CalendarController();
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          setState(() {
-            final DateTime today= DateTime.now();
-            final DateTime startTime=
-            DateTime(today.year,today.month,today.day,9,0,0);
-            final DateTime endTime=
-            DateTime(today.year,today.month,today.day,11,0,0);
-            getAppointments(startTime, endTime);
-          });
-      },
-        child: const Text("Add"),),
-      body: SfCalendar(
-        view: CalendarView.week,
-        firstDayOfWeek: 1,
-        dataSource: BookingDataSource(getMeetingDetails()),
-      ),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+        child: SfCalendar(
+          view: CalendarView.week,
+          firstDayOfWeek: 1,
+          dataSource: BookingDataSource(getMeetingDetails()),
+        ),
 
+      )
     );
   }
 }
