@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:new_cross_app/Calendar/ConsumerProfilePage.dart';
+import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'firebase_options.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 void main() {
@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: ElevatedButton(
           onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> Calendar(title: 'Calendar',)));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> EventCalendar()));
           },
           child: Text("Calendar"),
         ),
