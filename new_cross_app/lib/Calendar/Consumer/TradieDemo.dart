@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:new_cross_app/Calendar/Consumer/ConsumerBookingPage.dart';
 
 //ignore: must_be_immutable
 class TradieDemo extends StatefulWidget {
@@ -8,6 +9,7 @@ class TradieDemo extends StatefulWidget {
   TradieDemoState createState() => TradieDemoState();
 }
 class TradieDemoState extends State<TradieDemo>{
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -22,7 +24,7 @@ class TradieDemoState extends State<TradieDemo>{
               color: Colors.blue,
               child: TextButton(
                 onPressed: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> new ConsumerBooking(tradie: 'Tom',work: 'Painting')));
                 },
                 child: const Text('Tom',selectionColor: Colors.black,),
 
@@ -43,7 +45,8 @@ class TradieDemoState extends State<TradieDemo>{
             )
           ],
         ),
-      )
+      ),
+
     );
   }
 

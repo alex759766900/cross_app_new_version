@@ -1,14 +1,13 @@
-part of event_calendar;
+part of booking_calendar;
 
 
-class AppointmentEditor extends StatefulWidget {
-  const AppointmentEditor({super.key});
-
+class BookingEditor extends StatefulWidget {
+  const BookingEditor({super.key});
   @override
-  AppointmentEditorState createState() => AppointmentEditorState();
+  BookingEditorState createState() => BookingEditorState();
 }
 
-class AppointmentEditorState extends State<AppointmentEditor> {
+class BookingEditorState extends State<BookingEditor> {
   Widget _getAppointmentEditor(BuildContext context) {
     return Container(
         color: Colors.white,
@@ -19,8 +18,8 @@ class AppointmentEditorState extends State<AppointmentEditor> {
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                 leading: const Text(''),
-                title: Text(_subject)
-              /*title: TextField(
+                title: Text(_work),
+                /*title: TextField(
                 controller: TextEditingController(text: _subject),
                 onChanged: (String value) {
                   _subject = value;
@@ -78,14 +77,13 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                 DateFormat('EEE, MMM dd yyyy')
                                     .format(_startDate),
                                 textAlign: TextAlign.left),
-                            /*onTap: () async {
+                            onTap: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
                                 initialDate: _startDate,
                                 firstDate: DateTime(1900),
                                 lastDate: DateTime(2100),
                               );
-
                               if (date != null && date != _startDate) {
                                 setState(() {
                                   final Duration difference =
@@ -103,7 +101,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                       minute: _endDate.minute);
                                 });
                               }
-                            }*/),
+                            }),
                       ),
                       Expanded(
                           flex: 3,
@@ -114,7 +112,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                 DateFormat('hh:mm a').format(_startDate),
                                 textAlign: TextAlign.right,
                               ),
-                              /*onTap: () async {
+                              onTap: () async {
                                 final TimeOfDay? time =
                                 await showTimePicker(
                                     context: context,
@@ -140,7 +138,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                         minute: _endDate.minute);
                                   });
                                 }
-                              }*/)),
+                              })),
                     ])),
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -155,7 +153,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                               DateFormat('EEE, MMM dd yyyy').format(_endDate),
                               textAlign: TextAlign.left,
                             ),
-                            /*onTap: () async {
+                            onTap: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
                                 initialDate: _endDate,
@@ -182,7 +180,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                   }
                                 });
                               }
-                            }*/),
+                            }),
                       ),
                       Expanded(
                           flex: 3,
@@ -193,7 +191,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                 DateFormat('hh:mm a').format(_endDate),
                                 textAlign: TextAlign.right,
                               ),
-                              /*onTap: () async {
+                              onTap: () async {
                                 final TimeOfDay? time =
                                 await showTimePicker(
                                     context: context,
@@ -222,7 +220,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                     }
                                   });
                                 }
-                              }*/)),
+                              })),
                     ])),
             //时区显示和选择
             /*ListTile(
@@ -313,6 +311,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
   @override
   Widget build(BuildContext context) {
+    print(_selectedStatusIndex);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -338,19 +337,50 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       Icons.done,
                       color: Colors.white,
                     ),
-                    onPressed: () {
-                      final List<Meeting> meetings = <Meeting>[];
+                    onPressed: () async{
+                      final Booking? newTimeAppointment =
+                      _isInterceptExistingAppointments(
+                          _startDate,_endDate);
+                      AlertDialog alert;
+                      if (newTimeAppointment != null) {
+                        Widget okButton = TextButton(
+                          child: const Text("Ok"),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                        );
+                        alert = AlertDialog(
+                          title: const Text("Alert"),
+                          content: const Text('Have intercept with existing'),
+                          actions: [
+                            okButton,
+                          ],
+                        );
+
+                        await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return alert;
+                          },
+                        );
+
+                        return;
+                      }
+
+                      final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
                       if (_selectedAppointment != null) {
-                        _events.appointments!.removeAt(_events.appointments!
+                        _bookings.appointments!.removeAt(_bookings.appointments!
                             .indexOf(_selectedAppointment));
-                        _events.notifyListeners(CalendarDataSourceAction.remove,
-                            <Meeting>[]..add(_selectedAppointment!));
+                        _bookings.notifyListeners(CalendarDataSourceAction.remove,
+                            <Booking>[]..add(_selectedAppointment!));
                       }
-                      meetings.add(Meeting(
+                      meetings.add(Booking(
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
+                        consumerName: _consumer,
+                        tradieName: _tradie,
                         /*startTimeZone: _selectedTimeZoneIndex == 0
                             ? ''
                             : _timeZoneCollection[_selectedTimeZoneIndex],
@@ -363,9 +393,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         ///eventName: _subject =_subject,
                       ));
 
-                      _events.appointments!.add(meetings[0]);
+                      _bookings.appointments!.add(meetings[0]);
 
-                      _events.notifyListeners(
+                      _bookings.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
 
@@ -385,10 +415,10 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                 : FloatingActionButton(
               onPressed: () {
                 if (_selectedAppointment != null) {
-                  _events.appointments!.removeAt(_events.appointments!
+                  _bookings.appointments!.removeAt(_bookings.appointments!
                       .indexOf(_selectedAppointment));
-                  _events.notifyListeners(CalendarDataSourceAction.remove,
-                      <Meeting>[]..add(_selectedAppointment!));
+                  _bookings.notifyListeners(CalendarDataSourceAction.remove,
+                      <Booking>[]..add(_selectedAppointment!));
                   _selectedAppointment = null;
                   Navigator.pop(context);
                 }
@@ -402,5 +432,38 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
+  }
+  dynamic _isInterceptExistingAppointments(DateTime from, DateTime to) {
+    if(from == null || to==null ||_bookings ==null || _bookings.appointments == null || _bookings.appointments!.isEmpty)
+      return null;
+    for (int i = 0; i < _bookings.appointments!.length; i++) {
+      Booking appointment = _bookings.appointments![i];
+      if (_isSameDay(appointment.from, from)&&_isSameDay(appointment.to, to)&&(
+          (appointment.from.hour<from.hour&&from.hour<appointment.to.hour)
+          ||(appointment.from.hour<to.hour&&to.hour<appointment.to.hour)
+          ||(appointment.from.hour<from.hour&&to.hour<appointment.to.hour)
+          ||(appointment.from.hour==from.hour&&to.hour==appointment.to.hour)))
+      {
+        return appointment;
+      }
+    }
+    return null;
+  }
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    if (date1 == date2) {
+      return true;
+    }
+
+    if (date1 == null || date2 == null) {
+      return false;
+    }
+
+    if (date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day) {
+      return true;
+    }
+
+    return false;
   }
 }
