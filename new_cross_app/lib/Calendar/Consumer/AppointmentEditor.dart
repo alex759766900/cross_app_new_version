@@ -77,7 +77,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                 DateFormat('EEE, MMM dd yyyy')
                                     .format(_startDate),
                                 textAlign: TextAlign.left),
-                            onTap: () async {
+                            /*onTap: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
                                 initialDate: _startDate,
@@ -102,7 +102,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                       minute: _endDate.minute);
                                 });
                               }
-                            }),
+                            }*/),
                       ),
                       Expanded(
                           flex: 3,
@@ -113,7 +113,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                 DateFormat('hh:mm a').format(_startDate),
                                 textAlign: TextAlign.right,
                               ),
-                              onTap: () async {
+                              /*onTap: () async {
                                 final TimeOfDay? time =
                                 await showTimePicker(
                                     context: context,
@@ -139,7 +139,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                         minute: _endDate.minute);
                                   });
                                 }
-                              })),
+                              }*/)),
                     ])),
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -154,7 +154,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                               DateFormat('EEE, MMM dd yyyy').format(_endDate),
                               textAlign: TextAlign.left,
                             ),
-                            onTap: () async {
+                            /*onTap: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
                                 initialDate: _endDate,
@@ -181,9 +181,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                   }
                                 });
                               }
-                            }),
+                            }*/),
                       ),
-                      /*Expanded(
+                      Expanded(
                           flex: 3,
                           child: _isAllDay
                               ? const Text('')
@@ -192,7 +192,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                 DateFormat('hh:mm a').format(_endDate),
                                 textAlign: TextAlign.right,
                               ),
-                              onTap: () async {
+                              /*onTap: () async {
                                 final TimeOfDay? time =
                                 await showTimePicker(
                                     context: context,
@@ -221,7 +221,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                     }
                                   });
                                 }
-                              })),*/
+                              }*/)),
                     ])),
             //时区显示和选择
             /*ListTile(
@@ -256,15 +256,15 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               height: 1.0,
               thickness: 1,
             ),
-            //颜色选择
+            //Status
             ListTile(
               contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
               leading: Icon(Icons.lens,
-                  color: _colorCollection[_selectedColorIndex]),
+                  color: _colorCollection[_selectedStatusIndex]),
               title: Text(
-                _colorNames[_selectedColorIndex],
+                _statusNames[_selectedStatusIndex],
               ),
-              onTap: () {
+              /*onTap: () {
                 showDialog<Widget>(
                   context: context,
                   barrierDismissible: true,
@@ -272,7 +272,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                     return _ColorPicker();
                   },
                 ).then((dynamic value) => setState(() {}));
-              },
+              }*/
             ),
             const Divider(
               height: 1.0,
@@ -298,7 +298,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                     fontWeight: FontWeight.w400),
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Add description',
+                  hintText: 'Add Note',
                 ),
               ),
             ),
@@ -318,7 +318,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
             //最上方一行 new event
             appBar: AppBar(
               title: Text(getTile()),
-              backgroundColor: _colorCollection[_selectedColorIndex],
+              backgroundColor: _colorCollection[_selectedStatusIndex],
               //x 按钮
               leading: IconButton(
                 icon: const Icon(
@@ -349,7 +349,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       meetings.add(Meeting(
                         from: _startDate,
                         to: _endDate,
-                        background: _colorCollection[_selectedColorIndex],
+                        status: _statusNames[_selectedStatusIndex],
                         /*startTimeZone: _selectedTimeZoneIndex == 0
                             ? ''
                             : _timeZoneCollection[_selectedTimeZoneIndex],
@@ -393,7 +393,8 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                 }
               },
               child:
-              const Icon(Icons.delete_outline, color: Colors.white),
+                const Text('Cancel',selectionColor: Colors.white,),
+              /*const Icon(Icons.delete_outline, color: Colors.white),*/
               backgroundColor: Colors.red,
             )));
   }

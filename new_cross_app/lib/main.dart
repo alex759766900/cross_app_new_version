@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
+import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -54,12 +55,30 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text("Home Page"),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> EventCalendar()));
-          },
-          child: Text("Calendar"),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.lightGreen,
+              ),
+              child: Text('Menu'),
+            ),
+            ListTile(
+              title: const Text('Consumer Calendar'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> EventCalendar()));
+              },
+            ),
+            ListTile(
+              title: const Text('Tradie Selection'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieDemo()));
+
+              },
+            ),
+          ],
         ),
       ),
     );

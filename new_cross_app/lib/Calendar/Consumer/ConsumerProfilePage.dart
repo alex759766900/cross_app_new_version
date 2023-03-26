@@ -3,9 +3,10 @@ library event_calendar;
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-part 'ColorPicker.dart';
+part 'StatusPicker.dart';
 
 part 'AppointmentEditor.dart';
 
@@ -24,9 +25,10 @@ class EventCalendar extends StatefulWidget {
 //Variables
 List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
-int _selectedColorIndex = 0;
-int _selectedTimeZoneIndex = 0;
-List<String> _timeZoneCollection = <String>[];
+int _selectedStatusIndex = 0;
+List<String> _statusNames=<String>[];
+//int _selectedTimeZoneIndex = 0;
+//List<String> _timeZoneCollection = <String>[];
 late DataSource _events;
 Meeting? _selectedAppointment;
 String _tradie='';
@@ -50,8 +52,8 @@ class EventCalendarState extends State<EventCalendar> {
     appointments = getMeetingDetails();
     _events = DataSource(appointments);
     _selectedAppointment = null;
-    _selectedColorIndex = 0;
-    _selectedTimeZoneIndex = 0;
+    _selectedStatusIndex = 0;
+    //_selectedTimeZoneIndex = 0;
     _subject = '';
     _notes = '';
     _tradie='';
@@ -62,10 +64,50 @@ class EventCalendarState extends State<EventCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text('Current Bookings'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+
+      ),
+      /*drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.lightGreen,
+              ),
+              child: Text('Menu'),
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text('Calendar'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),*/
+
+        resizeToAvoidBottomInset: true,
         body: Padding(
-            padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
-            child: getEventCalendar(_events, onCalendarTapped)));
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: getEventCalendar(_events, onCalendarTapped)),
+    );
   }
 
   //Set up Calendar
@@ -79,14 +121,15 @@ class EventCalendarState extends State<EventCalendar> {
         allowedViews: const [CalendarView.week, CalendarView.month],
         dataSource: _calendarDataSource,
         onTap: calendarTapCallback,
+
         //看不懂的部分
         appointmentBuilder: (context, calendarAppointmentDetails) {
           final Meeting meeting =
               calendarAppointmentDetails.appointments.first;
           //Container for every meeting
           return Container(
-            color: meeting.background.withOpacity(0.5),
-            child: Text(meeting.eventName),
+            color: _colorCollection[_statusNames.indexOf(meeting.status)].withOpacity(0.5),
+            child: Text(meeting.eventName,overflow: TextOverflow.ellipsis,),
           );
         },
         initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month,
@@ -100,63 +143,71 @@ class EventCalendarState extends State<EventCalendar> {
 
   void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
     print(calendarTapDetails.targetElement.name);
-    /*if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
+
+    if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
         calendarTapDetails.targetElement != CalendarElement.appointment) {
       return;
-    }*/
-    if(calendarTapDetails.targetElement!=CalendarElement.appointment){
+    }else{
+      calendarController.view = CalendarView.day;
+      /*if (calendarController.view == CalendarView.month) {
+        calendarController.view = CalendarView.day;
+      }*/
+      if(calendarTapDetails.targetElement!=CalendarElement.calendarCell){
+        setState(() {
+          _selectedAppointment = null;
+          _isAllDay = false;
+          _selectedStatusIndex = 0;
+          //_selectedTimeZoneIndex = 0;
+          _subject = '';
+          _notes = '';
+          _tradie='';
+          if (calendarTapDetails.appointments != null &&
+              calendarTapDetails.appointments!.length == 1) {
+            final Meeting meetingDetails = calendarTapDetails.appointments![0];
+            _startDate = meetingDetails.from;
+            _endDate = meetingDetails.to;
+            _isAllDay = meetingDetails.isAllDay;
+            _selectedStatusIndex =
+                _statusNames.indexOf(meetingDetails.status);
+            _tradie=meetingDetails.tradieName;
+            /*_selectedTimeZoneIndex = meetingDetails.startTimeZone == ''
+              ? 0
+              : _timeZoneCollection.indexOf(meetingDetails.startTimeZone);*/
+            _subject = meetingDetails.eventName == '(No title)'
+                ? ''
+                : meetingDetails.eventName;
+            _notes = meetingDetails.description;
+            _selectedAppointment = meetingDetails;
+            //如果返回appointments 为null，则说明是新的meeting,根据点击的时间点设置信息，并且跳转到appointment editor
+          } else {
+            final DateTime date = calendarTapDetails.date!;
+            _startDate = date;
+            _endDate = date.add(const Duration(hours: 1));
+          }
+            //点击当前存在的meeting只会返回list length 为1.
+
+          _startTime =
+              TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
+          _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
+          Navigator.push<Widget>(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => AppointmentEditor()),
+          );
+
+        });
+      }
+    }
+
+
+    /*if(calendarTapDetails.targetElement!=CalendarElement.appointment){
       return;
     }else{
       if (calendarController.view == CalendarView.month) {
         calendarController.view = CalendarView.day;
       }
-    }
-    setState(() {
-      _selectedAppointment = null;
-      _isAllDay = false;
-      _selectedColorIndex = 0;
-      _selectedTimeZoneIndex = 0;
-      _subject = '';
-      _notes = '';
-      _tradie='';
-      //若当前点击在月视图下，则跳入天视图
-      if (calendarController.view == CalendarView.month) {
-        calendarController.view = CalendarView.day;
-      } else {
-        //点击当前存在的meeting只会返回list length 为1.
-        if (calendarTapDetails.appointments != null &&
-            calendarTapDetails.appointments!.length == 1) {
-          final Meeting meetingDetails = calendarTapDetails.appointments![0];
-          _startDate = meetingDetails.from;
-          _endDate = meetingDetails.to;
-          _isAllDay = meetingDetails.isAllDay;
-          _selectedColorIndex =
-              _colorCollection.indexOf(meetingDetails.background);
-          _tradie=meetingDetails.tradieName;
-          /*_selectedTimeZoneIndex = meetingDetails.startTimeZone == ''
-              ? 0
-              : _timeZoneCollection.indexOf(meetingDetails.startTimeZone);*/
-          _subject = meetingDetails.eventName == '(No title)'
-              ? ''
-              : meetingDetails.eventName;
-          _notes = meetingDetails.description;
-          _selectedAppointment = meetingDetails;
-          //如果返回appointments 为null，则说明是新的meeting,根据点击的时间点设置信息，并且跳转到appointment editor
-        } else {
-          final DateTime date = calendarTapDetails.date!;
-          _startDate = date;
-          _endDate = date.add(const Duration(hours: 1));
-        }
-        _startTime =
-            TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
-        _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
-        Navigator.push<Widget>(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => AppointmentEditor()),
-        );
-      }
-    });
+    }*/
+
   }
 
   List<Meeting> getMeetingDetails() {
@@ -195,6 +246,11 @@ class EventCalendarState extends State<EventCalendar> {
     _colorNames.add('Peach');
     _colorNames.add('Gray');
 
+    _statusNames.add('Pending');
+    _statusNames.add('Confirmed');
+    _statusNames.add('Working');
+    _statusNames.add('Rating');
+    _statusNames.add('Complete');
     /*_timeZoneCollection = <String>[];
     _timeZoneCollection.add('Default Time');
     _timeZoneCollection.add('AUS Central Standard Time');
@@ -313,7 +369,7 @@ class EventCalendarState extends State<EventCalendar> {
             to: today
                 .add(Duration(days: (month * 30) + day))
                 .add(Duration(hours: hour + 2)),
-            background: _colorCollection[random.nextInt(9)],
+            status: _statusNames[random.nextInt(5)],
             tradieName: "Tom",
             //startTimeZone: '',
             //endTimeZone: '',
@@ -351,8 +407,8 @@ class DataSource extends CalendarDataSource {
   //@override
   //String getEndTimeZone(int index) => appointments![index].endTimeZone;
 
-  @override
-  Color getColor(int index) => appointments![index].background;
+  /*@override
+  Color getColor(int index) => appointments![index].status;*/
 
   @override
   DateTime getStartTime(int index) => appointments![index].from;
@@ -365,7 +421,7 @@ class Meeting {
   Meeting(
       {required this.from,
         required this.to,
-        this.background = Colors.green,
+        this.status = 'Pending',
         this.isAllDay = false,
         this.eventName = '',
         this.tradieName='',
@@ -377,7 +433,7 @@ class Meeting {
   final String eventName;
   final DateTime from;
   final DateTime to;
-  final Color background;
+  final String status;
   final bool isAllDay;
   //final String startTimeZone;
   //final String endTimeZone;

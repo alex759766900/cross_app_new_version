@@ -15,19 +15,19 @@ class _ColorPickerState extends State<_ColorPicker> {
           width: double.maxFinite,
           child: ListView.builder(
             padding: const EdgeInsets.all(0),
-            itemCount: _colorCollection.length - 1,
+            itemCount: _statusNames.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 contentPadding: const EdgeInsets.all(0),
                 leading: Icon(
-                    index == _selectedColorIndex
+                    index == _selectedStatusIndex
                         ? Icons.lens
                         : Icons.trip_origin,
                     color: _colorCollection[index]),
-                title: Text(_colorNames[index]),
+                title: Text(_statusNames[index]),
                 onTap: () {
                   setState(() {
-                    _selectedColorIndex = index;
+                    _selectedStatusIndex = index;
                   });
 
                   // ignore: always_specify_types
