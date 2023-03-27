@@ -1,36 +1,33 @@
-library event_calendar;
+library booking_Calendar;
 
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
+import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'ConsumerBookingPage.dart';
 
 part 'StatusPicker.dart';
 
 part 'AppointmentEditor.dart';
 
-void main() => runApp(const MaterialApp(
-  home: EventCalendar(),
-  debugShowCheckedModeBanner: false,
-));
-
 //ignore: must_be_immutable
-class EventCalendar extends StatefulWidget {
-  const EventCalendar({Key? key}) : super(key: key);
+class ConsumerProfilePage extends StatefulWidget {
+  const ConsumerProfilePage({Key? key,required Consumer consumer}) : super(key: key);
 
   @override
-  EventCalendarState createState() => EventCalendarState();
+  ConsumerProfileState createState() => ConsumerProfileState();
 }
 //Variables
 List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
 List<String> _statusNames=<String>[];
-//int _selectedTimeZoneIndex = 0;
-//List<String> _timeZoneCollection = <String>[];
+final Consumer _consumer=new Consumer('Lance');
 late DataSource _events;
-Meeting? _selectedAppointment;
+Booking? _selectedAppointment;
 String _tradie='';
 late DateTime _startDate;
 late TimeOfDay _startTime;
@@ -40,16 +37,16 @@ bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
 
-class EventCalendarState extends State<EventCalendar> {
-  EventCalendarState();
+class ConsumerProfileState extends State<ConsumerProfilePage> {
+  ConsumerProfileState();
   late List<String> eventNameCollection;
-  late List<Meeting> appointments;
+  late List<Booking> appointments=<Booking>[];
   CalendarController calendarController = CalendarController();
 
   //Calendar Initialisation
   @override
   void initState() {
-    appointments = getMeetingDetails();
+    appointments=getMeetingDetails();
     _events = DataSource(appointments);
     _selectedAppointment = null;
     _selectedStatusIndex = 0;
@@ -67,42 +64,13 @@ class EventCalendarState extends State<EventCalendar> {
       appBar: AppBar(
         title: Text('Current Bookings'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.house),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyApp()));
           },
         ),
 
       ),
-      /*drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.lightGreen,
-              ),
-              child: Text('Menu'),
-            ),
-            ListTile(
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Calendar'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-      ),*/
-
         resizeToAvoidBottomInset: true,
         body: Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -124,7 +92,7 @@ class EventCalendarState extends State<EventCalendar> {
 
         //看不懂的部分
         appointmentBuilder: (context, calendarAppointmentDetails) {
-          final Meeting meeting =
+          final Booking meeting =
               calendarAppointmentDetails.appointments.first;
           //Container for every meeting
           return Container(
@@ -163,10 +131,9 @@ class EventCalendarState extends State<EventCalendar> {
           _tradie='';
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
-            final Meeting meetingDetails = calendarTapDetails.appointments![0];
+            final Booking meetingDetails = calendarTapDetails.appointments![0];
             _startDate = meetingDetails.from;
             _endDate = meetingDetails.to;
-            _isAllDay = meetingDetails.isAllDay;
             _selectedStatusIndex =
                 _statusNames.indexOf(meetingDetails.status);
             _tradie=meetingDetails.tradieName;
@@ -210,8 +177,8 @@ class EventCalendarState extends State<EventCalendar> {
 
   }
 
-  List<Meeting> getMeetingDetails() {
-    final List<Meeting> meetingCollection = <Meeting>[];
+  List<Booking> getMeetingDetails() {
+    final List<Booking> meetingCollection = <Booking>[];
     eventNameCollection = <String>[];
     eventNameCollection.add('Demolition');
     eventNameCollection.add('Bricklaying');
@@ -251,118 +218,13 @@ class EventCalendarState extends State<EventCalendar> {
     _statusNames.add('Working');
     _statusNames.add('Rating');
     _statusNames.add('Complete');
-    /*_timeZoneCollection = <String>[];
-    _timeZoneCollection.add('Default Time');
-    _timeZoneCollection.add('AUS Central Standard Time');
-    _timeZoneCollection.add('AUS Eastern Standard Time');
-    _timeZoneCollection.add('Afghanistan Standard Time');
-    _timeZoneCollection.add('Alaskan Standard Time');
-    _timeZoneCollection.add('Arab Standard Time');
-    _timeZoneCollection.add('Arabian Standard Time');
-    _timeZoneCollection.add('Arabic Standard Time');
-    _timeZoneCollection.add('Argentina Standard Time');
-    _timeZoneCollection.add('Atlantic Standard Time');
-    _timeZoneCollection.add('Azerbaijan Standard Time');
-    _timeZoneCollection.add('Azores Standard Time');
-    _timeZoneCollection.add('Bahia Standard Time');
-    _timeZoneCollection.add('Bangladesh Standard Time');
-    _timeZoneCollection.add('Belarus Standard Time');
-    _timeZoneCollection.add('Canada Central Standard Time');
-    _timeZoneCollection.add('Cape Verde Standard Time');
-    _timeZoneCollection.add('Caucasus Standard Time');
-    _timeZoneCollection.add('Cen. Australia Standard Time');
-    _timeZoneCollection.add('Central America Standard Time');
-    _timeZoneCollection.add('Central Asia Standard Time');
-    _timeZoneCollection.add('Central Brazilian Standard Time');
-    _timeZoneCollection.add('Central Europe Standard Time');
-    _timeZoneCollection.add('Central European Standard Time');
-    _timeZoneCollection.add('Central Pacific Standard Time');
-    _timeZoneCollection.add('Central Standard Time');
-    _timeZoneCollection.add('China Standard Time');
-    _timeZoneCollection.add('Dateline Standard Time');
-    _timeZoneCollection.add('E. Africa Standard Time');
-    _timeZoneCollection.add('E. Australia Standard Time');
-    _timeZoneCollection.add('E. South America Standard Time');
-    _timeZoneCollection.add('Eastern Standard Time');
-    _timeZoneCollection.add('Egypt Standard Time');
-    _timeZoneCollection.add('Ekaterinburg Standard Time');
-    _timeZoneCollection.add('FLE Standard Time');
-    _timeZoneCollection.add('Fiji Standard Time');
-    _timeZoneCollection.add('GMT Standard Time');
-    _timeZoneCollection.add('GTB Standard Time');
-    _timeZoneCollection.add('Georgian Standard Time');
-    _timeZoneCollection.add('Greenland Standard Time');
-    _timeZoneCollection.add('Greenwich Standard Time');
-    _timeZoneCollection.add('Hawaiian Standard Time');
-    _timeZoneCollection.add('India Standard Time');
-    _timeZoneCollection.add('Iran Standard Time');
-    _timeZoneCollection.add('Israel Standard Time');
-    _timeZoneCollection.add('Jordan Standard Time');
-    _timeZoneCollection.add('Kaliningrad Standard Time');
-    _timeZoneCollection.add('Korea Standard Time');
-    _timeZoneCollection.add('Libya Standard Time');
-    _timeZoneCollection.add('Line Islands Standard Time');
-    _timeZoneCollection.add('Magadan Standard Time');
-    _timeZoneCollection.add('Mauritius Standard Time');
-    _timeZoneCollection.add('Middle East Standard Time');
-    _timeZoneCollection.add('Montevideo Standard Time');
-    _timeZoneCollection.add('Morocco Standard Time');
-    _timeZoneCollection.add('Mountain Standard Time');
-    _timeZoneCollection.add('Mountain Standard Time (Mexico)');
-    _timeZoneCollection.add('Myanmar Standard Time');
-    _timeZoneCollection.add('N. Central Asia Standard Time');
-    _timeZoneCollection.add('Namibia Standard Time');
-    _timeZoneCollection.add('Nepal Standard Time');
-    _timeZoneCollection.add('New Zealand Standard Time');
-    _timeZoneCollection.add('Newfoundland Standard Time');
-    _timeZoneCollection.add('North Asia East Standard Time');
-    _timeZoneCollection.add('North Asia Standard Time');
-    _timeZoneCollection.add('Pacific SA Standard Time');
-    _timeZoneCollection.add('Pacific Standard Time');
-    _timeZoneCollection.add('Pacific Standard Time (Mexico)');
-    _timeZoneCollection.add('Pakistan Standard Time');
-    _timeZoneCollection.add('Paraguay Standard Time');
-    _timeZoneCollection.add('Romance Standard Time');
-    _timeZoneCollection.add('Russia Time Zone 10');
-    _timeZoneCollection.add('Russia Time Zone 11');
-    _timeZoneCollection.add('Russia Time Zone 3');
-    _timeZoneCollection.add('Russian Standard Time');
-    _timeZoneCollection.add('SA Eastern Standard Time');
-    _timeZoneCollection.add('SA Pacific Standard Time');
-    _timeZoneCollection.add('SA Western Standard Time');
-    _timeZoneCollection.add('SE Asia Standard Time');
-    _timeZoneCollection.add('Samoa Standard Time');
-    _timeZoneCollection.add('Singapore Standard Time');
-    _timeZoneCollection.add('South Africa Standard Time');
-    _timeZoneCollection.add('Sri Lanka Standard Time');
-    _timeZoneCollection.add('Syria Standard Time');
-    _timeZoneCollection.add('Taipei Standard Time');
-    _timeZoneCollection.add('Tasmania Standard Time');
-    _timeZoneCollection.add('Tokyo Standard Time');
-    _timeZoneCollection.add('Tonga Standard Time');
-    _timeZoneCollection.add('Turkey Standard Time');
-    _timeZoneCollection.add('US Eastern Standard Time');
-    _timeZoneCollection.add('US Mountain Standard Time');
-    _timeZoneCollection.add('UTC');
-    _timeZoneCollection.add('UTC+12');
-    _timeZoneCollection.add('UTC-02');
-    _timeZoneCollection.add('UTC-11');
-    _timeZoneCollection.add('Ulaanbaatar Standard Time');
-    _timeZoneCollection.add('Venezuela Standard Time');
-    _timeZoneCollection.add('Vladivostok Standard Time');
-    _timeZoneCollection.add('W. Australia Standard Time');
-    _timeZoneCollection.add('W. Central Africa Standard Time');
-    _timeZoneCollection.add('W. Europe Standard Time');
-    _timeZoneCollection.add('West Asia Standard Time');
-    _timeZoneCollection.add('West Pacific Standard Time');
-    _timeZoneCollection.add('Yakutsk Standard Time');*/
 
     final DateTime today = DateTime.now();
     final Random random = Random();
     for (int month = -1; month < 2; month++) {
       for (int day = -5; day < 5; day++) {
         for (int hour = 9; hour < 18; hour += 5) {
-          meetingCollection.add(Meeting(
+          meetingCollection.add(Booking(
             from: today
                 .add(Duration(days: (month * 30) + day))
                 .add(Duration(hours: hour)),
@@ -374,7 +236,6 @@ class EventCalendarState extends State<EventCalendar> {
             //startTimeZone: '',
             //endTimeZone: '',
             description: '',
-            isAllDay: false,
             eventName: eventNameCollection[random.nextInt(7)],
           ));
         }
@@ -385,57 +246,3 @@ class EventCalendarState extends State<EventCalendar> {
   }
 }
 
-class DataSource extends CalendarDataSource {
-  DataSource(List<Meeting> source) {
-    appointments = source;
-  }
-
-  @override
-  bool isAllDay(int index) => appointments![index].isAllDay;
-
-  @override
-  String getSubject(int index) => appointments![index].eventName;
-
-  //@override
-  //String getStartTimeZone(int index) => appointments![index].startTimeZone;
-
-  @override
-  String getNotes(int index) => appointments![index].description;
-
-  /*@override
-  String getTradie(int index)=>appointments![index].toString();*/
-  //@override
-  //String getEndTimeZone(int index) => appointments![index].endTimeZone;
-
-  /*@override
-  Color getColor(int index) => appointments![index].status;*/
-
-  @override
-  DateTime getStartTime(int index) => appointments![index].from;
-
-  @override
-  DateTime getEndTime(int index) => appointments![index].to;
-}
-
-class Meeting {
-  Meeting(
-      {required this.from,
-        required this.to,
-        this.status = 'Pending',
-        this.isAllDay = false,
-        this.eventName = '',
-        this.tradieName='',
-        //this.startTimeZone = '',
-        //this.endTimeZone = '',
-        this.description = ''});
-
-  final String tradieName;
-  final String eventName;
-  final DateTime from;
-  final DateTime to;
-  final String status;
-  final bool isAllDay;
-  //final String startTimeZone;
-  //final String endTimeZone;
-  final String description;
-}

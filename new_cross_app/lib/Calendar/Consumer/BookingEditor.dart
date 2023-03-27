@@ -19,51 +19,11 @@ class BookingEditorState extends State<BookingEditor> {
                 contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                 leading: const Text(''),
                 title: Text(_work),
-                /*title: TextField(
-                controller: TextEditingController(text: _subject),
-                onChanged: (String value) {
-                  _subject = value;
-                },
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                style: const TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Add title',
-                ),
-              ),*/
             ),
             const Divider(
               height: 1.0,
               thickness: 1,
             ),
-            //All-Day
-            /*ListTile(
-                contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                leading: const Icon(
-                  Icons.access_time,
-                  color: Colors.black54,
-                ),
-                title: Row(children: <Widget>[
-                  const Expanded(
-                    child: Text('All-day'),
-                  ),
-                  Expanded(
-                      child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Switch(
-                            value: _isAllDay,
-                            onChanged: (bool value) {
-                              setState(() {
-                                _isAllDay = value;
-                              });
-                            },
-                          ))),
-                ])),*/
-            //start and end time TODO:搞懂
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                 leading: const Text(''),
@@ -222,24 +182,6 @@ class BookingEditorState extends State<BookingEditor> {
                                 }
                               })),
                     ])),
-            //时区显示和选择
-            /*ListTile(
-              contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-              leading: const Icon(
-                Icons.public,
-                color: Colors.black87,
-              ),
-              title: Text(_timeZoneCollection[_selectedTimeZoneIndex]),
-              onTap: () {
-                showDialog<Widget>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return _TimeZonePicker();
-                  },
-                ).then((dynamic value) => setState(() {}));
-              },
-            ),*/
             const Divider(
               height: 1.0,
               thickness: 1,
@@ -263,15 +205,6 @@ class BookingEditorState extends State<BookingEditor> {
               title: Text(
                 _statusNames[_selectedStatusIndex],
               ),
-              /*onTap: () {
-                showDialog<Widget>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return _ColorPicker();
-                  },
-                ).then((dynamic value) => setState(() {}));
-              }*/
             ),
             const Divider(
               height: 1.0,
@@ -311,7 +244,6 @@ class BookingEditorState extends State<BookingEditor> {
 
   @override
   Widget build(BuildContext context) {
-    print(_selectedStatusIndex);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -338,10 +270,33 @@ class BookingEditorState extends State<BookingEditor> {
                       color: Colors.white,
                     ),
                     onPressed: () async{
+                      AlertDialog alert_outBound;
+                      if(_startDate.hour<9||_endDate.hour>17){
+                        Widget okButton = TextButton(
+                          child: const Text("Ok"),
+                          onPressed: () {
+                            Navigator.pop(context,true);
+                          },
+                        );
+                        alert_outBound = AlertDialog(
+                          title: const Text("Alert"),
+                          content: const Text('Out of Tradie Working Time'),
+                          actions: [
+                            okButton,
+                          ],
+                        );
+                        await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return alert_outBound;
+                          },
+                        );
+                        return;
+                      }
                       final Booking? newTimeAppointment =
                       _isInterceptExistingAppointments(
                           _startDate,_endDate);
-                      AlertDialog alert;
+                      AlertDialog alert_conflict;
                       if (newTimeAppointment != null) {
                         Widget okButton = TextButton(
                           child: const Text("Ok"),
@@ -349,7 +304,7 @@ class BookingEditorState extends State<BookingEditor> {
                             Navigator.pop(context, true);
                           },
                         );
-                        alert = AlertDialog(
+                        alert_conflict = AlertDialog(
                           title: const Text("Alert"),
                           content: const Text('Have intercept with existing'),
                           actions: [
@@ -360,13 +315,11 @@ class BookingEditorState extends State<BookingEditor> {
                         await showDialog<bool>(
                           context: context,
                           builder: (BuildContext context) {
-                            return alert;
+                            return alert_conflict;
                           },
                         );
-
                         return;
                       }
-
                       final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
                       if (_selectedAppointment != null) {
@@ -379,26 +332,16 @@ class BookingEditorState extends State<BookingEditor> {
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
-                        consumerName: _consumer,
+                        consumerName: _consumer.name,
                         tradieName: _tradie,
-                        /*startTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],
-                        endTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],*/
                         description: _notes,
-                        //isAllDay: _isAllDay,
-                        eventName: _subject == '' ? '(No title)' : _subject,
-                        ///eventName: _subject =_subject,
+                        eventName: _work,
                       ));
-
                       _bookings.appointments!.add(meetings[0]);
-
                       _bookings.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
-
+                      //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
                     })
               ],

@@ -1,4 +1,4 @@
-part of event_calendar;
+part of booking_Calendar;
 
 
 class AppointmentEditor extends StatefulWidget {
@@ -339,15 +339,15 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       color: Colors.white,
                     ),
                     onPressed: () {
-                      final List<Meeting> meetings = <Meeting>[];
+                      final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
                       if (_selectedAppointment != null) {
                         _events.appointments!.removeAt(_events.appointments!
                             .indexOf(_selectedAppointment));
                         _events.notifyListeners(CalendarDataSourceAction.remove,
-                            <Meeting>[]..add(_selectedAppointment!));
+                            <Booking>[]..add(_selectedAppointment!));
                       }
-                      meetings.add(Meeting(
+                      meetings.add(Booking(
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
@@ -368,7 +368,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       _events.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
-
+                      //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
                     })
               ],
@@ -388,7 +388,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                   _events.appointments!.removeAt(_events.appointments!
                       .indexOf(_selectedAppointment));
                   _events.notifyListeners(CalendarDataSourceAction.remove,
-                      <Meeting>[]..add(_selectedAppointment!));
+                      <Booking>[]..add(_selectedAppointment!));
                   _selectedAppointment = null;
                   Navigator.pop(context);
                 }

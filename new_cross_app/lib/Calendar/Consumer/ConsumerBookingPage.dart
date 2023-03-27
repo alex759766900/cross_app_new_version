@@ -1,18 +1,21 @@
 library booking_calendar;
+import 'dart:js_util';
+
 import 'package:flutter/material.dart';
+import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
+import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
+import 'package:new_cross_app/Calendar/Consumer/Tradie.dart';
+import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
 part 'BookingEditor.dart';
 
 class ConsumerBooking extends StatefulWidget{
-  String tradie='';
-  String work='';
+  String tradie;
+  String work;
   ConsumerBooking({Key? key, required this.tradie,required this.work}) : super(key: key);
 
-  /*ConsumerBooking(Key key, String tradie, String work){
-    _tradie=tradie;
-    _work=work;
-  }*/
   @override
   ConsumerBookingState createState()=>ConsumerBookingState();
 }
@@ -27,7 +30,7 @@ String _work='';
 //List<String> _timeZoneCollection = <String>[];
 late DataSource _bookings;
 Booking? _selectedAppointment;
-final String _consumer='Lance';
+Consumer _consumer=newObject();
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -60,9 +63,9 @@ class ConsumerBookingState extends State<ConsumerBooking>{
       appBar: AppBar(
         title: const Text('Choose a date'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.house),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyApp()));
           },
         ),
       ),
@@ -89,7 +92,7 @@ class ConsumerBookingState extends State<ConsumerBooking>{
           final Booking booking =
               calendarAppointmentDetails.appointments.first;
           //Container for every meeting
-          if(booking.consumerName!=_consumer){
+          if(booking.consumerName!=_consumer.name){
             return Container(
               color: Colors.deepOrange.withOpacity(0.5),
               child: Text('Unavaliable'),
@@ -135,7 +138,7 @@ class ConsumerBookingState extends State<ConsumerBooking>{
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
-            if(meetingDetails.consumerName==_consumer){
+            if(meetingDetails.consumerName==_consumer.name){
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
@@ -167,15 +170,6 @@ class ConsumerBookingState extends State<ConsumerBooking>{
 
       }
     }
-
-
-    /*if(calendarTapDetails.targetElement!=CalendarElement.appointment){
-      return;
-    }else{
-      if (calendarController.view == CalendarView.month) {
-        calendarController.view = CalendarView.day;
-      }
-    }*/
 
   }
 
