@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -49,6 +51,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 Consumer consumer=Consumer('Lance');
+
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -75,10 +79,15 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
+              title: const Text('Tradie Calendar'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieProfilePage(tradie: 'Frank',)));
+              },
+            ),
+            ListTile(
               title: const Text('Tradie Selection'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieDemo(consumer: consumer,)));
-
               },
             ),
           ],
