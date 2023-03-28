@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/stripe/cardpayment.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -44,11 +46,12 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
-Consumer consumer=Consumer('Lance');
+
+Consumer consumer = Consumer('Lance');
+
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
@@ -69,14 +72,30 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Consumer Calendar'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> ConsumerProfilePage(consumer: consumer)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ConsumerProfilePage(consumer: consumer)));
               },
             ),
             ListTile(
               title: const Text('Tradie Selection'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieDemo(consumer: consumer,)));
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TradieDemo(
+                              consumer: consumer,
+                            )));
+              },
+            ),
+            // Stripe CardPayment
+            ListTile(
+              title: const Text('Stripe Payment'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CardPayment()));
               },
             ),
           ],
@@ -84,8 +103,4 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
 }
-
-
-
