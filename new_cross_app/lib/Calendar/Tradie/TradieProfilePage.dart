@@ -1,4 +1,4 @@
-library booking_Calendar;
+library tradie_calendar;
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -12,6 +12,8 @@ import '../Consumer/ConsumerBookingPage.dart';
 part 'StatusPicker.dart';
 
 part 'AppointmentEditor.dart';
+
+part 'AddNonWorking.dart';
 
 //ignore: must_be_immutable
 class TradieProfilePage extends StatefulWidget {
@@ -89,7 +91,7 @@ class TradieProfileState extends State<TradieProfilePage> {
             Navigator.push<Widget>(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => AppointmentEditor()),
+                  builder: (BuildContext context) => AddNonWorking()),
             );
           },
           /*const Icon(Icons.delete_outline, color: Colors.white),*/
@@ -239,6 +241,7 @@ class TradieProfileState extends State<TradieProfilePage> {
     _statusNames.add('Working');
     _statusNames.add('Rating');
     _statusNames.add('Complete');
+    _statusNames.add('Unavailable');
 
     final DateTime today = DateTime.now();
     final Random random = Random();

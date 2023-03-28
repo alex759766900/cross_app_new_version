@@ -1,4 +1,4 @@
-part of booking_Calendar;
+part of tradie_calendar;
 
 class _ColorPicker extends StatefulWidget {
   @override
