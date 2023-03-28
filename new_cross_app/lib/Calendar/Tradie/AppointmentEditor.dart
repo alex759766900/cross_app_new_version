@@ -41,7 +41,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               thickness: 1,
             ),
             //All-Day
-            ListTile(
+            /*ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
                 leading: const Icon(
                   Icons.access_time,
@@ -62,7 +62,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                               });
                             },
                           ))),
-                ])),
+                ])),*/
             //start and end time TODO:搞懂
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),

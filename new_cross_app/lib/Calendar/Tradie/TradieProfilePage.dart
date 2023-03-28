@@ -82,6 +82,9 @@ class TradieProfileState extends State<TradieProfilePage> {
             final DateTime today = DateTime.now();
             _startDate = today;
             _endDate = today;
+            _startTime =
+                TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
+            _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
 
             Navigator.push<Widget>(
               context,
