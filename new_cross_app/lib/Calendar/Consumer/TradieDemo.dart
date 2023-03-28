@@ -21,49 +21,59 @@ class TradieDemoState extends State<TradieDemo>{
       appBar: AppBar(
         title: Text('Select Tradie'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Container(
-                      width: 80,
-                      height: 60,
-                      child: Image(
-                        image: AssetImage('images/Tom.jpg'),
-                      )
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> new ConsumerBooking(tradie: 'Tom',work: 'Wall Repair',)));
-                    },
-                    child: const Text('Tom',selectionColor: Colors.black,),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Container(
-                      width: 80,
-                      height: 60,
-                      child: Image(
-                        image: AssetImage('images/Jack.jpg'),
-                      )
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> new ConsumerBooking(tradie: 'Jack',work: 'Wall Repair',)));
-                    },
-                    child: const Text('Jack',selectionColor: Colors.black,),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+      body: Container(
+       child: Column(
+         mainAxisAlignment: MainAxisAlignment.center,
+         children: [
+           Row(
+             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+             children: [
+               Column(
+
+                 children: [
+                   Container(
+                       width: 150,
+                       height: 150,
+                       child: Image(
+                         image: AssetImage('images/Tom.jpg'),
+                       )
+                   ),
+                   TextButton(
+                     onPressed: () {
+                       Navigator.push(context, MaterialPageRoute(builder: (context)=> new ConsumerBooking(tradie: 'Tom',work: 'Wall Repair',)));
+                     },
+                     child: const Text(
+                       'Tom',
+                       textScaleFactor: 5.0,
+                       selectionColor: Colors.black,),
+                   ),
+                 ],
+               ),
+               Column(
+                 children: [
+                   Container(
+                       width: 150,
+                       height: 150,
+                       child: Image(
+                         image: AssetImage('images/Jack.jpg'),
+                       )
+                   ),
+                   TextButton(
+                     onPressed: () {
+                       Navigator.push(context, MaterialPageRoute(builder: (context)=> new ConsumerBooking(tradie: 'Jack',work: 'Wall Repair',)));
+                     },
+                     child: const Text(
+                       'Jack',
+                       textScaleFactor: 5.0,
+                       selectionColor: Colors.black,),
+                   ),
+                 ],
+               ),
+             ],
+           ),
+         ],
+       ),
+
       )
     );
   }

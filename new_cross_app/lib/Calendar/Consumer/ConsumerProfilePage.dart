@@ -15,7 +15,8 @@ part 'AppointmentEditor.dart';
 
 //ignore: must_be_immutable
 class ConsumerProfilePage extends StatefulWidget {
-  const ConsumerProfilePage({Key? key,required Consumer consumer}) : super(key: key);
+  //String consumer='';
+  ConsumerProfilePage({Key? key,required Consumer consumer}) : super(key: key);
 
   @override
   ConsumerProfileState createState() => ConsumerProfileState();
@@ -97,7 +98,12 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
           //Container for every meeting
           return Container(
             color: _colorCollection[_statusNames.indexOf(meeting.status)].withOpacity(0.5),
-            child: Text(meeting.eventName,overflow: TextOverflow.ellipsis,),
+            child: Center(
+               child: Text(
+                 meeting.eventName,
+                 textAlign: TextAlign.center,
+                 overflow: TextOverflow.ellipsis,),
+          ),
           );
         },
         initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month,
@@ -233,8 +239,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
                 .add(Duration(hours: hour + 2)),
             status: _statusNames[random.nextInt(5)],
             tradieName: "Tom",
-            //startTimeZone: '',
-            //endTimeZone: '',
             description: '',
             eventName: eventNameCollection[random.nextInt(7)],
           ));
