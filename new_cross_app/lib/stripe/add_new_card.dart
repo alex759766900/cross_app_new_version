@@ -5,6 +5,8 @@ import 'package:new_cross_app/stripe/components/card_type.dart';
 import 'package:new_cross_app/stripe/components/card_utilis.dart';
 import 'package:new_cross_app/stripe/constains.dart';
 
+import 'components/input_formatters.dart';
+
 class AddNewCardScreen extends StatefulWidget {
   const AddNewCardScreen({Key? key}) : super(key: key);
 
@@ -18,7 +20,31 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
   CardType cardType = CardType.Invalid;
 
   void getCardTypeFrmNum() {
-    String cardNum = CardUtils.getCleanedNumber(cardNumberCotroller.text);
+    // With in first 6 digits we can identify the tpye
+    if (cardNumberCotroller.text.length <= 6) {
+      String cardNum = CardUtils.getCleanedNumber(cardNumberCotroller.text);
+
+      CardType type = CardUtils.getCardTypeFrmNumber(cardNum);
+
+      if (type != cardType) {
+        setState(() {
+          cardType = type;
+          //restart the app
+          // print(cardType);
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    cardNumberCotroller.addListener(
+      () {
+        getCardTypeFrmNum();
+      },
+    );
+    super.initState();
   }
 
   @override
@@ -32,49 +58,112 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
         child: Column(
           children: [
+            /**
+             * Card number
+             */
             TextFormField(
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(19)
-                // CardNumberInputFormatter(),
+                controller: cardNumberCotroller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(19),
+                  CardNumberInputFormatter() //import input_formatters.drt to call the follow function
+                ],
+                decoration: InputDecoration(
+                  hintText: "Card number",
+                  //TODO:show the cardType logo
+                  suffixIcon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CardUtils.getCardIcon(cardType)),
+                  prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: SvgPicture.asset("assets/icons/card.svg")),
+                )),
+            /**
+             * Full name
+             */
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Full name",
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    //svg 不显示 ?-- done:pyam file images dependency setting
+                    child: SvgPicture.asset("assets/icons/user.svg"),
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                /**
+                 * CVV
+                 */
+                Expanded(
+                  child: TextFormField(
+                    keyboardType:
+                        TextInputType.number, // only provide number keyboard
+                    inputFormatters: [
+                      // only digits number input allowed
+                      FilteringTextInputFormatter.digitsOnly,
+                      //limit the input length
+                      LengthLimitingTextInputFormatter(4)
+                    ],
+                    decoration: InputDecoration(
+                      hintText: "CVV",
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: SvgPicture.asset("assets/icons/Cvv.svg"),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: defaultPadding,
+                ),
+
+                /**
+                 * MM/YY
+                 */
+                Expanded(
+                  child: TextFormField(
+                    keyboardType:
+                        TextInputType.number, // only provide number keyboard
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(5),
+                      CardMonthInputFormatter(),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: "MM/YY",
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: SvgPicture.asset("assets/icons/calender.svg"),
+                      ),
+                    ),
+                  ),
+                ),
               ],
-              decoration: InputDecoration(
-                hintText: "Card number",
-                prefixIcon: SvgPicture.asset("assets/icons/card.svg"),
+            ),
+
+            // Scan button
+            // already define button theme on theme in cardpayment.dart
+            OutlinedButton.icon(
+              onPressed: () {},
+              icon: SvgPicture.asset("assets/icons/scan.svg"),
+              label: Text("Scan"),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: defaultPadding),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("Add card"),
               ),
             )
           ],
         ),
       ),
     );
-  }
-}
-
-class CardNumberInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.selection.baseOffset == 0) {
-      return newValue;
-    }
-
-    String inputData = newValue.text;
-    StringBuffer buffer = StringBuffer();
-
-    for (var i = 0; i < inputData.length; i++) {
-      buffer.write(inputData[i]);
-      int index = i + 1;
-
-      if (index % 4 == 0 && inputData.length != index) {
-        buffer.write("  "); // double space
-      }
-    }
-
-    return TextEditingValue(
-      text: buffer.toString(),
-      selection: TextSelection.collapsed(offset: buffer.toString().length),
-    );
-    throw UnimplementedError();
   }
 }
