@@ -38,7 +38,6 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     cardNumberCotroller.addListener(
       () {
         getCardTypeFrmNum();
@@ -51,34 +50,40 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // TODO:payment frontend --- YM L
-
       appBar: AppBar(title: Text("Credit Card")),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
         child: Column(
           children: [
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            // const Spacer(),
             /**
              * Card number
              */
+            // Form(child: Column());
             TextFormField(
-                controller: cardNumberCotroller,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(19),
-                  CardNumberInputFormatter() //import input_formatters.drt to call the follow function
-                ],
-                decoration: InputDecoration(
-                  hintText: "Card number",
-                  //TODO:show the cardType logo
-                  suffixIcon: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CardUtils.getCardIcon(cardType)),
-                  prefixIcon: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: SvgPicture.asset("assets/icons/card.svg")),
-                )),
+              controller: cardNumberCotroller,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(19),
+                CardNumberInputFormatter() //import input_formatters.drt to call the follow function
+              ],
+              decoration: InputDecoration(
+                hintText: "Card number",
+                suffixIcon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CardUtils.getCardIcon(cardType)),
+                prefixIcon: cardType == CardType.Invalid
+                    ? null
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: SvgPicture.asset("assets/icons/card.svg")),
+              ),
+            ),
+
             /**
              * Full name
              */
@@ -147,6 +152,7 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
               ],
             ),
 
+            const Spacer(flex: 2),
             // Scan button
             // already define button theme on theme in cardpayment.dart
             OutlinedButton.icon(
