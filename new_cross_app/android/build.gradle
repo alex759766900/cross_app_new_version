@@ -13,6 +13,49 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+//YM stripe
+android{
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptioins{
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions{
+        jvmTarget = '1.8'
+    }
+
+    sourceSets{
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig{
+        //TODO:Specify your own unique application ID(https://developer.android)
+        applicationId "com.example.flutter_payments_with_stripe"
+
+        minSdkVersion 21
+        targetSdkVersion flutter.targetSdkVersion
+
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+
+    buildType{
+        release{
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter{
+    source'../..'
+}
+
+
+//YM stripe
+
 
 allprojects {
     repositories {
