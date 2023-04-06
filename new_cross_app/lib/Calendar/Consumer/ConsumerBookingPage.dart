@@ -243,13 +243,13 @@ List<Booking> getBookingDetails(String tradie){
   List<Booking> bookings=<Booking>[];
   DateTime today=DateTime.now();
   if(tradie=='Jack'){
-    Booking b1=Booking(from: DateTime(today.year,today.month,today.day,8,0,0), to: DateTime(today.year,today.month,today.day,10,0,0),tradieName: 'Jack',consumerName: 'Black',eventName: 'Painting',status: 'Pending');
+    Booking b1=Booking(from: DateTime(today.year,today.month,today.day,10,0,0), to: DateTime(today.year,today.month,today.day,11,0,0),tradieName: 'Jack',consumerName: 'Black',eventName: 'Painting',status: 'Pending');
     Booking b2=Booking(from: DateTime(today.year,today.month,today.day,12,0,0), to: DateTime(today.year,today.month,today.day,14,0,0),tradieName: 'Jack',consumerName: 'Lance',eventName: 'Painting',status: 'Pending');
     bookings.add(b1);
     bookings.add(b2);
   }else{
-    Booking b1=Booking(from: DateTime(today.year,today.month,today.day,7,0,0), to: DateTime(today.year,today.month,today.day,11,0,0),tradieName: 'Tom',consumerName: 'Black',eventName: 'Painting',status: 'Pending');
-    Booking b2=Booking(from: DateTime(today.year,today.month,today.day,15,0,0), to: DateTime(today.year,today.month,today.day,18,0,0),tradieName: 'Tom',consumerName: 'Lance',eventName: 'Painting',status: 'Pending');
+    Booking b1=Booking(from: DateTime(today.year,today.month,today.day,10,0,0), to: DateTime(today.year,today.month,today.day,11,0,0),tradieName: 'Tom',consumerName: 'Black',eventName: 'Painting',status: 'Pending');
+    Booking b2=Booking(from: DateTime(today.year,today.month,today.day,15,0,0), to: DateTime(today.year,today.month,today.day,17,0,0),tradieName: 'Tom',consumerName: 'Lance',eventName: 'Painting',status: 'Pending');
     bookings.add(b1);
     bookings.add(b2);
   }

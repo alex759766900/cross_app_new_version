@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "462991973077",
+    "project_id": "jemma-b0fcd",
+    "storage_bucket": "jemma-b0fcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462991973077:android:1d84d43ff33b067baf605c",
+        "android_client_info": {
+          "package_name": "com.example.new_cross_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462991973077-7snuu8jgg9jrg6mlamqm74fi5dorucg3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9MBy4lvVsbnra4yiIiKuqkEzrFkvcmjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462991973077-7snuu8jgg9jrg6mlamqm74fi5dorucg3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "462991973077-ggfso9vrdit70s45u4mue4rd8jo8lvd6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newCrossApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

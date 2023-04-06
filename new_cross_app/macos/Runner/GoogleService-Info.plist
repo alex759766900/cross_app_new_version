@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>774978952042-h4vrshr9vef11bu0709lmdbbij24ml8f.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.774978952042-h4vrshr9vef11bu0709lmdbbij24ml8f</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBpZ3dU2GgxW-bB896oGzVKVmAfHv2xh24</string>
+	<key>GCM_SENDER_ID</key>
+	<string>774978952042</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.newCrossApp</string>
+	<key>PROJECT_ID</key>
+	<string>jemma-australia-d5fe3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>jemma-australia-d5fe3.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:774978952042:ios:19abaaf7aacf332faf2313</string>
+</dict>
+</plist>

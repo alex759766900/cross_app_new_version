@@ -1,9 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -52,8 +61,25 @@ class MyHomePage extends StatefulWidget {
 }
 Consumer consumer=Consumer('Lance');
 
+FirebaseFirestore db = FirebaseFirestore.instance;
+
+getFirebaseExample(){
+  var data;
+  final docRef = db.collection("users").doc("consumer");
+  docRef.get().then(
+        (DocumentSnapshot doc) {
+      data = doc.data() as Map<String, dynamic>;
+      print(data);
+      return data;
+      // ...
+    },
+    onError: (e) => print("Error getting document: $e"),
+  );
+
+}
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +116,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieDemo(consumer: consumer,)));
               },
             ),
+            ListTile(
+              title:Text('FirebaseTest'),
+              onTap: () {
+                  var data=getFirebaseExample();
+              },
+            ),
+
           ],
         ),
       ),
