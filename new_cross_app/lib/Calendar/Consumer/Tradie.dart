@@ -4,8 +4,9 @@ import 'ConsumerBookingPage.dart';
 
 class Tradie {
   Tradie(this.name,this.work);
-  String id='';
+  int id=0;
   String name='';
+  String firstname='';
   String address='';
   String work='';
   int workingFrom=8;

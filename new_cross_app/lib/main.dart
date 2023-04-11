@@ -5,6 +5,7 @@ import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'firebase_options.dart';
 
 
@@ -120,6 +121,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title:Text('FirebaseTest'),
               onTap: () {
                   var data=getFirebaseExample();
+              },
+            ),
+            ListTile(
+              title:Text('FirebaseTest'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatHomePage()));
               },
             ),
 
