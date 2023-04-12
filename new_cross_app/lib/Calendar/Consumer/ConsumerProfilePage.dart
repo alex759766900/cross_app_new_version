@@ -9,7 +9,6 @@ import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'ConsumerBookingPage.dart';
 
-
 part 'StatusPicker.dart';
 
 part 'AppointmentEditor.dart';
@@ -17,20 +16,22 @@ part 'AppointmentEditor.dart';
 //ignore: must_be_immutable
 class ConsumerProfilePage extends StatefulWidget {
   //String consumer='';
-  ConsumerProfilePage({Key? key,required Consumer consumer}) : super(key: key);
+  ConsumerProfilePage({Key? key, required Consumer_person consumer})
+      : super(key: key);
 
   @override
   ConsumerProfileState createState() => ConsumerProfileState();
 }
+
 //Variables
 List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
-List<String> _statusNames=<String>[];
-final Consumer _consumer=new Consumer('Lance');
+List<String> _statusNames = <String>[];
+final Consumer_person _consumer = new Consumer_person('Lance');
 late DataSource _events;
 Booking? _selectedAppointment;
-String _tradie='';
+String _tradie = '';
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -42,20 +43,20 @@ String _notes = '';
 class ConsumerProfileState extends State<ConsumerProfilePage> {
   ConsumerProfileState();
   late List<String> eventNameCollection;
-  late List<Booking> appointments=<Booking>[];
+  late List<Booking> appointments = <Booking>[];
   CalendarController calendarController = CalendarController();
 
   //Calendar Initialisation
   @override
   void initState() {
-    appointments=getMeetingDetails();
+    appointments = getMeetingDetails();
     _events = DataSource(appointments);
     _selectedAppointment = null;
     _selectedStatusIndex = 0;
     //_selectedTimeZoneIndex = 0;
     _subject = '';
     _notes = '';
-    _tradie='';
+    _tradie = '';
     super.initState();
   }
 
@@ -68,21 +69,20 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         leading: IconButton(
           icon: Icon(Icons.house),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyApp()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MyApp()));
           },
         ),
-
       ),
-        resizeToAvoidBottomInset: true,
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: getEventCalendar(_events, onCalendarTapped)),
+      resizeToAvoidBottomInset: true,
+      body: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          child: getEventCalendar(_events, onCalendarTapped)),
     );
   }
 
   //Set up Calendar
-  SfCalendar getEventCalendar(
-      CalendarDataSource _calendarDataSource,
+  SfCalendar getEventCalendar(CalendarDataSource _calendarDataSource,
       CalendarTapCallback calendarTapCallback) {
     return SfCalendar(
         view: CalendarView.month,
@@ -94,17 +94,18 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
 
         //看不懂的部分
         appointmentBuilder: (context, calendarAppointmentDetails) {
-          final Booking meeting =
-              calendarAppointmentDetails.appointments.first;
+          final Booking meeting = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
           return Container(
-            color: _colorCollection[_statusNames.indexOf(meeting.status)].withOpacity(0.5),
+            color: _colorCollection[_statusNames.indexOf(meeting.status)]
+                .withOpacity(0.5),
             child: Center(
-               child: Text(
-                 meeting.eventName,
-                 textAlign: TextAlign.center,
-                 overflow: TextOverflow.ellipsis,),
-          ),
+              child: Text(
+                meeting.eventName,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           );
         },
         initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month,
@@ -122,12 +123,12 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
         calendarTapDetails.targetElement != CalendarElement.appointment) {
       return;
-    }else{
+    } else {
       calendarController.view = CalendarView.day;
       /*if (calendarController.view == CalendarView.month) {
         calendarController.view = CalendarView.day;
       }*/
-      if(calendarTapDetails.targetElement!=CalendarElement.calendarCell){
+      if (calendarTapDetails.targetElement != CalendarElement.calendarCell) {
         setState(() {
           _selectedAppointment = null;
           _isAllDay = false;
@@ -135,15 +136,14 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
           //_selectedTimeZoneIndex = 0;
           _subject = '';
           _notes = '';
-          _tradie='';
+          _tradie = '';
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _startDate = meetingDetails.from;
             _endDate = meetingDetails.to;
-            _selectedStatusIndex =
-                _statusNames.indexOf(meetingDetails.status);
-            _tradie=meetingDetails.tradieName;
+            _selectedStatusIndex = _statusNames.indexOf(meetingDetails.status);
+            _tradie = meetingDetails.tradieName;
             /*_selectedTimeZoneIndex = meetingDetails.startTimeZone == ''
               ? 0
               : _timeZoneCollection.indexOf(meetingDetails.startTimeZone);*/
@@ -158,7 +158,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
             _startDate = date;
             _endDate = date.add(const Duration(hours: 1));
           }
-            //点击当前存在的meeting只会返回list length 为1.
+          //点击当前存在的meeting只会返回list length 为1.
 
           _startTime =
               TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
@@ -168,11 +168,9 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
             MaterialPageRoute(
                 builder: (BuildContext context) => AppointmentEditor()),
           );
-
         });
       }
     }
-
 
     /*if(calendarTapDetails.targetElement!=CalendarElement.appointment){
       return;
@@ -181,7 +179,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         calendarController.view = CalendarView.day;
       }
     }*/
-
   }
 
   List<Booking> getMeetingDetails() {
@@ -250,4 +247,3 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     return meetingCollection;
   }
 }
-
