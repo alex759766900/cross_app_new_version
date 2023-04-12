@@ -1,7 +1,10 @@
 library booking_Calendar;
 
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
@@ -16,6 +19,7 @@ part 'AppointmentEditor.dart';
 
 //ignore: must_be_immutable
 class ConsumerProfilePage extends StatefulWidget {
+
   //String consumer='';
   ConsumerProfilePage({Key? key,required Consumer consumer}) : super(key: key);
 
@@ -40,39 +44,89 @@ String _subject = '';
 String _notes = '';
 
 class ConsumerProfileState extends State<ConsumerProfilePage> {
-  ConsumerProfileState();
+  final List<String> options = <String>['Add', 'Delete', 'Update'];
+  final databaseReference = FirebaseFirestore.instance;
+  //ConsumerProfileState();
   late List<String> eventNameCollection;
   late List<Booking> appointments=<Booking>[];
   CalendarController calendarController = CalendarController();
-
+  initializeFirestore() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+  }
   //Calendar Initialisation
   @override
   void initState() {
-    appointments=getMeetingDetails();
-    _events = DataSource(appointments);
-    _selectedAppointment = null;
-    _selectedStatusIndex = 0;
-    //_selectedTimeZoneIndex = 0;
-    _subject = '';
-    _notes = '';
-    _tradie='';
+    getDataFromFireStore().then((results) {
+      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+        setState(() {});
+      });
+    });
     super.initState();
+  }
+
+  Future<void> getDataFromFireStore() async {
+    var snapShotsValue = await databaseReference
+        .collection("CalendarAppointmentCollection")
+        .get();
+
+    final Random random = new Random();
+    List<Booking> list = snapShotsValue.docs
+        .map((e) => Booking(
+        eventName: e.data()['Subject'],
+        from:
+            DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['StartTime']),
+        to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['EndTime']),
+        //background: _colorCollection[random.nextInt(9)],
+        //isAllDay: false)
+         ))
+        .toList();
+    setState(() {
+      _events = DataSource(list);
+    });
   }
 
   //Main Page
   @override
   Widget build(BuildContext context) {
+    initializeFirestore();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Current Bookings'),
-        leading: IconButton(
-          icon: Icon(Icons.house),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyApp()));
-          },
-        ),
-
-      ),
+          leading: PopupMenuButton<String>(
+            icon: Icon(Icons.settings),
+            itemBuilder: (BuildContext context) => options.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList(),
+            onSelected: (String value) {
+              if (value == 'Add') {
+                databaseReference
+                    .collection("CalendarAppointmentCollection")
+                    .doc("1")
+                    .set({
+                  'Subject': 'Mastering Flutter',
+                  'StartTime': '07/04/2020 08:00:00',
+                  'EndTime': '07/04/2020 09:00:00'
+                });
+              } else if (value == "Delete") {
+                try {
+                  databaseReference
+                      .collection('CalendarAppointmentCollection')
+                      .doc('1')
+                      .delete();
+                } catch (e) {}
+              } else if (value == "Update") {
+                try {
+                  databaseReference
+                      .collection('CalendarAppointmentCollection')
+                      .doc('1')
+                      .update({'Subject': 'Meeting'});
+                } catch (e) {}
+              }
+            },
+          )),
         resizeToAvoidBottomInset: true,
         body: Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
