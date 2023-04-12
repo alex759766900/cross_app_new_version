@@ -1,5 +1,5 @@
 library booking_calendar;
-import 'dart:js_util';
+//import 'dart:js_util';
 
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
@@ -30,7 +30,7 @@ String _work='';
 //List<String> _timeZoneCollection = <String>[];
 late DataSource _bookings;
 Booking? _selectedAppointment;
-Consumer _consumer=newObject();
+Consumer _consumer=Consumer('lance');
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
