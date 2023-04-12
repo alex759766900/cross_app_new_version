@@ -1,5 +1,6 @@
 library booking_calendar;
-//import 'dart:js_util';
+
+import 'dart:js_util';
 
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
@@ -11,26 +12,28 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
 part 'BookingEditor.dart';
 
-class ConsumerBooking extends StatefulWidget{
+class ConsumerBooking extends StatefulWidget {
   String tradie;
   String work;
-  ConsumerBooking({Key? key, required this.tradie,required this.work}) : super(key: key);
+  ConsumerBooking({Key? key, required this.tradie, required this.work})
+      : super(key: key);
 
   @override
-  ConsumerBookingState createState()=>ConsumerBookingState();
+  ConsumerBookingState createState() => ConsumerBookingState();
 }
+
 //Variables
 List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
-List<String> _statusNames=<String>[];
-String _tradie='';
-String _work='';
+List<String> _statusNames = <String>[];
+String _tradie = '';
+String _work = '';
 //int _selectedTimeZoneIndex = 0;
 //List<String> _timeZoneCollection = <String>[];
 late DataSource _bookings;
 Booking? _selectedAppointment;
-Consumer _consumer=Consumer('lance');
+Consumer_person _consumer = newObject();
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -39,7 +42,7 @@ bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
 
-class ConsumerBookingState extends State<ConsumerBooking>{
+class ConsumerBookingState extends State<ConsumerBooking> {
   ConsumerBookingState();
 
   late List<Booking> appointments;
@@ -57,27 +60,27 @@ class ConsumerBookingState extends State<ConsumerBooking>{
 
   @override
   Widget build(BuildContext context) {
-    _tradie=widget.tradie;
-    _work=widget.work;
+    _tradie = widget.tradie;
+    _work = widget.work;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Choose a date'),
         leading: IconButton(
           icon: Icon(Icons.house),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>MyApp()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MyApp()));
           },
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-        child: getBookingCalendar(_bookings, onCalendarTapped)),
-      );
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+          child: getBookingCalendar(_bookings, onCalendarTapped)),
+    );
   }
 
   SfCalendar getBookingCalendar(
-      CalendarDataSource dataSource,
-      CalendarTapCallback calendarTapCallback){
+      CalendarDataSource dataSource, CalendarTapCallback calendarTapCallback) {
     print(appointments.length);
     print(appointments.first);
     return SfCalendar(
@@ -87,17 +90,15 @@ class ConsumerBookingState extends State<ConsumerBooking>{
         allowedViews: const [CalendarView.week, CalendarView.month],
         dataSource: dataSource,
         onTap: calendarTapCallback,
-
         appointmentBuilder: (context, calendarAppointmentDetails) {
-          final Booking booking =
-              calendarAppointmentDetails.appointments.first;
+          final Booking booking = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
-          if(booking.consumerName!=_consumer.name){
+          if (booking.consumerName != _consumer.name) {
             return Container(
               color: Colors.deepOrange.withOpacity(0.5),
               child: Text('Unavaliable'),
             );
-          }else{
+          } else {
             return Container(
               color: Colors.lightGreen.withOpacity(0.5),
               child: Text(booking.eventName),
@@ -111,22 +112,23 @@ class ConsumerBookingState extends State<ConsumerBooking>{
         //Minimum appointment duration set to be 60 mins
         timeSlotViewSettings: const TimeSlotViewSettings(
             minimumAppointmentDuration: Duration(minutes: 60)));
-
   }
+
   void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
     print(calendarTapDetails.targetElement.name);
-    if(calendarController.view==CalendarView.month){
+    if (calendarController.view == CalendarView.month) {
       if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
           calendarTapDetails.targetElement != CalendarElement.appointment) {
         return;
-      }else if(calendarTapDetails.targetElement == CalendarElement.calendarCell){
-        calendarController.view=CalendarView.day;
+      } else if (calendarTapDetails.targetElement ==
+          CalendarElement.calendarCell) {
+        calendarController.view = CalendarView.day;
       }
-    }else if(calendarController.view==CalendarView.day){
+    } else if (calendarController.view == CalendarView.day) {
       if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
           calendarTapDetails.targetElement != CalendarElement.appointment) {
         return;
-      }else{
+      } else {
         setState(() {
           _selectedAppointment = null;
           _selectedStatusIndex = 0;
@@ -138,12 +140,12 @@ class ConsumerBookingState extends State<ConsumerBooking>{
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
-            if(meetingDetails.consumerName==_consumer.name){
+            if (meetingDetails.consumerName == _consumer.name) {
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
                   _statusNames.indexOf(meetingDetails.status);
-              _tradie=meetingDetails.tradieName;
+              _tradie = meetingDetails.tradieName;
               _subject = meetingDetails.eventName;
               _notes = meetingDetails.description;
               Navigator.push<Widget>(
@@ -167,19 +169,15 @@ class ConsumerBookingState extends State<ConsumerBooking>{
             );
           }
         });
-
       }
     }
-
   }
-
 }
 
 class DataSource extends CalendarDataSource {
   DataSource(List<Booking> source) {
     appointments = source;
   }
-
 
   @override
   String getSubject(int index) => appointments![index].eventName;
@@ -205,15 +203,15 @@ class DataSource extends CalendarDataSource {
   DateTime getEndTime(int index) => appointments![index].to;
 }
 
-class Booking{
+class Booking {
   Booking(
       {required this.from,
-        required this.to,
-        this.status = 'Pending',
-        this.eventName = '',
-        this.tradieName='',
-        this.consumerName='',
-        this.description = ''});
+      required this.to,
+      this.status = 'Pending',
+      this.eventName = '',
+      this.tradieName = '',
+      this.consumerName = '',
+      this.description = ''});
 
   final String tradieName;
   final String consumerName;
@@ -223,7 +221,8 @@ class Booking{
   String status;
   String description;
 }
-List<Booking> getBookingDetails(String tradie){
+
+List<Booking> getBookingDetails(String tradie) {
   _statusNames.add('Pending');
   _statusNames.add('Confirmed');
   _statusNames.add('Working');
@@ -240,21 +239,42 @@ List<Booking> getBookingDetails(String tradie){
   _colorCollection.add(const Color(0xFF3D4FB5));
   _colorCollection.add(const Color(0xFFE47C73));
   _colorCollection.add(const Color(0xFF636363));
-  List<Booking> bookings=<Booking>[];
-  DateTime today=DateTime.now();
-  if(tradie=='Jack'){
-    Booking b1=Booking(from: DateTime(today.year,today.month,today.day,10,0,0), to: DateTime(today.year,today.month,today.day,11,0,0),tradieName: 'Jack',consumerName: 'Black',eventName: 'Painting',status: 'Pending');
-    Booking b2=Booking(from: DateTime(today.year,today.month,today.day,12,0,0), to: DateTime(today.year,today.month,today.day,14,0,0),tradieName: 'Jack',consumerName: 'Lance',eventName: 'Painting',status: 'Pending');
+  List<Booking> bookings = <Booking>[];
+  DateTime today = DateTime.now();
+  if (tradie == 'Jack') {
+    Booking b1 = Booking(
+        from: DateTime(today.year, today.month, today.day, 10, 0, 0),
+        to: DateTime(today.year, today.month, today.day, 11, 0, 0),
+        tradieName: 'Jack',
+        consumerName: 'Black',
+        eventName: 'Painting',
+        status: 'Pending');
+    Booking b2 = Booking(
+        from: DateTime(today.year, today.month, today.day, 12, 0, 0),
+        to: DateTime(today.year, today.month, today.day, 14, 0, 0),
+        tradieName: 'Jack',
+        consumerName: 'Lance',
+        eventName: 'Painting',
+        status: 'Pending');
     bookings.add(b1);
     bookings.add(b2);
-  }else{
-    Booking b1=Booking(from: DateTime(today.year,today.month,today.day,10,0,0), to: DateTime(today.year,today.month,today.day,11,0,0),tradieName: 'Tom',consumerName: 'Black',eventName: 'Painting',status: 'Pending');
-    Booking b2=Booking(from: DateTime(today.year,today.month,today.day,15,0,0), to: DateTime(today.year,today.month,today.day,17,0,0),tradieName: 'Tom',consumerName: 'Lance',eventName: 'Painting',status: 'Pending');
+  } else {
+    Booking b1 = Booking(
+        from: DateTime(today.year, today.month, today.day, 10, 0, 0),
+        to: DateTime(today.year, today.month, today.day, 11, 0, 0),
+        tradieName: 'Tom',
+        consumerName: 'Black',
+        eventName: 'Painting',
+        status: 'Pending');
+    Booking b2 = Booking(
+        from: DateTime(today.year, today.month, today.day, 15, 0, 0),
+        to: DateTime(today.year, today.month, today.day, 17, 0, 0),
+        tradieName: 'Tom',
+        consumerName: 'Lance',
+        eventName: 'Painting',
+        status: 'Pending');
     bookings.add(b1);
     bookings.add(b2);
   }
   return bookings;
-
 }
-
-

@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 import 'package:new_cross_app/chat/chatting/my_tab_bar.dart';
 //import 'package:new_cross_app/chat/routes.dart';
 
+import '../main.dart';
 import 'chat_page.dart';
 
 class ChatHomePage extends StatefulWidget {
@@ -11,7 +11,8 @@ class ChatHomePage extends StatefulWidget {
   _ChatHomePageState createState() => _ChatHomePageState();
 }
 
-class _ChatHomePageState extends State<ChatHomePage> with TickerProviderStateMixin {
+class _ChatHomePageState extends State<ChatHomePage>
+    with TickerProviderStateMixin {
   late TabController tabController;
   int currentTabIndex = 0;
 
@@ -50,10 +51,12 @@ class _ChatHomePageState extends State<ChatHomePage> with TickerProviderStateMix
         leading: IconButton(
           onPressed: () {
             //Navigator.pushNamed(context, Screen.home.getURL());
-            },             //TODO: Need to navigate back
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const MyApp()));
+          },
           icon: const Icon(Icons.arrow_back), //TODO: Need to navigate back
         ),
-        title: Text(
+        title: const Text(
           'Jemma',
           //style: GoogleFonts.grandHotel(fontSize: 36),
         ),
@@ -81,7 +84,7 @@ class _ChatHomePageState extends State<ChatHomePage> with TickerProviderStateMix
               child: TabBarView(
                 controller: tabController,
                 children: [
-                  const ChatPage(),   //TODO: Need to be done
+                  const ChatPage(), //TODO: Need to be done
                   const Center(child: Text('Status')),
                   //Center(child: Text('Call')),
                 ],
@@ -99,8 +102,8 @@ class _ChatHomePageState extends State<ChatHomePage> with TickerProviderStateMix
           currentTabIndex == 0
               ? Icons.message_outlined
               : currentTabIndex == 1
-              ? Icons.camera_alt
-              : Icons.call,
+                  ? Icons.camera_alt
+                  : Icons.call,
           color: Colors.white,
         ),
       ),
