@@ -1,10 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/stripe/cardpayment.dart';
+import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'firebase_options.dart';
 
-void main() {
+
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -46,21 +56,40 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 Consumer consumer = Consumer('Lance');
 
+Consumer consumer=Consumer('Lance');
+
+FirebaseFirestore db = FirebaseFirestore.instance;
+
+getFirebaseExample(){
+  var data;
+  final docRef = db.collection("users").doc("consumer");
+  docRef.get().then(
+        (DocumentSnapshot doc) {
+      data = doc.data() as Map<String, dynamic>;
+      print(data);
+      return data;
+      // ...
+    },
+    onError: (e) => print("Error getting document: $e"),
+  );
+
+}
+
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
       ),
-      //TODO:
-      // body: ,
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -69,7 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                 color: Colors.lightGreen,
               ),
-              child: Text('Menu'),
+              child: Text(
+                  'Menu',
+              ),
             ),
             ListTile(
               title: const Text('Consumer Calendar'),
@@ -79,6 +110,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(
                         builder: (context) =>
                             ConsumerProfilePage(consumer: consumer)));
+              },
+            ),
+            ListTile(
+              title: const Text('Tradie Calendar'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieProfilePage(tradie: 'Frank',)));
               },
             ),
             ListTile(
@@ -98,11 +135,29 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CardPayment()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> TradieDemo(consumer: consumer,)));
               },
             ),
+            ListTile(
+              title:Text('FirebaseTest'),
+              onTap: () {
+                  var data=getFirebaseExample();
+              },
+            ),
+            ListTile(
+              title:Text('FirebaseTest'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatHomePage()));
+              },
+            ),
+
           ],
         ),
       ),
     );
   }
+
 }
+
+
+

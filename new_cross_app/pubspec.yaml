@@ -58,6 +58,7 @@ dependencies:
 
   firebase_core: ^2.7.1
   syncfusion_flutter_calendar: ^20.4.54
+  cloud_firestore: ^4.5.0
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +90,7 @@ flutter:
   assets:
     - images/Tom.jpg
     - images/Jack.jpg
+    - images/Jemma.png
     - assets/icons/
     - assets/images/
 

@@ -272,7 +272,7 @@ class BookingEditorState extends State<BookingEditor> {
                     onPressed: () async{
                       AlertDialog alert_outBound;
                       if(_startDate.hour<9||_endDate.hour>17){
-                        Widget okButton = TextButton(
+                        Widget OKButton = TextButton(
                           child: const Text("Ok"),
                           onPressed: () {
                             Navigator.pop(context,true);
@@ -282,7 +282,7 @@ class BookingEditorState extends State<BookingEditor> {
                           title: const Text("Alert"),
                           content: const Text('Out of Tradie Working Time'),
                           actions: [
-                            okButton,
+                            OKButton,
                           ],
                         );
                         await showDialog<bool>(
