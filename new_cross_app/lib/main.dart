@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/stripe/card_form_screen.dart';
+import 'package:new_cross_app/stripe/cardpayment.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
@@ -153,6 +155,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         builder: (context) => TradieDemo(
                               consumer: consumer,
                             )));
+              },
+            ),
+            // Stripe CardPayment
+            ListTile(
+              title: const Text('Stripe Payment'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CardFormScreen()));
               },
             ),
             ListTile(
