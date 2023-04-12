@@ -15,20 +15,6 @@ buildscript {
     }
 }
 
-//YM stripe
-//android {
-//    compileSdkVersion 30
-//    buildToolsVersion "30.0.3"
-//
-//    defaultConfig {
-//        applicationId "com.example.myapp"
-//        minSdkVersion 21
-//        targetSdkVersion 30
-//    }
-//}
-//YM stripe
-
-
 allprojects {
     repositories {
         google()
