@@ -10,18 +10,17 @@ class Message {
   final bool? isRead;
   final String text;
 
-  Message({
-    required this.senderID,
-    required this.senderName,
-    this.avatar,
-    required this.time,
-    this.unreadCount,
-    this.isRead,
-    required this.text
-  });
+  Message(
+      {required this.senderID,
+      required this.senderName,
+      this.avatar,
+      required this.time,
+      this.unreadCount,
+      this.isRead,
+      required this.text});
 
   factory Message.fromCustomer({
-    required Consumer customer,
+    required Consumer_person customer,
     String? avatar,
     required String time,
     int? unreadCount,
@@ -29,13 +28,12 @@ class Message {
     required String text,
   }) {
     return Message(
-      senderID: customer.id,
-      senderName: customer.firstname ?? 'Anonymous',
-      time: time,
-      unreadCount: unreadCount,
-      isRead: isRead,
-      text: text
-    );
+        senderID: customer.id,
+        senderName: customer.firstname ?? 'Anonymous',
+        time: time,
+        unreadCount: unreadCount,
+        isRead: isRead,
+        text: text);
   }
 
   factory Message.fromTradie({
@@ -52,12 +50,9 @@ class Message {
         time: time,
         unreadCount: unreadCount,
         isRead: isRead,
-        text: text
-    );
+        text: text);
   }
-
 }
-
 
 final List<Message> recentChats = [
   Message(
@@ -174,7 +169,7 @@ final List<Message> messages = [
     time: '11:45 PM',
     isRead: true,
     text:
-    "Well, because I had no intention of being in your office. 20 minutes ago",
+        "Well, because I had no intention of being in your office. 20 minutes ago",
   ),
   Message(
     senderID: 0,

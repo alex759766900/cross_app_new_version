@@ -35,7 +35,6 @@ dependencies:
 #  stripe: ^23.6.0
   stripe: ^4.4.1
   flutter_credit_card: ^3.0.6
-  flutter_svg: ^1.1.1+1
 #  flutter_stripe: ^1.0.1
   # Flutter 3.0 with Stripe:
   # https://www.youtube.com/watch?v=YWonKJ0RBs8&t=369s
@@ -52,18 +51,28 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  adaptive_breakpoints: ^0.1.0
-  sizer: ^2.0.13
-  google_fonts: ^2.1.0
 
   firebase_core: ^2.7.1
   syncfusion_flutter_calendar: ^20.4.54
   cloud_firestore: ^4.5.0
+  google_fonts: ^4.0.3
+  flutter_svg: ^2.0.5
+  device_info_plus: ^8.2.0
+  adaptive_breakpoints: ^0.1.6
+  string_validator: ^1.0.0
+  hive: ^2.2.3
+  logger: ^1.3.0
+  provider: ^6.0.5
+  sizer: ^2.0.15
+  flutter_secure_storage: ^8.0.0
+  recase: ^4.1.0
+  hive_flutter: ^1.1.0
+  flutter_web_plugins:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_svg: ^1.1.1+1
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
