@@ -21,7 +21,7 @@ part 'AppointmentEditor.dart';
 class ConsumerProfilePage extends StatefulWidget {
 
   //String consumer='';
-  ConsumerProfilePage({Key? key,required Consumer consumer}) : super(key: key);
+  ConsumerProfilePage({Key? key,required Consumer_person consumer}) : super(key: key);
 
   @override
   ConsumerProfileState createState() => ConsumerProfileState();
@@ -31,7 +31,7 @@ List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
 List<String> _statusNames=<String>[];
-final Consumer _consumer=new Consumer('Lance');
+final Consumer_person _consumer=new Consumer_person('Lance');
 late DataSource _events;
 Booking? _selectedAppointment;
 String _tradie='';

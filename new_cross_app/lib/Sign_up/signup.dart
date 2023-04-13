@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:js' as js;
+//import 'dart:js' as js;
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 
@@ -345,7 +345,7 @@ class SignupStage2State extends State<SignupStage2> {
 
         if (response.containsKey("onboarding")) {
           // If user is TRADIE, redirect to Stripe onboarding
-          js.context.callMethod('open', [response["onboarding"]]);
+          //js.context.callMethod('open', [response["onboarding"]]);
         }
       } else {
         showNotification(context, "Failed signing up", NotificationType.error,
