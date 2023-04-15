@@ -74,7 +74,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         .get();
 
     final Random random = new Random();
-
     List<Booking> list = snapShotsValue.docs
         .map((e) => Booking(
               eventName: e.data()['Subject'],
@@ -86,7 +85,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
               //isAllDay: false)
             ))
         .toList();
-    print(list[0].status);
     setState(() {
       _events = DataSource(list);
     });
@@ -109,9 +107,9 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
           if (value == 'Add') {
             databaseReference
                 .collection("CalendarAppointmentCollection")
-                .doc("1")
+                .doc()
                 .set({
-              'Subject': 'Mastering Flutter',
+              'Subject': ' Flutter',
               'StartTime': '15/04/2023 08:00:00',
               'EndTime': '15/04/2023 09:00:00',
               'Status':'Pending'
@@ -141,9 +139,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
   //Set up Calendar
   SfCalendar getEventCalendar(
       DataSource _calendarDataSource, CalendarTapCallback calendarTapCallback) {
-    Booking b=_calendarDataSource.appointments![0];
-    print(_statusNames.indexOf(b.status));
-    print(_colorCollection[_statusNames.indexOf(b.status)]);
     return SfCalendar(
         view: CalendarView.month,
         controller: calendarController,
