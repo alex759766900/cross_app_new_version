@@ -27,7 +27,8 @@ final logger = Logger(
   printer: PrettyPrinter(),
 );
 
-Future<void> main() async {
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

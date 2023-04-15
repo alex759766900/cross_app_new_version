@@ -231,6 +231,15 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       _events.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
+                      databaseReference
+                          .collection("CalendarAppointmentCollection")
+                          .doc("1")
+                          .set({
+                        'Subject': _subject,
+                        'StartTime': _startDate.toString(),
+                        'EndTime': _endDate.toString(),
+                        'Status':'Pending'
+                      });
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
                     })
@@ -252,6 +261,12 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                   _events.notifyListeners(CalendarDataSourceAction.remove,
                       <Booking>[]..add(_selectedAppointment!));
                   _selectedAppointment = null;
+                  try {
+                    databaseReference
+                        .collection('CalendarAppointmentCollection')
+                        .doc('1')
+                        .delete();
+                  } catch (e) {}
                   Navigator.pop(context);
                 }
               },

@@ -12,29 +12,30 @@ import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'ConsumerBookingPage.dart';
 
-
 part 'StatusPicker.dart';
 
 part 'AppointmentEditor.dart';
 
 //ignore: must_be_immutable
 class ConsumerProfilePage extends StatefulWidget {
-
   //String consumer='';
-  ConsumerProfilePage({Key? key,required Consumer_person consumer}) : super(key: key);
+  ConsumerProfilePage({Key? key, required Consumer_person consumer})
+      : super(key: key);
 
   @override
   ConsumerProfileState createState() => ConsumerProfileState();
 }
+
 //Variables
 List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
-List<String> _statusNames=<String>[];
-final Consumer_person _consumer=new Consumer_person('Lance');
-late DataSource _events;
+List<String> _statusNames = <String>[];
+final Consumer_person _consumer = new Consumer_person('Lance');
+List<Booking> ls=<Booking>[];
+late DataSource _events=DataSource(ls);
 Booking? _selectedAppointment;
-String _tradie='';
+String _tradie = '';
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -42,21 +43,23 @@ late TimeOfDay _endTime;
 bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
+final databaseReference = FirebaseFirestore.instance;
+
 
 class ConsumerProfileState extends State<ConsumerProfilePage> {
   final List<String> options = <String>['Add', 'Delete', 'Update'];
-  final databaseReference = FirebaseFirestore.instance;
+  //final databaseReference = FirebaseFirestore.instance;
   //ConsumerProfileState();
   late List<String> eventNameCollection;
-  late List<Booking> appointments=<Booking>[];
+  late List<Booking> appointments = <Booking>[];
   CalendarController calendarController = CalendarController();
-  initializeFirestore() async{
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-  }
+
+
+
   //Calendar Initialisation
   @override
   void initState() {
+    addListDetails();
     getDataFromFireStore().then((results) {
       SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
         setState(() {});
@@ -71,16 +74,19 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         .get();
 
     final Random random = new Random();
+
     List<Booking> list = snapShotsValue.docs
         .map((e) => Booking(
-        eventName: e.data()['Subject'],
-        from:
-            DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['StartTime']),
-        to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['EndTime']),
-        //background: _colorCollection[random.nextInt(9)],
-        //isAllDay: false)
-         ))
+              eventName: e.data()['Subject'],
+              from: DateFormat('dd/MM/yyyy HH:mm:ss')
+                  .parse(e.data()['StartTime']),
+              to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['EndTime']),
+              status: e.data()['Status'],
+              //background: _colorCollection[random.nextInt(9)],
+              //isAllDay: false)
+            ))
         .toList();
+    print(list[0].status);
     setState(() {
       _events = DataSource(list);
     });
@@ -89,55 +95,55 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
   //Main Page
   @override
   Widget build(BuildContext context) {
-    initializeFirestore();
     return Scaffold(
       appBar: AppBar(
           leading: PopupMenuButton<String>(
-            icon: Icon(Icons.settings),
-            itemBuilder: (BuildContext context) => options.map((String choice) {
-              return PopupMenuItem<String>(
-                value: choice,
-                child: Text(choice),
-              );
-            }).toList(),
-            onSelected: (String value) {
-              if (value == 'Add') {
-                databaseReference
-                    .collection("CalendarAppointmentCollection")
-                    .doc("1")
-                    .set({
-                  'Subject': 'Mastering Flutter',
-                  'StartTime': '07/04/2020 08:00:00',
-                  'EndTime': '07/04/2020 09:00:00'
-                });
-              } else if (value == "Delete") {
-                try {
-                  databaseReference
-                      .collection('CalendarAppointmentCollection')
-                      .doc('1')
-                      .delete();
-                } catch (e) {}
-              } else if (value == "Update") {
-                try {
-                  databaseReference
-                      .collection('CalendarAppointmentCollection')
-                      .doc('1')
-                      .update({'Subject': 'Meeting'});
-                } catch (e) {}
-              }
-            },
-          )),
-        resizeToAvoidBottomInset: true,
-        body: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-            child: getEventCalendar(_events, onCalendarTapped)),
+        icon: Icon(Icons.settings),
+        itemBuilder: (BuildContext context) => options.map((String choice) {
+          return PopupMenuItem<String>(
+            value: choice,
+            child: Text(choice),
+          );
+        }).toList(),
+        onSelected: (String value) {
+          if (value == 'Add') {
+            databaseReference
+                .collection("CalendarAppointmentCollection")
+                .doc("1")
+                .set({
+              'Subject': 'Mastering Flutter',
+              'StartTime': '15/04/2023 08:00:00',
+              'EndTime': '15/04/2023 09:00:00',
+              'Status':'Pending'
+            });
+          } else if (value == "Delete") {
+            try {
+              databaseReference
+                  .collection('CalendarAppointmentCollection')
+                  .doc('1')
+                  .delete();
+            } catch (e) {}
+          } else if (value == "Update") {
+            try {
+              databaseReference
+                  .collection('CalendarAppointmentCollection')
+                  .doc('1')
+                  .update({'Subject': 'Meeting'});
+            } catch (e) {}
+          }
+        },
+      )),
+      resizeToAvoidBottomInset: true,
+      body: getEventCalendar(_events, onCalendarTapped)
     );
   }
 
   //Set up Calendar
   SfCalendar getEventCalendar(
-      CalendarDataSource _calendarDataSource,
-      CalendarTapCallback calendarTapCallback) {
+      DataSource _calendarDataSource, CalendarTapCallback calendarTapCallback) {
+    Booking b=_calendarDataSource.appointments![0];
+    print(_statusNames.indexOf(b.status));
+    print(_colorCollection[_statusNames.indexOf(b.status)]);
     return SfCalendar(
         view: CalendarView.month,
         controller: calendarController,
@@ -147,18 +153,21 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         onTap: calendarTapCallback,
 
         //看不懂的部分
+
         appointmentBuilder: (context, calendarAppointmentDetails) {
-          final Booking meeting =
-              calendarAppointmentDetails.appointments.first;
+          final Booking meeting = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
           return Container(
-            color: _colorCollection[_statusNames.indexOf(meeting.status)].withOpacity(0.5),
+
+            color: _colorCollection[_statusNames.indexOf(meeting.status)]
+                .withOpacity(0.5),
             child: Center(
-               child: Text(
-                 meeting.eventName,
-                 textAlign: TextAlign.center,
-                 overflow: TextOverflow.ellipsis,),
-          ),
+              child: Text(
+                meeting.eventName,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           );
         },
         initialDisplayDate: DateTime(DateTime.now().year, DateTime.now().month,
@@ -176,12 +185,12 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
         calendarTapDetails.targetElement != CalendarElement.appointment) {
       return;
-    }else{
+    } else {
       calendarController.view = CalendarView.day;
       /*if (calendarController.view == CalendarView.month) {
         calendarController.view = CalendarView.day;
       }*/
-      if(calendarTapDetails.targetElement!=CalendarElement.calendarCell){
+      if (calendarTapDetails.targetElement != CalendarElement.calendarCell) {
         setState(() {
           _selectedAppointment = null;
           _isAllDay = false;
@@ -189,15 +198,14 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
           //_selectedTimeZoneIndex = 0;
           _subject = '';
           _notes = '';
-          _tradie='';
+          _tradie = '';
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _startDate = meetingDetails.from;
             _endDate = meetingDetails.to;
-            _selectedStatusIndex =
-                _statusNames.indexOf(meetingDetails.status);
-            _tradie=meetingDetails.tradieName;
+            _selectedStatusIndex = _statusNames.indexOf(meetingDetails.status);
+            _tradie = meetingDetails.tradieName;
             /*_selectedTimeZoneIndex = meetingDetails.startTimeZone == ''
               ? 0
               : _timeZoneCollection.indexOf(meetingDetails.startTimeZone);*/
@@ -212,7 +220,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
             _startDate = date;
             _endDate = date.add(const Duration(hours: 1));
           }
-            //点击当前存在的meeting只会返回list length 为1.
+          //点击当前存在的meeting只会返回list length 为1.
 
           _startTime =
               TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
@@ -222,11 +230,9 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
             MaterialPageRoute(
                 builder: (BuildContext context) => AppointmentEditor()),
           );
-
         });
       }
     }
-
 
     /*if(calendarTapDetails.targetElement!=CalendarElement.appointment){
       return;
@@ -235,24 +241,10 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         calendarController.view = CalendarView.day;
       }
     }*/
-
   }
 
-  List<Booking> getMeetingDetails() {
-    final List<Booking> meetingCollection = <Booking>[];
-    eventNameCollection = <String>[];
-    eventNameCollection.add('Demolition');
-    eventNameCollection.add('Bricklaying');
-    eventNameCollection.add('Plastering');
-    eventNameCollection.add('Coating');
-    eventNameCollection.add('Plumbing and electrical renovation');
-    eventNameCollection.add('Waterproofing treatment');
-    eventNameCollection.add('Furniture arrangement');
-    eventNameCollection.add('Wall decoration');
-    eventNameCollection.add('Air conditioning installation');
-    eventNameCollection.add('Green decoration');
-
-    _colorCollection = <Color>[];
+  void addListDetails(){
+    //_colorCollection = <Color>[];
     _colorCollection.add(const Color(0xFF0F8644));
     _colorCollection.add(const Color(0xFF8B1FA9));
     _colorCollection.add(const Color(0xFFD20100));
@@ -263,7 +255,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     _colorCollection.add(const Color(0xFFE47C73));
     _colorCollection.add(const Color(0xFF636363));
 
-    _colorNames = <String>[];
+    //_colorNames = <String>[];
     _colorNames.add('Green');
     _colorNames.add('Purple');
     _colorNames.add('Red');
@@ -279,6 +271,22 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     _statusNames.add('Working');
     _statusNames.add('Rating');
     _statusNames.add('Complete');
+  }
+  List<Booking> getMeetingDetails() {
+    final List<Booking> meetingCollection = <Booking>[];
+    eventNameCollection = <String>[];
+    eventNameCollection.add('Demolition');
+    eventNameCollection.add('Bricklaying');
+    eventNameCollection.add('Plastering');
+    eventNameCollection.add('Coating');
+    eventNameCollection.add('Plumbing and electrical renovation');
+    eventNameCollection.add('Waterproofing treatment');
+    eventNameCollection.add('Furniture arrangement');
+    eventNameCollection.add('Wall decoration');
+    eventNameCollection.add('Air conditioning installation');
+    eventNameCollection.add('Green decoration');
+
+
 
     final DateTime today = DateTime.now();
     final Random random = Random();
@@ -304,4 +312,3 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     return meetingCollection;
   }
 }
-
