@@ -35,7 +35,7 @@ dependencies:
 #  stripe: ^23.6.0
   stripe: ^4.4.1
   flutter_credit_card: ^3.0.6
-  flutter_svg: ^1.1.1+1
+#  flutter_svg: ^1.1.1+1
 #  flutter_stripe: ^1.0.1
   # Flutter 3.0 with Stripe:
   # https://www.youtube.com/watch?v=YWonKJ0RBs8&t=369s
