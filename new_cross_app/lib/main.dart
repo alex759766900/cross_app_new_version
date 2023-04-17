@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            ConsumerProfilePage(consumer: consumer)));
+                            ConsumerProfilePage(consumer: 'kmWX5dwrYVnmfbQjMxKX')));
               },
             ),
             ListTile(
