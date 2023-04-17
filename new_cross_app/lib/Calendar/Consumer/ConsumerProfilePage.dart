@@ -31,10 +31,10 @@ List<Color> _colorCollection = <Color>[];
 List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
 List<String> _statusNames = <String>[];
-String _consumer = '';
 List<Booking> ls = <Booking>[];
 late DataSource _events = DataSource(ls);
 Booking? _selectedAppointment;
+String selectedKey='';
 String _tradie = '';
 late DateTime _startDate;
 late TimeOfDay _startTime;
@@ -44,37 +44,29 @@ bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
 final databaseReference = FirebaseFirestore.instance;
-
-
+final CollectionReference colRef=databaseReference.collection('bookings');
 class ConsumerProfileState extends State<ConsumerProfilePage> {
   String consumer='';
-  late DocumentReference docRef;
   late Stream<QuerySnapshot> _usersStream;
   ConsumerProfileState(String consumer){
-    docRef = databaseReference.collection('consumer').doc(consumer);
-    docRef.snapshots().listen(
-          (event) => print("current data: ${event.data()}"),
+    colRef.snapshots().listen(
+          (event) => print("get Data"),
       onError: (error) => print("Listen failed: $error"),
     );
-    _usersStream = docRef.collection('bookings').snapshots();
+    _usersStream = colRef.snapshots();
 
   }
-
-
-
-  final List<String> options = <String>['Add', 'Delete', 'Update'];
 
   late List<String> eventNameCollection;
   late List<Booking> appointments = <Booking>[];
   CalendarController calendarController = CalendarController();
 
-  //Calendar Initialisation
+
   @override
   void initState() {
     addListDetails();
     super.initState();
   }
-
  
   //Main Page
   @override
@@ -89,19 +81,20 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-        List<Booking> list = snapshot.data!.docs
+        //print(snapshot.data?.docs.asMap().values);
+        List<Booking>? list = snapshot.data?.docs
             .map((e) => Booking(
-          eventName: e['Subject'] ?? '',
-          from: DateFormat('dd/MM/yyyy HH:mm:ss')
-              .parse(e['StartTime']),
-          to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e['EndTime']),
-          status: e['Status'],
-          consumerName: e['Consumer'] ?? '',
-          tradieName: e['Tradie'] ?? '',
-          description: e['Description'] ?? '',
+          eventName: e['eventName'] ?? '',
+          from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['from']),
+          to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['to']),
+          status: e['status'],
+          consumerName: e['consumerName'] ?? '',
+          tradieName: e['tradieName'] ?? '',
+          description: e['description'] ?? '',
+          key: e['key'],
         ))
             .toList();
-        _events = DataSource(list);
+        _events = DataSource(list!);
 
         return Scaffold(
             appBar: AppBar(
@@ -131,8 +124,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
         dataSource: _calendarDataSource,
         onTap: calendarTapCallback,
 
-        //看不懂的部分
-
         appointmentBuilder: (context, calendarAppointmentDetails) {
           final Booking meeting = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
@@ -158,8 +149,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
   }
 
   void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
-    print(calendarTapDetails.targetElement.name);
-
     if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
         calendarTapDetails.targetElement != CalendarElement.appointment) {
       return;
@@ -171,7 +160,6 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
       if (calendarTapDetails.targetElement != CalendarElement.calendarCell) {
         setState(() {
           _selectedAppointment = null;
-          _isAllDay = false;
           _selectedStatusIndex = 0;
           //_selectedTimeZoneIndex = 0;
           _subject = '';
@@ -191,7 +179,9 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
                 ? ''
                 : meetingDetails.eventName;
             _notes = meetingDetails.description;
+            selectedKey=meetingDetails.key;
             _selectedAppointment = meetingDetails;
+
             //如果返回appointments 为null，则说明是新的meeting,根据点击的时间点设置信息，并且跳转到appointment editor
           } else {
             final DateTime date = calendarTapDetails.date!;

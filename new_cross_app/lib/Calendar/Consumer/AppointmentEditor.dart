@@ -204,12 +204,22 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                     onPressed: () {
                       final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
+                      print(_selectedAppointment!.key);
+                      print(_selectedAppointment.toString());
+
                       if (_selectedAppointment != null) {
-                        _events.appointments!.removeAt(_events.appointments!
-                            .indexOf(_selectedAppointment));
-                        _events.notifyListeners(CalendarDataSourceAction.remove,
-                            <Booking>[]..add(_selectedAppointment!));
-                      }
+                        int remove=0;
+                        for (int i=0; i<_events.appointments!.length;i++){
+                          Booking b=_events.appointments![i];
+                          if (b.key==_selectedAppointment!.key){
+                            print('find');
+                           remove=i;
+                           break;
+                          }
+                        }
+                        _events.appointments!.removeAt(remove);
+                        print(_events.appointments!.length);
+                        _events.notifyListeners(CalendarDataSourceAction.remove, <Booking>[]..add(_selectedAppointment!));}
                       meetings.add(Booking(
                         from: _startDate,
                         to: _endDate,
@@ -223,6 +233,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         description: _notes,
                         //isAllDay: _isAllDay,
                         eventName: _subject == '' ? '(No title)' : _subject,
+                        consumerName: '',
+                        tradieName: '',
+                        key: selectedKey,
                         ///eventName: _subject =_subject,
                       ));
 
@@ -230,16 +243,21 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
                       _events.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
-                      _selectedAppointment = null;
-                      databaseReference
-                          .collection("CalendarAppointmentCollection")
-                          .doc("1")
-                          .set({
-                        'Subject': _subject,
-                        'StartTime': _startDate.toString(),
-                        'EndTime': _endDate.toString(),
-                        'Status':'Pending'
+                      colRef.doc(_selectedAppointment?.key).update({
+                        'eventName': _subject,
+                        'from': _startDate.toString(),
+                        'to': _endDate.toString(),
+                        'status':'Pending',
+                        'tradieName':_tradie,
+                        'consumerName':'',
+                        'description':_notes,
+                        'key':selectedKey,
+                        //TODO: Add new variables to store data
+                        'tradieId':'',
+                        'consumerId':'',
                       });
+                      _selectedAppointment = null;
+
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
                     })
@@ -260,13 +278,11 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       .indexOf(_selectedAppointment));
                   _events.notifyListeners(CalendarDataSourceAction.remove,
                       <Booking>[]..add(_selectedAppointment!));
-                  _selectedAppointment = null;
+
                   try {
-                    databaseReference
-                        .collection('CalendarAppointmentCollection')
-                        .doc('1')
-                        .delete();
+                    colRef.doc(_selectedAppointment?.key).delete();
                   } catch (e) {}
+                  _selectedAppointment = null;
                   Navigator.pop(context);
                 }
               },

@@ -211,7 +211,8 @@ class Booking {
       this.eventName = '',
       this.tradieName = '',
       this.consumerName = '',
-      this.description = ''});
+      this.description = '',
+      this.key='',});
 
   final String tradieName;
   final String consumerName;
@@ -220,6 +221,7 @@ class Booking {
   DateTime to;
   String status;
   String description;
+  String key;
 }
 
 List<Booking> getBookingDetails(String tradie) {
