@@ -143,7 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TradieProfilePage(
-                              tradie: 'Frank',
+                              // tradie id in Firebase
+                              tradie: '7ylyCreV44uORAfvRxJT',
                             )));
               },
             ),
