@@ -212,7 +212,9 @@ class Booking {
       this.tradieName = '',
       this.consumerName = '',
       this.description = '',
-      this.key='',});
+      this.key='',
+      this.consumerId='',
+      this.tradieId=''});
 
   final String tradieName;
   final String consumerName;
@@ -222,6 +224,8 @@ class Booking {
   String status;
   String description;
   String key;
+  String consumerId;
+  String tradieId;
 }
 
 List<Booking> getBookingDetails(String tradie) {

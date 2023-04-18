@@ -114,7 +114,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -248,13 +248,13 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         'from': _startDate.toString(),
                         'to': _endDate.toString(),
                         'status':'Pending',
-                        'tradieName':_tradie,
-                        'consumerName':'',
+                        'tradieName':_tradieName,
+                        'consumerName':_consumerName,
                         'description':_notes,
                         'key':selectedKey,
                         //TODO: Add new variables to store data
-                        'tradieId':'',
-                        'consumerId':'',
+                        'tradieId':_tradieId,
+                        'consumerId':_consumerId,
                       });
                       _selectedAppointment = null;
 
