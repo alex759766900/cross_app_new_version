@@ -3,6 +3,8 @@ library tradie_calendar;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
+import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../Tradie/TradieBookingPage.dart';
