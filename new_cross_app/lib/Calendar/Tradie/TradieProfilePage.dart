@@ -1,14 +1,11 @@
 library tradie_calendar;
 
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
-import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../Consumer/ConsumerBookingPage.dart';
+import '../Tradie/TradieBookingPage.dart';
 
 part 'StatusPicker.dart';
 
@@ -19,6 +16,7 @@ part 'AddNonWorking.dart';
 //ignore: must_be_immutable
 class TradieProfilePage extends StatefulWidget {
   String tradie = '';
+  // 传参进来 获得tradieid
   TradieProfilePage({Key? key, required this.tradie}) : super(key: key);
   @override
   TradieProfileState createState() => TradieProfileState(this.tradie);
@@ -30,7 +28,8 @@ List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
 List<String> _statusNames = <String>[];
 
-late DataSource _events;
+List<Booking> ls = <Booking>[];
+late DataSource _events = DataSource(ls);
 Booking? _selectedAppointment;
 String _tradie = '';
 late DateTime _startDate;
@@ -40,42 +39,40 @@ late TimeOfDay _endTime;
 bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
+String selectedKey='';
+String _tradieName = '';
+String _consumerName='';
+String _tradieId='';
+String _consumerId='';
+
 final databaseReference = FirebaseFirestore.instance;
+final CollectionReference colRef=databaseReference.collection('bookings');
 
 class TradieProfileState extends State<TradieProfilePage> {
+
+  String tradie='';
+  late Stream<QuerySnapshot> _usersStream;
+
+  TradieProfileState(String this.tradie){
+    _tradieId=this.tradie;
+    print(_tradieId);
+    colRef.where('tradieId', isEqualTo: _tradieId).snapshots().listen(
+          (event) => print("get query"+_tradieId),
+
+      onError: (error) => print("Listen failed: $error"),
+    );
+    print("this"+_tradieId);
+    _usersStream = colRef.where('tradieId', isEqualTo: _tradieId).snapshots();
+
+  }
+
   late List<String> eventNameCollection;
   late List<Booking> appointments = <Booking>[];
   CalendarController calendarController = CalendarController();
 
-  String tradie='';
-  late DocumentReference docRef;
-  late Stream<QuerySnapshot> _usersStream;
-
-  TradieProfileState(String tradie){
-    // Listen to the collection's snapshot
-    databaseReference.collection('bookings').snapshots().listen(
-          (QuerySnapshot querySnapshot) {
-        querySnapshot.docs.forEach((doc) {
-          print("current data: ${doc.data()}");
-        });
-      },
-      onError: (error) => print("Listen failed: $error"),
-    );
-    _usersStream = databaseReference.collection('bookings').snapshots();
-  }
-
   //Calendar Initialisation
   @override
   void initState() {
-    // appointments = getMeetingDetails();
-    // _events = DataSource(appointments);
-    // _selectedAppointment = null;
-    // _selectedStatusIndex = 0;
-    // //_selectedTimeZoneIndex = 0;
-    // _subject = '';
-    // _notes = '';
-    // _tradie = '';
-
     addListDetails();
     super.initState();
   }
@@ -135,19 +132,22 @@ class TradieProfileState extends State<TradieProfilePage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-        List<Booking> list = snapshot.data!.docs
+
+        List<Booking>? list = snapshot.data?.docs
             .map((e) => Booking(
           eventName: e['eventName'] ?? '',
-          from: DateFormat('dd/MM/yyyy HH:mm:ss')
-              .parse(e['from']),
-          to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e['to']),
+          from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['from']),
+          to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['to']),
           status: e['status'],
           consumerName: e['consumerName'] ?? '',
           tradieName: e['tradieName'] ?? '',
           description: e['description'] ?? '',
+          key: e['key'],
+          consumerId: e['consumerId'] ?? '',
+          tradieId: e['tradieId'] ?? '',
         ))
             .toList();
-        _events = DataSource(list);
+        _events = DataSource(list!);
 
         return Scaffold(
             appBar: AppBar(
