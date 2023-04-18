@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:new_cross_app/chat/message.dart';
 import 'package:new_cross_app/chat/chat_room.dart';
 
-
 class RecentChats extends StatelessWidget {
   const RecentChats({
     Key? key,

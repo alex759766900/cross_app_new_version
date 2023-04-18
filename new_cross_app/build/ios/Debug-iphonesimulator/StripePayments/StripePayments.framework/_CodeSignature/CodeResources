@@ -402,15 +402,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		iPUApOHwhmcbCMUWCD5wPwCLzEw=
+		hgaYeOywFfagcM6x7/pZHEe0mSQ=
 		</data>
 		<key>Modules/StripePayments.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		yYPwfXFcaGC5BiR9WX2UIhU9R8o=
+		AlF/YkMv5nHvikZe70EolcZIV0U=
 		</data>
 		<key>Modules/StripePayments.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		y37CaKLmL1N4HRtHA5GOKPpCcs0=
+		pkLUqgENVUAbkGtiD/I4rrX43pA=
 		</data>
 		<key>Modules/StripePayments.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -422,7 +422,7 @@
 		</data>
 		<key>Modules/StripePayments.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		vZKtcxYY88JAD3gIWBkQwJEUHm4=
+		cmjrHjWtNwY4XVTf9sxRzexBIgA=
 		</data>
 		<key>Modules/StripePayments.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -434,7 +434,7 @@
 		</data>
 		<key>Modules/StripePayments.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		iUzpjsAtP8DUF0a/wSXaXg6sSt4=
+		0aZypWo1exqfb2Dnb37VZHtxPJ4=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -446,7 +446,7 @@
 		</data>
 		<key>Stripe3DS2.bundle/Info.plist</key>
 		<data>
-		JWsLh5Avf0BbNTWjxkwGDYCIUAc=
+		CiTnIaKybQLWkAkoDAjQkurk/iw=
 		</data>
 		<key>Stripe3DS2.bundle/amex-logo@3x.png</key>
 		<data>
@@ -847,7 +847,7 @@
 		</dict>
 		<key>StripePayments.bundle/Info.plist</key>
 		<data>
-		eVWo12xFvav+ORudu8OCJaBiU3o=
+		lhcRIAZClmOKvvj0GLyUoiYcki4=
 		</data>
 		<key>StripePayments.bundle/bg-BG.lproj/Localizable.strings</key>
 		<dict>
@@ -1927,14 +1927,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			6kYWBUdQgroHlHLZ4LbZf4mjiSiIXMDkDYFkNIkxAkg=
+			+kwm7xl/lmfKUifHw1EXWTMGShEYd5EGgB8sDBOl0i4=
 			</data>
 		</dict>
 		<key>Modules/StripePayments.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Dlrny+yMNGZJJYYuy4GGJk7w+xG6CC5YyLs0UUgcvhQ=
+			1dOzKR16YqHv6v8nWLagXvkOuRhM4qaaV3fEiAJqBBk=
 			</data>
 		</dict>
 		<key>Modules/StripePayments.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -1955,7 +1955,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			33TGcyDlWfzqmERb8YJNQR3QRgoZJUErdAytChRVQc8=
+			myS8RPuWHaKcKWhCZc3ZWgyiMYD+QcKNVGHz+iQfzjk=
 			</data>
 		</dict>
 		<key>Modules/StripePayments.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -1976,7 +1976,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			da47evQ1wSy70ikqeyXELNjuHysMVxWfOrt7og0oyJE=
+			N8swttymXS/eFY+jBlw+rZjisJfgiiaTUHGMpUs3f9E=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -1997,7 +1997,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IZ/rTG6CugpYKhkWD3M1epVdiMIX5v+mIg8DhWFCJRY=
+			6rIAIKsNQK7ghgijtbbQDQMHc0dlj6+Gn2zT0kVd9SE=
 			</data>
 		</dict>
 		<key>Stripe3DS2.bundle/amex-logo@3x.png</key>
@@ -2422,7 +2422,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			QA/uWnpE8sDiNjs56+B1P2LtMyAqjj2Cyo+jM3YTsi8=
+			CcP7TbOOGTeZGHpstuVlbu5oKKbcbRedL7S45GtqlYg=
 			</data>
 		</dict>
 		<key>StripePayments.bundle/bg-BG.lproj/Localizable.strings</key>
