@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/Sign_up/signup_customer.dart';
+import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/stripe/card_form_screen.dart';
 import 'package:new_cross_app/stripe/cardpayment.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
@@ -30,17 +32,13 @@ final logger = Logger(
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    //name: "jemma",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  configureApp();
-  initialise();
+  //configureApp();
+  // initialise();
   runApp(const MyApp());
-}
-
-void initialise() async {
-  await Hive.initFlutter();
-  Repository().init();
 }
 
 class MyApp extends StatelessWidget {
@@ -143,7 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TradieProfilePage(
-                              tradie: 'Frank',
+                              // tradie id in Firebase
+                              tradie: '7ylyCreV44uORAfvRxJT',
                             )));
               },
             ),
@@ -182,12 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('LoginTest'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                            create: (context) => LoginNotifier(),
-                            child: Login())));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()));
               },
             ),
             ListTile(

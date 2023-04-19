@@ -55,7 +55,6 @@ dependencies:
 
   firebase_core: ^2.7.1
   syncfusion_flutter_calendar: ^20.4.54
-  cloud_firestore: ^4.5.0
   google_fonts: ^4.0.3
   flutter_svg: ^2.0.5
   device_info_plus: ^8.2.0
@@ -70,6 +69,12 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_web_plugins:
     sdk: flutter
+  firebase_auth: ^4.2.2
+  firebase_auth_web: ^5.2.2
+  firebase_core_web: ^2.2.2
+  cloud_firestore: ^4.4.4
+  intl: ^0.17.0
+
 
 dev_dependencies:
   flutter_test:
