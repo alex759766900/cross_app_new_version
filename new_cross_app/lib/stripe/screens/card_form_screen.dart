@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
+import 'package:flutter_stripe_web/flutter_stripe_web.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

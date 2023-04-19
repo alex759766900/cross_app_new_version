@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/stripe/screens/card_form_screen.dart';
 import 'package:new_cross_app/stripe/screens/.env';
 
+import 'package:flutter_stripe_web/flutter_stripe_web.dart';
+
 //import 'package:stripe/stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 /// sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI
