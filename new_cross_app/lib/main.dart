@@ -29,7 +29,8 @@ final logger = Logger(
   printer: PrettyPrinter(),
 );
 
-Future<void> main() async {
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     //name: "jemma",
     options: DefaultFirebaseOptions.currentPlatform,
@@ -130,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            ConsumerProfilePage(consumer: consumer)));
+                            ConsumerProfilePage(consumer: 'kmWX5dwrYVnmfbQjMxKX')));
               },
             ),
             ListTile(
@@ -140,7 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TradieProfilePage(
-                              tradie: 'Frank',
+                              // tradie id in Firebase
+                              tradie: '7ylyCreV44uORAfvRxJT',
                             )));
               },
             ),
