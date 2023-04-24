@@ -204,9 +204,6 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                     onPressed: () {
                       final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
-                      print(_selectedAppointment!.key);
-                      print(_selectedAppointment.toString());
-
                       if (_selectedAppointment != null) {
                         int remove=0;
                         for (int i=0; i<_events.appointments!.length;i++){
@@ -224,18 +221,13 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
-                        /*startTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],
-                        endTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],*/
                         description: _notes,
-                        //isAllDay: _isAllDay,
                         eventName: _subject == '' ? '(No title)' : _subject,
-                        consumerName: '',
-                        tradieName: '',
+                        consumerName: _consumerName,
+                        tradieName: _tradieName,
                         key: selectedKey,
+                        consumerId: _consumerId,
+                        tradieId: _tradieId
                         ///eventName: _subject =_subject,
                       ));
 
@@ -252,7 +244,6 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         'consumerName':_consumerName,
                         'description':_notes,
                         'key':selectedKey,
-                        //TODO: Add new variables to store data
                         'tradieId':_tradieId,
                         'consumerId':_consumerId,
                       });
