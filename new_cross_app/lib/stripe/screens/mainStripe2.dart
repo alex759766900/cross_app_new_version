@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/stripe/screens/card_form_screen.dart';
 import 'package:new_cross_app/stripe/screens/.env';
 
-import 'package:flutter_stripe_web/flutter_stripe_web.dart';
+// import 'package:flutter_stripe_web/flutter_stripe_web.dart';
 
 //import 'package:stripe/stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
