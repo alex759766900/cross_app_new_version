@@ -327,19 +327,47 @@ class BookingEditorState extends State<BookingEditor> {
                             .indexOf(_selectedAppointment));
                         _bookings.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
+                        colRef.doc(_selectedAppointment?.key).update({
+                          'eventName': _subject,
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status':'Pending',
+                          'tradieName':_tradieName,
+                          'consumerName':_consumerName,
+                          'description':_notes,
+                          'key':selectedKey,
+                          'tradieId':_tradieId,
+                          'consumerId':_consumerId,
+                        });
                       }
                       meetings.add(Booking(
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
-                        consumerName: _consumer.name,
-                        tradieName: _tradie,
+                        consumerName: _consumerName,
+                        tradieName: _tradieName,
                         description: _notes,
-                        eventName: _work,
+                        eventName: _subject,
+                        consumerId: _consumerId,
+                        tradieId: _tradieId,
+                        key: selectedKey,
+
                       ));
                       _bookings.appointments!.add(meetings[0]);
                       _bookings.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
+                      colRef.doc().set({
+                        'eventName': _subject,
+                        'from': _startDate.toString(),
+                        'to': _endDate.toString(),
+                        'status':'Pending',
+                        'tradieName':_tradieName,
+                        'consumerName':_consumerName,
+                        'description':_notes,
+                        'key':selectedKey,
+                        'tradieId':_tradieId,
+                        'consumerId':_consumerId,
+                      });
                       _selectedAppointment = null;
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
@@ -362,6 +390,9 @@ class BookingEditorState extends State<BookingEditor> {
                       .indexOf(_selectedAppointment));
                   _bookings.notifyListeners(CalendarDataSourceAction.remove,
                       <Booking>[]..add(_selectedAppointment!));
+                  try {
+                    colRef.doc(_selectedAppointment?.key).delete();
+                  } catch (e) {}
                   _selectedAppointment = null;
                   Navigator.pop(context);
                 }

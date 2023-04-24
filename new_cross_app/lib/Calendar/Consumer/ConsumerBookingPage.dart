@@ -2,6 +2,7 @@ library booking_calendar;
 
 //import 'dart:js_util';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
@@ -14,12 +15,12 @@ part 'BookingEditor.dart';
 
 class ConsumerBooking extends StatefulWidget {
   String tradie;
-  String work;
-  ConsumerBooking({Key? key, required this.tradie, required this.work})
+
+  ConsumerBooking({Key? key, required this.tradie})
       : super(key: key);
 
   @override
-  ConsumerBookingState createState() => ConsumerBookingState();
+  ConsumerBookingState createState() => ConsumerBookingState(tradie);
 }
 
 //Variables
@@ -29,11 +30,14 @@ int _selectedStatusIndex = 0;
 List<String> _statusNames = <String>[];
 String _tradie = '';
 String _work = '';
-//int _selectedTimeZoneIndex = 0;
-//List<String> _timeZoneCollection = <String>[];
+String selectedKey='';
+String _tradieName = '';
+String _consumerName='';
 late DataSource _bookings;
 Booking? _selectedAppointment;
-Consumer_person _consumer = new Consumer_person('name');
+String _consumer ='kmWX5dwrYVnmfbQjMxKX';
+String _consumerId='';
+String _tradieId='';
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -43,7 +47,18 @@ String _subject = '';
 String _notes = '';
 
 class ConsumerBookingState extends State<ConsumerBooking> {
-  ConsumerBookingState();
+  late Stream<QuerySnapshot> _usersStream;
+  String tradie;
+  ConsumerBookingState(this.tradie){
+    _tradieId=this.tradie;
+    print(_consumerId);
+    colRef.where('tradieId', isEqualTo: _tradieId).snapshots().listen(
+          (event) => print("get query"+_tradieId),
+
+      onError: (error) => print("Listen failed: $error"),
+    );
+    _usersStream = colRef.where('tradieId', isEqualTo: _tradieId).snapshots();
+  }
 
   late List<Booking> appointments;
   CalendarController calendarController = CalendarController();
@@ -60,22 +75,48 @@ class ConsumerBookingState extends State<ConsumerBooking> {
 
   @override
   Widget build(BuildContext context) {
-    _tradie = widget.tradie;
-    _work = widget.work;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Choose a date'),
-        leading: IconButton(
-          icon: Icon(Icons.house),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MyApp()));
-          },
-        ),
-      ),
-      body: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          child: getBookingCalendar(_bookings, onCalendarTapped)),
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: _usersStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        List<Booking>? list = snapshot.data?.docs
+            .map((e) => Booking(
+          eventName: e['eventName'] ?? '',
+          from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['from']),
+          to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['to']),
+          status: e['status'],
+          consumerName: e['consumerName'] ?? '',
+          tradieName: e['tradieName'] ?? '',
+          description: e['description'] ?? '',
+          key: e['key'],
+          consumerId: e['consumerId'] ?? '',
+          tradieId: e['tradieId'] ?? '',
+        ))
+            .toList();
+        _bookings = DataSource(list!);
+
+        return Scaffold(
+            appBar: AppBar(
+                leading: IconButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                      Icons.arrow_back
+                  ),
+                )
+            ),
+            resizeToAvoidBottomInset: true,
+            body: getBookingCalendar(_bookings, onCalendarTapped));
+      },
     );
   }
 
@@ -93,7 +134,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
         appointmentBuilder: (context, calendarAppointmentDetails) {
           final Booking booking = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
-          if (booking.consumerName != _consumer.name) {
+          if (booking.consumerId != _consumer) {
             return Container(
               color: Colors.deepOrange.withOpacity(0.5),
               child: Text('Unavaliable'),
@@ -140,14 +181,19 @@ class ConsumerBookingState extends State<ConsumerBooking> {
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
-            if (meetingDetails.consumerName == _consumer.name) {
+            if (meetingDetails.consumerId == _consumer) {
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
                   _statusNames.indexOf(meetingDetails.status);
-              _tradie = meetingDetails.tradieName;
+              _tradieName = meetingDetails.tradieName;
+              _consumerName=meetingDetails.consumerName;
               _subject = meetingDetails.eventName;
               _notes = meetingDetails.description;
+              selectedKey=meetingDetails.key;
+              _consumerId=meetingDetails.consumerId;
+              _tradieId=meetingDetails.tradieId;
+
               Navigator.push<Widget>(
                 context,
                 MaterialPageRoute(
