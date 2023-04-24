@@ -14,15 +14,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		KLYcZPuDPU5j88PQaJHrKJJZFak=
+		HrxykJKR2jGEDgUCkS59GF7bf58=
 		</data>
 		<key>Modules/StripeApplePay.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		GymW0fGt4GXAl9e17+6fJxeB57w=
+		D9rbjVT60zSQ5S1ItBVuDVbSoDU=
 		</data>
 		<key>Modules/StripeApplePay.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		NfhUDPBtd4z6QuvuwYkG8KnvE9w=
+		UHoIhz/1FIA9RvLgq4zGOou9dR4=
 		</data>
 		<key>Modules/StripeApplePay.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -34,7 +34,7 @@
 		</data>
 		<key>Modules/StripeApplePay.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		7pj5V8qDWofXwSvF9h5mAiyvtJg=
+		v9l4WvzFdds6l+Js4piphjNQqxQ=
 		</data>
 		<key>Modules/StripeApplePay.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Modules/StripeApplePay.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		IUI0kHR+8qXw4nSLWo3hKLxSO4w=
+		Yu9Llu/HdHUKUGsy9d7TS5TEZgw=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -73,14 +73,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ckrCHk15CyaJzHhbPNb8qgqSK3b2TNcryIQCTF7Ik/E=
+			Wp4k64WcNVV2OCiiqoGdvlC/jpr+p0mF9Ke6o7X/0KM=
 			</data>
 		</dict>
 		<key>Modules/StripeApplePay.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			uRO+LGYrf66DsOG/TWtrgJrxbi77CRGNmzPKN8vizEE=
+			3aYz6IwDMYB435dtFhFYnKk0m73Gf18DQ/COYECzBVM=
 			</data>
 		</dict>
 		<key>Modules/StripeApplePay.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -101,7 +101,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			sY5uY6KSKxF5FlFBHT2KlhEs1WFy7pbN9ZYZ5ULN7vw=
+			A3xJ6OSdBpod6tc1NTPuVU/FgEbr2hgkvvOwDIU00HE=
 			</data>
 		</dict>
 		<key>Modules/StripeApplePay.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -122,7 +122,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			eYjOb846rVzjNqhf3D8kdXqjz4YC9HxQSXGMwAS5V+o=
+			K6/+RshnZfI608RB1OgJexAOcmj8LaVOx8gOjcf9UIg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

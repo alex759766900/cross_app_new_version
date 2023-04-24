@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 
 import 'package:new_cross_app/stripe/screens/card_form_screen.dart';
 import 'package:new_cross_app/stripe/screens/.env';
-import 'package:new_cross_app/stripe/screens/screens.dart';
-import 'package:new_cross_app/stripe/constains.dart';
+
+// import 'package:flutter_stripe_web/flutter_stripe_web.dart';
+
 //import 'package:stripe/stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
+/// sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
-  // TODO
-
-  //Stripe.publishableKey = stripePublishableKey;
-  //await Stripe.instance.applySettings();
-
+  Stripe.publishableKey = stripePublishableKey;//JemmaAUGroup@gmail.com code:JemmaTeam2023
+  await Stripe.instance.applySettings();
+  // TODO Replace with your actual merchant identifier
+  Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
   runApp(const MyApp());
 }
 

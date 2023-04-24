@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_cross_app/stripe/components/card_type.dart';
 import 'package:new_cross_app/stripe/components/card_utilis.dart';
 import 'package:new_cross_app/stripe/constains.dart';
-
 import 'components/input_formatters.dart';
 
 class AddNewCardScreen extends StatefulWidget {

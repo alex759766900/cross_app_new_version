@@ -31,7 +31,7 @@ class InputFields extends StatelessWidget {
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           textInputAction: TextInputAction.next,
-          autofillHints: [AutofillHints.email],
+          autofillHints: const [AutofillHints.email],
           validator: (value) {
             if (value == null || isEmail(value)) {
               return null;

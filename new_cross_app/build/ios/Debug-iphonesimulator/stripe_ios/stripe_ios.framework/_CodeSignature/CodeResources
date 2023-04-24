@@ -22,7 +22,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		Tlsn2NquNIDZyzagElrqd/5H4xU=
+		tKJQWKkXMIl+TdJAYgCt2OWDrvY=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -30,11 +30,11 @@
 		</data>
 		<key>Modules/stripe_ios.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		Hxdx/r4/lac6yo08ZMlvRZXK+M4=
+		u8RRoeG2oJgOULMjZtfHA1t38k8=
 		</data>
 		<key>Modules/stripe_ios.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		32QkTC6boBoGg4wQy4IQn0clXMs=
+		DD0fzTG7N3c5qe3UvH5DI6wj/q4=
 		</data>
 		<key>Modules/stripe_ios.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Modules/stripe_ios.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		qF71Zb9uCYnRQSbFVGfRyVGpoic=
+		Qjljp+PuYQA3DE8zlJIr6fXuAcI=
 		</data>
 		<key>Modules/stripe_ios.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -58,7 +58,7 @@
 		</data>
 		<key>Modules/stripe_ios.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		elmC6dhlvFEhVEj7lCQeGpDY3sc=
+		sUUBnmsXOsOq4fMLjqDB8lTAErE=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -102,14 +102,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			6G0i8WRp0L0fiGVxQ/M4Gb/A6cMazxgUNREX6ZzaX9s=
+			Ty25E3t33pzdOhf9sy0lfgnm2/oioOCbHBZ0ulH5+sU=
 			</data>
 		</dict>
 		<key>Modules/stripe_ios.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			dEIivj5zJRRUKRnPWmqmCaKqGB6CmPhoTiTzc8RjfyA=
+			VR7hjqof8J06OmmdMnEiutOiEdi6ayLBbQgVDKd5zJo=
 			</data>
 		</dict>
 		<key>Modules/stripe_ios.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -130,7 +130,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			7f+Rg6XIjq5kBdkVqgjlZtxxRO3WImI6pArmm33IZo0=
+			hBaJWLWpXagaEp7Bp1eyUAGrIsEtKzHgKnnowtmF60o=
 			</data>
 		</dict>
 		<key>Modules/stripe_ios.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -151,7 +151,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			IBbFVbsRgvPc6e1cw5aV8bNQkeFVFr/9talflHYT7Do=
+			5z6MyEItxNjJZv2A/HEOl7gGXqT7ioL+Y/sNJ2bpwz0=
 			</data>
 		</dict>
 	</dict>

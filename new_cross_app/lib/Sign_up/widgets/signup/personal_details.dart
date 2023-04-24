@@ -63,19 +63,20 @@ class PersonalDetails extends StatelessWidget {
                   child: TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       textInputAction: TextInputAction.next,
-                      controller: this.lastName,
+                      controller: lastName,
                       maxLength: 50,
                       validator: (String? value) {
-                        if ((this.signupOf == SignupOf.tradesperson) &&
-                            ((value == null) || (value.length <= 0)))
+                        if ((signupOf == SignupOf.tradesperson) &&
+                            ((value == null) || (value.isEmpty))) {
                           return "This value is required";
-                        else if ((value == null) || (value.length <= 0))
+                        } else if ((value == null) || (value.isEmpty)) {
                           return null;
-                        else if (!isAlpha(value))
+                        } else if (!isAlpha(value)) {
                           return "The value should only have alphabets.";
+                        }
                         return null;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           labelText: "Last Name",
                           hintText: "Enter your Last Name.",
                           labelStyle: TextStyle(fontSize: 14),
@@ -89,21 +90,22 @@ class PersonalDetails extends StatelessWidget {
                   child: TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       textInputAction: TextInputAction.next,
-                      controller: this.phone,
+                      controller: phone,
                       maxLength: 10,
                       validator: (String? value) {
-                        if ((this.signupOf == SignupOf.tradesperson) &&
-                            ((value == null) || (value.length <= 0)))
+                        if ((signupOf == SignupOf.tradesperson) &&
+                            ((value == null) || (value.isEmpty))) {
                           return "This value is required";
-                        else if ((value == null) || (value.length <= 0))
+                        } else if ((value == null) || (value.isEmpty)) {
                           return null;
-                        else if (!isNumeric(value))
+                        } else if (!isNumeric(value)) {
                           return "The value should only have numbers.";
-                        else if (value.length != 10)
+                        } else if (value.length != 10) {
                           return "The value should only contain 10 numbers.";
+                        }
                         return null;
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           labelText: "Phone number",
                           hintText: "Enter your Phone number.",
                           labelStyle: TextStyle(fontSize: 14),
