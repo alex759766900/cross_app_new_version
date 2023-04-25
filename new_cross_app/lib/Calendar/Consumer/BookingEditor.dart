@@ -1,6 +1,5 @@
 part of booking_calendar;
 
-
 class BookingEditor extends StatefulWidget {
   const BookingEditor({super.key});
   @override
@@ -16,9 +15,9 @@ class BookingEditorState extends State<BookingEditor> {
           children: <Widget>[
             //Booking Title
             ListTile(
-                contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-                leading: const Text(''),
-                title: Text(_work),
+              contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              leading: const Text(''),
+              title: Text(user_subject),
             ),
             const Divider(
               height: 1.0,
@@ -47,7 +46,7 @@ class BookingEditorState extends State<BookingEditor> {
                               if (date != null && date != _startDate) {
                                 setState(() {
                                   final Duration difference =
-                                  _endDate.difference(_startDate);
+                                      _endDate.difference(_startDate);
                                   _startDate = DateTime(
                                       date.year,
                                       date.month,
@@ -68,37 +67,37 @@ class BookingEditorState extends State<BookingEditor> {
                           child: false
                               ? const Text('')
                               : GestureDetector(
-                              child: Text(
-                                DateFormat('hh:mm a').format(_startDate),
-                                textAlign: TextAlign.right,
-                              ),
-                              onTap: () async {
-                                final TimeOfDay? time =
-                                await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay(
-                                        hour: _startTime.hour,
-                                        minute: _startTime.minute));
+                                  child: Text(
+                                    DateFormat('hh:mm a').format(_startDate),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  onTap: () async {
+                                    final TimeOfDay? time =
+                                        await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay(
+                                                hour: _startTime.hour,
+                                                minute: _startTime.minute));
 
-                                if (time != null && time != _startTime) {
-                                  setState(() {
-                                    _startTime = time;
-                                    final Duration difference =
-                                    _endDate.difference(_startDate);
-                                    _startDate = DateTime(
-                                        _startDate.year,
-                                        _startDate.month,
-                                        _startDate.day,
-                                        _startTime.hour,
-                                        _startTime.minute,
-                                        0);
-                                    _endDate = _startDate.add(difference);
-                                    _endTime = TimeOfDay(
-                                        hour: _endDate.hour,
-                                        minute: _endDate.minute);
-                                  });
-                                }
-                              })),
+                                    if (time != null && time != _startTime) {
+                                      setState(() {
+                                        _startTime = time;
+                                        final Duration difference =
+                                            _endDate.difference(_startDate);
+                                        _startDate = DateTime(
+                                            _startDate.year,
+                                            _startDate.month,
+                                            _startDate.day,
+                                            _startTime.hour,
+                                            _startTime.minute,
+                                            0);
+                                        _endDate = _startDate.add(difference);
+                                        _endTime = TimeOfDay(
+                                            hour: _endDate.hour,
+                                            minute: _endDate.minute);
+                                      });
+                                    }
+                                  })),
                     ])),
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -124,7 +123,7 @@ class BookingEditorState extends State<BookingEditor> {
                               if (date != null && date != _endDate) {
                                 setState(() {
                                   final Duration difference =
-                                  _endDate.difference(_startDate);
+                                      _endDate.difference(_startDate);
                                   _endDate = DateTime(
                                       date.year,
                                       date.month,
@@ -147,40 +146,40 @@ class BookingEditorState extends State<BookingEditor> {
                           child: _isAllDay
                               ? const Text('')
                               : GestureDetector(
-                              child: Text(
-                                DateFormat('hh:mm a').format(_endDate),
-                                textAlign: TextAlign.right,
-                              ),
-                              onTap: () async {
-                                final TimeOfDay? time =
-                                await showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay(
-                                        hour: _endTime.hour,
-                                        minute: _endTime.minute));
+                                  child: Text(
+                                    DateFormat('hh:mm a').format(_endDate),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  onTap: () async {
+                                    final TimeOfDay? time =
+                                        await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay(
+                                                hour: _endTime.hour,
+                                                minute: _endTime.minute));
 
-                                if (time != null && time != _endTime) {
-                                  setState(() {
-                                    _endTime = time;
-                                    final Duration difference =
-                                    _endDate.difference(_startDate);
-                                    _endDate = DateTime(
-                                        _endDate.year,
-                                        _endDate.month,
-                                        _endDate.day,
-                                        _endTime.hour,
-                                        _endTime.minute,
-                                        0);
-                                    if (_endDate.isBefore(_startDate)) {
-                                      _startDate =
-                                          _endDate.subtract(difference);
-                                      _startTime = TimeOfDay(
-                                          hour: _startDate.hour,
-                                          minute: _startDate.minute);
+                                    if (time != null && time != _endTime) {
+                                      setState(() {
+                                        _endTime = time;
+                                        final Duration difference =
+                                            _endDate.difference(_startDate);
+                                        _endDate = DateTime(
+                                            _endDate.year,
+                                            _endDate.month,
+                                            _endDate.day,
+                                            _endTime.hour,
+                                            _endTime.minute,
+                                            0);
+                                        if (_endDate.isBefore(_startDate)) {
+                                          _startDate =
+                                              _endDate.subtract(difference);
+                                          _startTime = TimeOfDay(
+                                              hour: _startDate.hour,
+                                              minute: _startDate.minute);
+                                        }
+                                      });
                                     }
-                                  });
-                                }
-                              })),
+                                  })),
                     ])),
             const Divider(
               height: 1.0,
@@ -191,7 +190,7 @@ class BookingEditorState extends State<BookingEditor> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -205,6 +204,17 @@ class BookingEditorState extends State<BookingEditor> {
               title: Text(
                 _statusNames[_selectedStatusIndex],
               ),
+              trailing: _statusNames[_selectedStatusIndex] != 'Confirmed'
+                  ? const Text('')
+                  : IconButton(
+                      icon: Icon(
+                        Icons.check_circle,
+                        color: _colorCollection[_selectedStatusIndex],
+                      ),
+                      onPressed: () {
+                        colRef.doc(selectedKey).update({'status': 'Working'});
+                      },
+                    ),
             ),
             const Divider(
               height: 1.0,
@@ -269,77 +279,146 @@ class BookingEditorState extends State<BookingEditor> {
                       Icons.done,
                       color: Colors.white,
                     ),
-                    onPressed: () async{
-                      AlertDialog alert_outBound;
-                      if(_startDate.hour<9||_endDate.hour>17){
-                        Widget OKButton = TextButton(
-                          child: const Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context,true);
-                          },
-                        );
-                        alert_outBound = AlertDialog(
-                          title: const Text("Alert"),
-                          content: const Text('Out of Tradie Working Time'),
-                          actions: [
-                            OKButton,
-                          ],
-                        );
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert_outBound;
-                          },
-                        );
-                        return;
-                      }
-                      final Booking? newTimeAppointment =
-                      _isInterceptExistingAppointments(
-                          _startDate,_endDate);
-                      AlertDialog alert_conflict;
-                      if (newTimeAppointment != null) {
-                        Widget okButton = TextButton(
-                          child: const Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                        );
-                        alert_conflict = AlertDialog(
-                          title: const Text("Alert"),
-                          content: const Text('Have intercept with existing'),
-                          actions: [
-                            okButton,
-                          ],
-                        );
+                    onPressed: () async {
+                      if(_selectedAppointment==null){
+                        print('new booking');
+                        final meetings = <Booking>[];
+                        AlertDialog alert_outBound;
+                        if (_startDate.hour < 9 || _endDate.hour > 17) {
+                          Widget OKButton = TextButton(
+                            child: const Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                          );
+                          alert_outBound = AlertDialog(
+                            title: const Text("Alert"),
+                            content: const Text('Out of Tradie Working Time'),
+                            actions: [
+                              OKButton,
+                            ],
+                          );
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert_outBound;
+                            },
+                          );
+                          return;
+                        }
+                        final Booking? newTimeAppointment =
+                        _isInterceptExistingAppointments(
+                            _startDate, _endDate);
+                        AlertDialog alert_conflict;
+                        if (newTimeAppointment != null) {
+                          Widget okButton = TextButton(
+                            child: const Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                          );
+                          alert_conflict = AlertDialog(
+                            title: const Text("Alert"),
+                            content: const Text('Have intercept with existing'),
+                            actions: [
+                              okButton,
+                            ],
+                          );
 
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert_conflict;
-                          },
-                        );
-                        return;
-                      }
-                      final List<Booking> meetings = <Booking>[];
-                      //如果是已存在的appointment，从列表中移除，加上更改的
-                      if (_selectedAppointment != null) {
-                        _bookings.appointments!.removeAt(_bookings.appointments!
-                            .indexOf(_selectedAppointment));
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert_conflict;
+                            },
+                          );
+                          return;
+                        }
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: _statusNames[_selectedStatusIndex],
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: _subject,
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _bookings.appointments!.add(meetings[0]);
+                        _bookings.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
+                        List<String> keys = <String>[];
+                        if (_bookings.appointments!.isNotEmpty ||
+                            _bookings.appointments != null) {
+                          for (int i = 0;
+                          i < _bookings.appointments!.length;
+                          i++) {
+                            Booking b = _bookings.appointments![i];
+                            keys.add(b.key);
+                          }
+                        }
+                        colRef.doc().set({
+                          'eventName': _subject,
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Pending',
+                          'tradieName': _tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+
+                        var k = await getKey(keys);
+                        colRef.doc(k).update({'key': k});
+
+                      }else{
+                        print('old booking');
+                        final meetings = <Booking>[];
+                        int remove = 0;
+                        for (int i = 0; i < _bookings.appointments!.length; i++) {
+                          Booking b = _bookings.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        _bookings.appointments!.removeAt(remove);
                         _bookings.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
+                        colRef.doc(_selectedAppointment?.key).update({
+                          'eventName': _subject,
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Pending',
+                          'tradieName': _tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: _statusNames[_selectedStatusIndex],
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: _subject,
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _bookings.appointments!.add(meetings[0]);
+                        _bookings.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
                       }
-                      meetings.add(Booking(
-                        from: _startDate,
-                        to: _endDate,
-                        status: _statusNames[_selectedStatusIndex],
-                        consumerName: _consumer.name,
-                        tradieName: _tradie,
-                        description: _notes,
-                        eventName: _work,
-                      ));
-                      _bookings.appointments!.add(meetings[0]);
-                      _bookings.notifyListeners(
-                          CalendarDataSourceAction.add, meetings);
+
+
                       _selectedAppointment = null;
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
@@ -356,42 +435,85 @@ class BookingEditorState extends State<BookingEditor> {
             floatingActionButton: _selectedAppointment == null
                 ? const Text('')
                 : FloatingActionButton(
-              onPressed: () {
-                if (_selectedAppointment != null) {
-                  _bookings.appointments!.removeAt(_bookings.appointments!
-                      .indexOf(_selectedAppointment));
-                  _bookings.notifyListeners(CalendarDataSourceAction.remove,
-                      <Booking>[]..add(_selectedAppointment!));
-                  _selectedAppointment = null;
-                  Navigator.pop(context);
-                }
-              },
-              child:
-                const Text('Cancel',selectionColor: Colors.white,),
-              /*const Icon(Icons.delete_outline, color: Colors.white),*/
-              backgroundColor: Colors.red,
-            )));
+                    onPressed: () {
+                      if (_selectedAppointment != null) {
+                        _bookings.appointments!.removeAt(_bookings.appointments!
+                            .indexOf(_selectedAppointment));
+                        _bookings.notifyListeners(
+                            CalendarDataSourceAction.remove,
+                            <Booking>[]..add(_selectedAppointment!));
+                        try {
+                          colRef.doc(_selectedAppointment?.key).delete();
+                        } catch (e) {}
+                        _selectedAppointment = null;
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text(
+                      'Cancel',
+                      selectionColor: Colors.white,
+                    ),
+                    /*const Icon(Icons.delete_outline, color: Colors.white),*/
+                    backgroundColor: Colors.red,
+                  )));
+  }
+
+  Future<String> getKey(List<String> oldkeys) async {
+    String newKey = '';
+    await colRef.where('key', isEqualTo: '').get().then(
+      (QuerySnapshot snapshot) {
+        if (snapshot.docs.length > 1) {
+          for (var b in snapshot.docs) {
+            if (oldkeys.indexOf(b.id) == -1) {
+              var v = b.data() as Map<String, dynamic>;
+              if (v['consumerId'] == user_consumerId) {
+                newKey = b.id;
+                return newKey;
+              }
+            }
+          }
+        }
+        for (var b in snapshot.docs) {
+          if (oldkeys.indexOf(b.id) == -1) {
+            newKey = b.id;
+            print(newKey);
+            return newKey;
+          }
+        }
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return newKey;
   }
 
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
   }
+
   dynamic _isInterceptExistingAppointments(DateTime from, DateTime to) {
-    if(from == null || to==null ||_bookings ==null || _bookings.appointments == null || _bookings.appointments!.isEmpty)
-      return null;
+    if (from == null ||
+        to == null ||
+        _bookings == null ||
+        _bookings.appointments == null ||
+        _bookings.appointments!.isEmpty) return null;
     for (int i = 0; i < _bookings.appointments!.length; i++) {
       Booking appointment = _bookings.appointments![i];
-      if (_isSameDay(appointment.from, from)&&_isSameDay(appointment.to, to)&&(
-          (appointment.from.hour<from.hour&&from.hour<appointment.to.hour)
-          ||(appointment.from.hour<to.hour&&to.hour<appointment.to.hour)
-          ||(appointment.from.hour<from.hour&&to.hour<appointment.to.hour)
-          ||(appointment.from.hour==from.hour&&to.hour==appointment.to.hour)))
-      {
+      if (_isSameDay(appointment.from, from) &&
+          _isSameDay(appointment.to, to) &&
+          ((appointment.from.hour < from.hour &&
+                  from.hour < appointment.to.hour) ||
+              (appointment.from.hour < to.hour &&
+                  to.hour < appointment.to.hour) ||
+              (appointment.from.hour < from.hour &&
+                  to.hour < appointment.to.hour) ||
+              (appointment.from.hour == from.hour &&
+                  to.hour == appointment.to.hour))) {
         return appointment;
       }
     }
     return null;
   }
+
   bool _isSameDay(DateTime date1, DateTime date2) {
     if (date1 == date2) {
       return true;

@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>774978952042-h4vrshr9vef11bu0709lmdbbij24ml8f.apps.googleusercontent.com</string>
+	<string>462991973077-ggfso9vrdit70s45u4mue4rd8jo8lvd6.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.774978952042-h4vrshr9vef11bu0709lmdbbij24ml8f</string>
+	<string>com.googleusercontent.apps.462991973077-ggfso9vrdit70s45u4mue4rd8jo8lvd6</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBpZ3dU2GgxW-bB896oGzVKVmAfHv2xh24</string>
+	<string>AIzaSyAgzbu6prfUFVg4Jd9xsbMZFvA4uV-90qw</string>
 	<key>GCM_SENDER_ID</key>
-	<string>774978952042</string>
+	<string>462991973077</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.newCrossApp</string>
 	<key>PROJECT_ID</key>
-	<string>jemma-australia-d5fe3</string>
+	<string>jemma-b0fcd</string>
 	<key>STORAGE_BUCKET</key>
-	<string>jemma-australia-d5fe3.appspot.com</string>
+	<string>jemma-b0fcd.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:774978952042:ios:19abaaf7aacf332faf2313</string>
+	<string>1:462991973077:ios:481c0b6ffb616df1af605c</string>
 </dict>
 </plist>

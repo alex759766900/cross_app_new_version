@@ -2,10 +2,11 @@ import 'package:new_cross_app/Calendar/Consumer/User.dart';
 
 import 'ConsumerBookingPage.dart';
 
-class Consumer extends User{
-  Consumer(this.name);
-  String id='';
-  String name='';
-  String address='';
-  List<Booking> bookings=<Booking>[];
+class Consumer_person {
+  Consumer_person(this.name);
+  int id = 0;
+  String name = '';
+  String firstname = '';
+  String address = '';
+  List<Booking> bookings = <Booking>[];
 }
