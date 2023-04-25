@@ -2,6 +2,8 @@ library booking_calendar;
 
 //import 'dart:js_util';
 
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
@@ -33,11 +35,16 @@ String _work = '';
 String selectedKey='';
 String _tradieName = '';
 String _consumerName='';
-late DataSource _bookings;
+List<Booking> ls=<Booking>[];
+late DataSource _bookings=DataSource(ls);
 Booking? _selectedAppointment;
-String _consumer ='kmWX5dwrYVnmfbQjMxKX';
+String user_consumerId ='Th42NDgq4SJZYnOIE3R4';
+String user_consumerName='';
+String user_tradieName='';
+String user_tradieId='';
 String _consumerId='';
 String _tradieId='';
+String user_subject='';
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -50,14 +57,13 @@ class ConsumerBookingState extends State<ConsumerBooking> {
   late Stream<QuerySnapshot> _usersStream;
   String tradie;
   ConsumerBookingState(this.tradie){
-    _tradieId=this.tradie;
-    print(_consumerId);
-    colRef.where('tradieId', isEqualTo: _tradieId).snapshots().listen(
+    user_tradieId=this.tradie;
+    colRef.where('tradieId', isEqualTo: user_tradieId).snapshots().listen(
           (event) => print("get query"+_tradieId),
 
       onError: (error) => print("Listen failed: $error"),
     );
-    _usersStream = colRef.where('tradieId', isEqualTo: _tradieId).snapshots();
+    _usersStream = colRef.where('tradieId', isEqualTo: user_tradieId).snapshots();
   }
 
   late List<Booking> appointments;
@@ -101,6 +107,19 @@ class ConsumerBookingState extends State<ConsumerBooking> {
           tradieId: e['tradieId'] ?? '',
         ))
             .toList();
+        for (var v in list!){
+          if(v.tradieId==user_tradieId){
+            user_tradieName=v.tradieName;
+            break;
+          }
+        }
+        for (var v in list!){
+          if(v.consumerId==user_consumerId){
+            user_consumerName=v.consumerName;
+            user_subject=v.eventName;
+            break;
+          }
+        }
         _bookings = DataSource(list!);
 
         return Scaffold(
@@ -122,8 +141,6 @@ class ConsumerBookingState extends State<ConsumerBooking> {
 
   SfCalendar getBookingCalendar(
       CalendarDataSource dataSource, CalendarTapCallback calendarTapCallback) {
-    print(appointments.length);
-    print(appointments.first);
     return SfCalendar(
         view: CalendarView.month,
         controller: calendarController,
@@ -134,7 +151,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
         appointmentBuilder: (context, calendarAppointmentDetails) {
           final Booking booking = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
-          if (booking.consumerId != _consumer) {
+          if (booking.consumerId != user_consumerId) {
             return Container(
               color: Colors.deepOrange.withOpacity(0.5),
               child: Text('Unavaliable'),
@@ -171,17 +188,11 @@ class ConsumerBookingState extends State<ConsumerBooking> {
         return;
       } else {
         setState(() {
-          _selectedAppointment = null;
-          _selectedStatusIndex = 0;
-          //_selectedTimeZoneIndex = 0;
-          _subject = _work;
-          _notes = '';
-          //_tradie=_tradie;
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
-            if (meetingDetails.consumerId == _consumer) {
+            if (meetingDetails.consumerId == user_consumerId) {
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
@@ -208,6 +219,11 @@ class ConsumerBookingState extends State<ConsumerBooking> {
             _startTime =
                 TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
             _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
+            _consumerId=user_consumerId;
+            _tradieId=user_tradieId;
+            _consumerName=user_consumerName;
+            _tradieName=user_tradieName;
+            _subject=user_subject;
             Navigator.push<Widget>(
               context,
               MaterialPageRoute(
