@@ -9,7 +9,6 @@ import 'package:new_cross_app/stripe/screens/.env';
 import 'package:flutter_stripe/flutter_stripe.dart';
 /// sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = stripePublishableKey;//JemmaAUGroup@gmail.com code:JemmaTeam2023
   await Stripe.instance.applySettings();
