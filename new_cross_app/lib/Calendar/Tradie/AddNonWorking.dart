@@ -192,7 +192,7 @@ class AddNonWorkingState extends State<AddNonWorking> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(user_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -308,33 +308,93 @@ class AddNonWorkingState extends State<AddNonWorking> {
                       }
                       final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
-                      if (_selectedAppointment != null) {
-                        _events.appointments!.removeAt(_events.appointments!
-                            .indexOf(_selectedAppointment));
+                      if(_selectedAppointment==null){
+                        print('new booking');
+                        final meetings = <Booking>[];
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: "Unavailable",
+                          consumerName: _consumerName,
+                          tradieName: user_tradieName,
+                          description: _notes,
+                          eventName: "Unavailable",
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
+                        List<String> keys = <String>[];
+                        if (_events.appointments!.isNotEmpty ||
+                            _events.appointments != null) {
+                          for (int i = 0;
+                          i < _events.appointments!.length;
+                          i++) {
+                            Booking b = _events.appointments![i];
+                            keys.add(b.key);
+                          }
+                        }
+                        colRef.doc().set({
+                          'eventName': "Unavailable",
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Unavailable',
+                          'tradieName': user_tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+
+                        var k = await getKey(keys);
+                        colRef.doc(k).update({'key': k});
+
+                      }else{
+                        print('old booking');
+                        final meetings = <Booking>[];
+                        int remove = 0;
+                        for (int i = 0; i < _events.appointments!.length; i++) {
+                          Booking b = _events.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        _events.appointments!.removeAt(remove);
                         _events.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
+                        colRef.doc(_selectedAppointment?.key).update({
+                          'eventName': "Unavailable",
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Unavailable',
+                          'tradieName': _tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: "Unavailable",
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: "Unavailable",
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
                       }
-                      meetings.add(Booking(
-                        from: _startDate,
-                        to: _endDate,
-                        status: 'Unavailable',
-                        /*startTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],
-                        endTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],*/
-                        description: _notes,
-                        //isAllDay: _isAllDay,
-                        eventName: 'Unavailable',
-
-                        ///eventName: _subject =_subject,
-                      ));
-
-                      _events.appointments!.add(meetings[0]);
-
-                      _events.notifyListeners(
-                          CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
@@ -369,6 +429,35 @@ class AddNonWorkingState extends State<AddNonWorking> {
                     ),
                   )));
   }
+
+  Future<String> getKey(List<String> oldkeys) async {
+    String newKey = '';
+    await colRef.where('key', isEqualTo: '').get().then(
+          (QuerySnapshot snapshot) {
+        if (snapshot.docs.length > 1) {
+          for (var b in snapshot.docs) {
+            if (oldkeys.indexOf(b.id) == -1) {
+              var v = b.data() as Map<String, dynamic>;
+              if (v['consumerId'] == _consumerId) {
+                newKey = b.id;
+                return newKey;
+              }
+            }
+          }
+        }
+        for (var b in snapshot.docs) {
+          if (oldkeys.indexOf(b.id) == -1) {
+            newKey = b.id;
+            print(newKey);
+            return newKey;
+          }
+        }
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return newKey;
+  }
+
 
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';

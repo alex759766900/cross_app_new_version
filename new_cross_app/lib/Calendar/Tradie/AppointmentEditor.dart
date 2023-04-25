@@ -250,7 +250,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -258,21 +258,25 @@ class AppointmentEditorState extends State<AppointmentEditor> {
             ),
             //Status
             ListTile(
-                contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                leading: Icon(Icons.lens,
-                    color: _colorCollection[_selectedStatusIndex]),
-                title: Text(
-                  _statusNames[_selectedStatusIndex],
+              contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+              leading: Icon(Icons.lens,
+                  color: _colorCollection[_selectedStatusIndex]),
+              title: Text(
+                _statusNames[_selectedStatusIndex],
+              ),
+              trailing: _statusNames[_selectedStatusIndex] != 'Pending'
+                  ? const Text('')
+                  : IconButton(
+                icon: Icon(
+                  Icons.check_circle,
+                  color: _colorCollection[_selectedStatusIndex],
                 ),
-                onTap: () {
-                  showDialog<Widget>(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return _ColorPicker();
-                    },
-                  ).then((dynamic value) => setState(() {}));
-                }),
+                onPressed: () {
+                  colRef.doc(selectedKey).update({'status': 'Confirmed'});
+                  Navigator.pop(context);
+                },
+              ),
+            ),
             const Divider(
               height: 1.0,
               thickness: 1,
@@ -340,30 +344,47 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
                       if (_selectedAppointment != null) {
-                        _events.appointments!.removeAt(_events.appointments!
-                            .indexOf(_selectedAppointment));
+                        int remove = 0;
+                        for (int i = 0; i < _events.appointments!.length; i++) {
+                          Booking b = _events.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        print(_events.appointments!.length);
+                        _events.appointments!.removeAt(remove);
+                        print(_events.appointments!.length);
                         _events.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
                       }
+
+                      colRef.doc(_selectedAppointment?.key).update({
+                        'eventName': _subject,
+                        'from': _startDate.toString(),
+                        'to': _endDate.toString(),
+                        'status': 'Pending',
+                        'tradieName': _tradieName,
+                        'consumerName': _consumerName,
+                        'description': _notes,
+                        'key': selectedKey,
+                        'tradieId': _tradieId,
+                        'consumerId': _consumerId,
+                      });
                       meetings.add(Booking(
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
-                        /*startTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],
-                        endTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],*/
+                        consumerName: _consumerName,
+                        tradieName: _tradieName,
                         description: _notes,
-                        //isAllDay: _isAllDay,
-                        eventName: _subject == '' ? '(No title)' : _subject,
-
-                        ///eventName: _subject =_subject,
+                        eventName: _subject,
+                        consumerId: _consumerId,
+                        tradieId: _tradieId,
+                        key: selectedKey,
                       ));
-
                       _events.appointments!.add(meetings[0]);
-
                       _events.notifyListeners(
                           CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
@@ -384,10 +405,22 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                 : FloatingActionButton(
                     onPressed: () {
                       if (_selectedAppointment != null) {
-                        _events.appointments!.removeAt(_events.appointments!
-                            .indexOf(_selectedAppointment));
-                        _events.notifyListeners(CalendarDataSourceAction.remove,
+                        int remove = 0;
+                        for (int i = 0; i < _events.appointments!.length; i++) {
+                          Booking b = _events.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        _events.appointments!.removeAt(remove);
+                        _events.notifyListeners(
+                            CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
+                        try {
+                          colRef.doc(_selectedAppointment?.key).delete();
+                        } catch (e) {}
                         _selectedAppointment = null;
                         Navigator.pop(context);
                       }
