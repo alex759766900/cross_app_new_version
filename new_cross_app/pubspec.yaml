@@ -44,6 +44,7 @@ dependencies:
   http: ^0.13.5
   # How to enable Stripe payments in your flutter Apps[2022]:
   # https://www.youtube.com/watch?v=tpILK64NM6M&t=486s
+  bloc: ^8.0.1
   flutter_bloc: 8.0.1
   equatable: ^2.0.3
 

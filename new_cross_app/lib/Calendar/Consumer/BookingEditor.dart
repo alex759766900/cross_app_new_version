@@ -437,8 +437,16 @@ class BookingEditorState extends State<BookingEditor> {
                 : FloatingActionButton(
                     onPressed: () {
                       if (_selectedAppointment != null) {
-                        _bookings.appointments!.removeAt(_bookings.appointments!
-                            .indexOf(_selectedAppointment));
+                        int remove = 0;
+                        for (int i = 0; i < _bookings.appointments!.length; i++) {
+                          Booking b = _bookings.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        _bookings.appointments!.removeAt(remove);
                         _bookings.notifyListeners(
                             CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
