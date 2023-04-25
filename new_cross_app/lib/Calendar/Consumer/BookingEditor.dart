@@ -190,7 +190,7 @@ class BookingEditorState extends State<BookingEditor> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -204,6 +204,17 @@ class BookingEditorState extends State<BookingEditor> {
               title: Text(
                 _statusNames[_selectedStatusIndex],
               ),
+              trailing: _statusNames[_selectedStatusIndex] != 'Confirmed'
+                  ? const Text('')
+                  : IconButton(
+                      icon: Icon(
+                        Icons.check_circle,
+                        color: _colorCollection[_selectedStatusIndex],
+                      ),
+                      onPressed: () {
+                        colRef.doc(selectedKey).update({'status': 'Working'});
+                      },
+                    ),
             ),
             const Divider(
               height: 1.0,
@@ -269,63 +280,114 @@ class BookingEditorState extends State<BookingEditor> {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      AlertDialog alert_outBound;
-                      if (_startDate.hour < 9 || _endDate.hour > 17) {
-                        Widget OKButton = TextButton(
-                          child: const Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                        );
-                        alert_outBound = AlertDialog(
-                          title: const Text("Alert"),
-                          content: const Text('Out of Tradie Working Time'),
-                          actions: [
-                            OKButton,
-                          ],
-                        );
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert_outBound;
-                          },
-                        );
-                        return;
-                      }
-                      final Booking? newTimeAppointment =
-                          _isInterceptExistingAppointments(
-                              _startDate, _endDate);
-                      AlertDialog alert_conflict;
-                      if (newTimeAppointment != null) {
-                        Widget okButton = TextButton(
-                          child: const Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                        );
-                        alert_conflict = AlertDialog(
-                          title: const Text("Alert"),
-                          content: const Text('Have intercept with existing'),
-                          actions: [
-                            okButton,
-                          ],
-                        );
+                      if(_selectedAppointment==null){
+                        print('new booking');
+                        final meetings = <Booking>[];
+                        AlertDialog alert_outBound;
+                        if (_startDate.hour < 9 || _endDate.hour > 17) {
+                          Widget OKButton = TextButton(
+                            child: const Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                          );
+                          alert_outBound = AlertDialog(
+                            title: const Text("Alert"),
+                            content: const Text('Out of Tradie Working Time'),
+                            actions: [
+                              OKButton,
+                            ],
+                          );
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert_outBound;
+                            },
+                          );
+                          return;
+                        }
+                        final Booking? newTimeAppointment =
+                        _isInterceptExistingAppointments(
+                            _startDate, _endDate);
+                        AlertDialog alert_conflict;
+                        if (newTimeAppointment != null) {
+                          Widget okButton = TextButton(
+                            child: const Text("Ok"),
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                          );
+                          alert_conflict = AlertDialog(
+                            title: const Text("Alert"),
+                            content: const Text('Have intercept with existing'),
+                            actions: [
+                              okButton,
+                            ],
+                          );
 
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert_conflict;
-                          },
-                        );
-                        return;
-                      }
-                      final List<Booking> meetings = <Booking>[];
-                      //如果是已存在的appointment，从列表中移除，加上更改的
-                      if (_selectedAppointment != null) {
-                        _bookings.appointments!.removeAt(_bookings.appointments!
-                            .indexOf(_selectedAppointment));
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return alert_conflict;
+                            },
+                          );
+                          return;
+                        }
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: _statusNames[_selectedStatusIndex],
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: _subject,
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _bookings.appointments!.add(meetings[0]);
                         _bookings.notifyListeners(
-                            CalendarDataSourceAction.remove,
+                            CalendarDataSourceAction.add, meetings);
+                        List<String> keys = <String>[];
+                        if (_bookings.appointments!.isNotEmpty ||
+                            _bookings.appointments != null) {
+                          for (int i = 0;
+                          i < _bookings.appointments!.length;
+                          i++) {
+                            Booking b = _bookings.appointments![i];
+                            keys.add(b.key);
+                          }
+                        }
+                        colRef.doc().set({
+                          'eventName': _subject,
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Pending',
+                          'tradieName': _tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+
+                        var k = await getKey(keys);
+                        colRef.doc(k).update({'key': k});
+
+                      }else{
+                        print('old booking');
+                        final meetings = <Booking>[];
+                        int remove = 0;
+                        for (int i = 0; i < _bookings.appointments!.length; i++) {
+                          Booking b = _bookings.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        _bookings.appointments!.removeAt(remove);
+                        _bookings.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
                         colRef.doc(_selectedAppointment?.key).update({
                           'eventName': _subject,
@@ -339,47 +401,22 @@ class BookingEditorState extends State<BookingEditor> {
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
                         });
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: _statusNames[_selectedStatusIndex],
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: _subject,
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _bookings.appointments!.add(meetings[0]);
+                        _bookings.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
                       }
-                      meetings.add(Booking(
-                        from: _startDate,
-                        to: _endDate,
-                        status: _statusNames[_selectedStatusIndex],
-                        consumerName: _consumerName,
-                        tradieName: _tradieName,
-                        description: _notes,
-                        eventName: _subject,
-                        consumerId: _consumerId,
-                        tradieId: _tradieId,
-                        key: selectedKey,
-                      ));
-                      _bookings.appointments!.add(meetings[0]);
-                      _bookings.notifyListeners(
-                          CalendarDataSourceAction.add, meetings);
-                      List<String> keys = <String>[];
-                      if (_bookings.appointments!.isNotEmpty ||
-                          _bookings.appointments != null) {
-                        for (int i = 0;
-                            i < _bookings.appointments!.length;
-                            i++) {
-                          Booking b = _bookings.appointments![i];
-                          keys.add(b.key);
-                        }
-                      }
-                      colRef.doc().set({
-                        'eventName': _subject,
-                        'from': _startDate.toString(),
-                        'to': _endDate.toString(),
-                        'status': 'Pending',
-                        'tradieName': _tradieName,
-                        'consumerName': _consumerName,
-                        'description': _notes,
-                        'key': selectedKey,
-                        'tradieId': _tradieId,
-                        'consumerId': _consumerId,
-                      });
-
-                      var k=await getKey(keys);
-                      colRef.doc(k).update({'key': k});
 
 
                       _selectedAppointment = null;
@@ -425,15 +462,14 @@ class BookingEditorState extends State<BookingEditor> {
     String newKey = '';
     await colRef.where('key', isEqualTo: '').get().then(
       (QuerySnapshot snapshot) {
-        if(snapshot.docs.length>1){
+        if (snapshot.docs.length > 1) {
           for (var b in snapshot.docs) {
             if (oldkeys.indexOf(b.id) == -1) {
-             var v=b.data() as Map<String,dynamic>;
-             if(v['consumerId']==user_consumerId){
-               newKey=b.id;
-               return newKey;
-             }
-
+              var v = b.data() as Map<String, dynamic>;
+              if (v['consumerId'] == user_consumerId) {
+                newKey = b.id;
+                return newKey;
+              }
             }
           }
         }
