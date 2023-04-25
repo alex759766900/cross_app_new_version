@@ -7,11 +7,8 @@ import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../Tradie/TradieBookingPage.dart';
 
-part 'StatusPicker.dart';
-
-part 'AppointmentEditor.dart';
+part 'BookingEditor.dart';
 
 part 'AddNonWorking.dart';
 
@@ -241,62 +238,6 @@ class TradieProfileState extends State<TradieProfilePage> {
             minimumAppointmentDuration: Duration(minutes: 60)));
   }
 
-  // void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
-  //   print(calendarTapDetails.targetElement.name);
-  //   if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
-  //       calendarTapDetails.targetElement != CalendarElement.appointment) {
-  //     return;
-  //   } else {
-  //     calendarController.view = CalendarView.day;
-  //     /*if (calendarController.view == CalendarView.month) {
-  //       calendarController.view = CalendarView.day;
-  //     }*/
-  //     if (calendarTapDetails.targetElement != CalendarElement.calendarCell) {
-  //       setState(() {
-  //         _selectedAppointment = null;
-  //         _isAllDay = false;
-  //         _selectedStatusIndex = 0;
-  //         //_selectedTimeZoneIndex = 0;
-  //         _subject = '';
-  //         _notes = '';
-  //         _tradie = '';
-  //         if (calendarTapDetails.appointments != null &&
-  //             calendarTapDetails.appointments!.length == 1) {
-  //           final Booking meetingDetails = calendarTapDetails.appointments![0];
-  //           _startDate = meetingDetails.from;
-  //           _endDate = meetingDetails.to;
-  //           _selectedStatusIndex = _statusNames.indexOf(meetingDetails.status);
-  //           _tradieName = meetingDetails.tradieName;
-  //           _consumerName = meetingDetails.consumerName;
-  //           _subject = meetingDetails.eventName == '(No title)'
-  //               ? ''
-  //               : meetingDetails.eventName;
-  //           _notes = meetingDetails.description;
-  //           selectedKey=meetingDetails.key;
-  //           _consumerId=meetingDetails.consumerId;
-  //           _tradieId=meetingDetails.tradieId;
-  //           _selectedAppointment = meetingDetails;
-  //           //如果返回appointments 为null，则说明是新的meeting,根据点击的时间点设置信息，并且跳转到appointment editor
-  //         } else {
-  //           final DateTime date = calendarTapDetails.date!;
-  //           _startDate = date;
-  //           _endDate = date.add(const Duration(hours: 1));
-  //         }
-  //         //点击当前存在的meeting只会返回list length 为1.
-  //
-  //         _startTime =
-  //             TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
-  //         _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
-  //         Navigator.push<Widget>(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (BuildContext context) => AppointmentEditor()),
-  //         );
-  //       });
-  //     }
-  //   }
-  // }
-
   void onCalendarTapped(CalendarTapDetails calendarTapDetails) {
     print(calendarTapDetails.targetElement.name);
     if (calendarController.view == CalendarView.month) {
@@ -390,4 +331,58 @@ class TradieProfileState extends State<TradieProfilePage> {
     _statusNames.add('Complete');
     _statusNames.add('Unavailable');
   }
+
+}
+class DataSource extends CalendarDataSource {
+  DataSource(List<Booking> source) {
+    appointments = source;
+  }
+
+  @override
+  String getSubject(int index) => appointments![index].eventName;
+
+  //@override
+  //String getStartTimeZone(int index) => appointments![index].startTimeZone;
+
+  @override
+  String getNotes(int index) => appointments![index].description;
+
+  /*@override
+  String getTradie(int index)=>appointments![index].toString();*/
+  //@override
+  //String getEndTimeZone(int index) => appointments![index].endTimeZone;
+
+  /*@override
+  Color getColor(int index) => appointments![index].status;*/
+
+  @override
+  DateTime getStartTime(int index) => appointments![index].from;
+
+  @override
+  DateTime getEndTime(int index) => appointments![index].to;
+}
+
+class Booking {
+  Booking(
+      {required this.from,
+        required this.to,
+        this.status = 'Pending',
+        this.eventName = '',
+        this.tradieName = '',
+        this.consumerName = '',
+        this.description = '',
+        this.key='',
+        this.consumerId='',
+        this.tradieId=''});
+
+  final String tradieName;
+  final String consumerName;
+  final String eventName;
+  DateTime from;
+  DateTime to;
+  String status;
+  String description;
+  String key;
+  String consumerId;
+  String tradieId;
 }

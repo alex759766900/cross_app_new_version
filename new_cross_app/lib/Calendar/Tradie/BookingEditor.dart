@@ -1,4 +1,4 @@
-part of booking_calendar;
+part of tradie_calendar;
 
 
 class BookingEditor extends StatefulWidget {
@@ -18,7 +18,7 @@ class BookingEditorState extends State<BookingEditor> {
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                 leading: const Text(''),
-                title: Text(_work),
+                title: Text(_subject),
             ),
             const Divider(
               height: 1.0,
@@ -214,6 +214,7 @@ class BookingEditorState extends State<BookingEditor> {
                 ),
                 onPressed: () {
                   colRef.doc(selectedKey).update({'status': 'Confirmed'});
+                  Navigator.pop(context);
                 },
               ),
             ),
@@ -297,16 +298,16 @@ class BookingEditorState extends State<BookingEditor> {
                           tradieId: _tradieId,
                           key: selectedKey,
                         ));
-                        _bookings.appointments!.add(meetings[0]);
-                        _bookings.notifyListeners(
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
                             CalendarDataSourceAction.add, meetings);
                         List<String> keys = <String>[];
-                        if (_bookings.appointments!.isNotEmpty ||
-                            _bookings.appointments != null) {
+                        if (_events.appointments!.isNotEmpty ||
+                            _events.appointments != null) {
                           for (int i = 0;
-                          i < _bookings.appointments!.length;
+                          i < _events.appointments!.length;
                           i++) {
-                            Booking b = _bookings.appointments![i];
+                            Booking b = _events.appointments![i];
                             keys.add(b.key);
                           }
                         }
@@ -330,22 +331,22 @@ class BookingEditorState extends State<BookingEditor> {
                         print('old booking');
                         final meetings = <Booking>[];
                         int remove = 0;
-                        for (int i = 0; i < _bookings.appointments!.length; i++) {
-                          Booking b = _bookings.appointments![i];
+                        for (int i = 0; i < _events.appointments!.length; i++) {
+                          Booking b = _events.appointments![i];
                           if (b.key == _selectedAppointment!.key) {
                             print('find');
                             remove = i;
                             break;
                           }
                         }
-                        _bookings.appointments!.removeAt(remove);
-                        _bookings.notifyListeners(CalendarDataSourceAction.remove,
+                        _events.appointments!.removeAt(remove);
+                        _events.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
                         colRef.doc(_selectedAppointment?.key).update({
                           'eventName': _subject,
                           'from': _startDate.toString(),
                           'to': _endDate.toString(),
-                          'status': 'Pending',
+                          'status': _statusNames[_selectedStatusIndex],
                           'tradieName': _tradieName,
                           'consumerName': _consumerName,
                           'description': _notes,
@@ -365,8 +366,8 @@ class BookingEditorState extends State<BookingEditor> {
                           tradieId: _tradieId,
                           key: selectedKey,
                         ));
-                        _bookings.appointments!.add(meetings[0]);
-                        _bookings.notifyListeners(
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
                             CalendarDataSourceAction.add, meetings);
                       }
                       _selectedAppointment = null;
@@ -388,16 +389,16 @@ class BookingEditorState extends State<BookingEditor> {
               onPressed: () {
                 if (_selectedAppointment != null) {
                   int remove = 0;
-                  for (int i = 0; i < _bookings.appointments!.length; i++) {
-                    Booking b = _bookings.appointments![i];
+                  for (int i = 0; i < _events.appointments!.length; i++) {
+                    Booking b = _events.appointments![i];
                     if (b.key == _selectedAppointment!.key) {
                       print('find');
                       remove = i;
                       break;
                     }
                   }
-                  _bookings.appointments!.removeAt(remove);
-                  _bookings.notifyListeners(
+                  _events.appointments!.removeAt(remove);
+                  _events.notifyListeners(
                       CalendarDataSourceAction.remove,
                       <Booking>[]..add(_selectedAppointment!));
                   try {
@@ -445,37 +446,5 @@ class BookingEditorState extends State<BookingEditor> {
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
   }
-  dynamic _isInterceptExistingAppointments(DateTime from, DateTime to) {
-    if(from == null || to==null ||_bookings ==null || _bookings.appointments == null || _bookings.appointments!.isEmpty)
-      return null;
-    for (int i = 0; i < _bookings.appointments!.length; i++) {
-      Booking appointment = _bookings.appointments![i];
-      if (_isSameDay(appointment.from, from)&&_isSameDay(appointment.to, to)&&(
-          (appointment.from.hour<from.hour&&from.hour<appointment.to.hour)
-          ||(appointment.from.hour<to.hour&&to.hour<appointment.to.hour)
-          ||(appointment.from.hour<from.hour&&to.hour<appointment.to.hour)
-          ||(appointment.from.hour==from.hour&&to.hour==appointment.to.hour)))
-      {
-        return appointment;
-      }
-    }
-    return null;
-  }
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    if (date1 == date2) {
-      return true;
-    }
 
-    if (date1 == null || date2 == null) {
-      return false;
-    }
-
-    if (date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day) {
-      return true;
-    }
-
-    return false;
-  }
 }
