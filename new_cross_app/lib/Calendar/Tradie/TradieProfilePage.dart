@@ -252,7 +252,7 @@ class TradieProfileState extends State<TradieProfilePage> {
       if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
           calendarTapDetails.targetElement != CalendarElement.appointment) {
         return;
-      } else {
+      } else if(calendarTapDetails.targetElement == CalendarElement.appointment) {
         setState(() {
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
