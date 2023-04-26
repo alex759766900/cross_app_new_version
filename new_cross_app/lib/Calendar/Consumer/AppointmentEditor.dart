@@ -271,7 +271,6 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                           _events.appointments!.indexOf(_selectedAppointment));
                       _events.notifyListeners(CalendarDataSourceAction.remove,
                           <Booking>[]..add(_selectedAppointment!));
-
                       try {
                         colRef.doc(_selectedAppointment?.key).delete();
                       } catch (e) {}
