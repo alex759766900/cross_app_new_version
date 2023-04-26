@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'card_form_screen.dart';
+
 
 
 void main() {
@@ -9,19 +11,9 @@ void main() {
 
 class StripeApp extends StatelessWidget{
   const StripeApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'checkout',
-      theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
-      ),
-      home:  MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({key, required this.title});
+
+
+
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -32,7 +24,7 @@ class MyHomePage extends StatelessWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +72,11 @@ class MyHomePage extends StatelessWidget {
 
               ElevatedButton(
                 child: Text("make a payment"),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder:(context) {
+                return CardFormScreen();}));}
+
               )
             ],
 
