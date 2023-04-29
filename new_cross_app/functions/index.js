@@ -1,10 +1,10 @@
 const functions = require("firebase-functions");
-//const stripe = require("stripe")(functions.config().stripe.testkey);
-const stripe = require('stripe')('sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI');
+const stripe = require("stripe")(functions.config().stripe.testkey);
+// const stripe = require('stripe')(functions.config().stripe.secret_key);
 
 const calculateOrderAmount = (items) => {
-  const prices = [];
-  const catalog = [
+  const prices = []; // Add 'let' before variable declaration
+  const catalog = [ // Add 'let' before variable declaration
     {"id": "0", "price": 2.99},
     {"id": "1", "price": 3.99},
     {"id": "2", "price": 4.99},
@@ -24,7 +24,7 @@ const generateResponse = function(intent) {
   switch (intent.status) {
     case "requires_action":
       return {
-        clientSecret: intent.clientSecret,
+        clientSecret: intent.client_secret,
         requiresAction: true,
         status: intent.status,
       };
@@ -34,7 +34,7 @@ const generateResponse = function(intent) {
       };
     case "succeeded":
       console.log("Payment succeeded");
-      return {clientSecret: intent.clientSecret, status: intent.status};
+      return {clientSecret: intent.client_secret, status: intent.status};
     default:
       return {error: "Failed"};
   }
@@ -42,13 +42,9 @@ const generateResponse = function(intent) {
 
 exports.StripePayEndpointMethodId =
 functions.https.onRequest(async (req, res)=>{
-  const {paymentMethodId, items, useStripeSdk，currency} = req.body;
-
-  console.log('req.body:  ',req.body);
-
+  const {useStripeSdk, paymentMethodId, currency, items} = req.body;
   // calculate Order Amount
   const orderAmount = calculateOrderAmount(items);
-  console.log('orderAmount:  ',orderAmount);
 
   try {
     if (paymentMethodId) {
@@ -58,15 +54,16 @@ functions.https.onRequest(async (req, res)=>{
         confirm: true,
         confirmation_method: "manual",
         payment_method: paymentMethodId,
+        currency: currency,
         use_stripe_sdk: useStripeSdk,
-        currency：'usd',
       };
-      console.log('params:',params)
       // Create a intent object
       const intent = await stripe.paymentIntents.create(params);
 
       console.log(`Intent: ${intent}`);
+
       return res.send(generateResponse(intent));
+
     }
     return res.sendStatus(400);
   } catch (e) {
@@ -91,37 +88,19 @@ functions.https.onRequest(async (req, res)=>{
   }
 });
 
+exports.StripeTransfer=
+functions.https.onRequest(async(req, res)=>{
+    const {destination_id, amount} = req.body;
 
-// From chatGPT
-//exports.stripePayEndpointMethodId = functions.https.onRequest(async (req, res) => {
-//  try {
-//    const { useStripeSdk, paymentMethodId, currency, items } = req.body;
-//    const { amount, description } = items[0];
-//    const paymentIntent = await stripe.paymentIntents.create({
-//      payment_method: paymentMethodId,
-//      amount,
-//      currency,
-//      description,
-//      confirm: useStripeSdk,
-//      metadata: {
-//        integration_check: 'accept_a_payment',
-//      },
-//    });
-//    res.json({
-//      clientSecret: paymentIntent.client_secret,
-//      requiresAction: paymentIntent.requires_action,
-//    });
-//  } catch (err) {
-//    res.status(500).json({ error: err.message });
-//  }
-//});
-//
-//exports.stripePayEndpointIntentId = functions.https.onRequest(async (req, res) => {
-//  try {
-//    const { paymentIntentId } = req.body;
-//    const paymentIntent = await stripe.paymentIntents.confirm(paymentIntentId);
-//    res.json(paymentIntent);
-//  } catch (err) {
-//    res.status(500).json({ error: err.message });
-//  }
-//});
+    try{
+        const params = {
+            amount: amount,
+            currency: 'aud',
+            destination: destination_id,
+        }
+        const transfer = await stripe.transfers.create(params);
+        return res.send(transfer);
+    } catch (e) {
+        return res.send({error: e.message});
+    }
+});

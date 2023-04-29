@@ -16,12 +16,12 @@ void main() async {
       stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
   await Stripe.instance.applySettings();
   // TODO Replace with your actual merchant identifier
-  // Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
-  runApp(const MyStripe());
+  //Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
+  runApp(const MyApp());
 }
 
-class MyStripe extends StatelessWidget {
-  const MyStripe({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

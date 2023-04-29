@@ -14,7 +14,6 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<PaymentCreateIntent>(_onPaymentCreateIntent);
     // /PaymentConfirmIntent
     on<PaymentConfirmIntent>(_onpaymentConfirmPayment);
-
   }
   void _onPaymentStart(PaymentStart event, Emitter<PaymentState> emit) {
     emit(state.copyWith(status: PaymentStatus.initial));
@@ -27,8 +26,9 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     final paymentMethod = await Stripe.instance.createPaymentMethod(
         params: PaymentMethodParams.card(
             paymentMethodData: PaymentMethodData(
-              billingDetails: event.billingDetails,
-            )));
+      billingDetails: event.billingDetails,
+    )));
+    print(paymentMethod.id);
     //String clientSecret;
     final paymentIntentResult = await _callPayEndpointMethodId(
       useStripeSdk: true,
@@ -36,35 +36,41 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       currency: 'usd',
       items: event.items,
     );
+
     if (paymentIntentResult['error'] != null) {
-      print(paymentIntentResult['error']);
+
       emit(state.copyWith(status: PaymentStatus.failure));
     }
 
     if (paymentIntentResult['clientSecret'] != null &&
         paymentIntentResult['requiresAction'] == null) {
+
       emit(state.copyWith(status: PaymentStatus.success));
     }
 
     if (paymentIntentResult['clientSecret'] != null &&
         paymentIntentResult['requiresAction'] == true) {
+
       final String clientSecret = paymentIntentResult['clientSecret'];
       add(PaymentConfirmIntent(clientSecret: clientSecret));
     }
+
   }
 
   void _onpaymentConfirmPayment(
       PaymentConfirmIntent event, Emitter<PaymentState> emit) async {
     try {
       final paymentIntent =
-      await Stripe.instance.handleNextAction(event.clientSecret);
+          await Stripe.instance.handleNextAction(event.clientSecret);
       if (paymentIntent.status == PaymentIntentsStatus.RequiresConfirmation) {
         Map<String, dynamic> results = await _callPayEndpointIntentId(
           paymentIntentId: paymentIntent.id,
         );
         if (results['error'] != null) {
+
           emit(state.copyWith(status: PaymentStatus.failure));
         } else {
+
           emit(state.copyWith(status: PaymentStatus.success));
         }
       }
@@ -73,6 +79,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       emit(state.copyWith(status: PaymentStatus.failure));
     }
   }
+
   Future<Map<String, dynamic>> _callPayEndpointIntentId({
     required String paymentIntentId,
   }) async {
@@ -88,8 +95,10 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         },
       ),
     );
+
     return json.decode(response.body);
   }
+
   Future<Map<String, dynamic>> _callPayEndpointMethodId({
     required bool useStripeSdk,
     required String paymentMethodId,
@@ -98,6 +107,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   }) async {
     final url = Uri.parse(
         'https://us-central1-jemma-b0fcd.cloudfunctions.net/StripePayEndpointMethodId');
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -110,10 +120,10 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         },
       ),
     );
+
     return jsonDecode(response.body);
   }
 }
-
 
 // import 'dart:convert';
 // import 'package:bloc/bloc.dart';
