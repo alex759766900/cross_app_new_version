@@ -16,7 +16,7 @@ void main() async {
       stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
   await Stripe.instance.applySettings();
   // TODO Replace with your actual merchant identifier
-  Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
+  //Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
   runApp(const MyApp());
 }
 

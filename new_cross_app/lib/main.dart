@@ -15,6 +15,7 @@ import 'package:new_cross_app/Sign_up/signup.dart';
 import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:new_cross_app/stripe/check_out.dart';
 import 'package:provider/provider.dart';
+import 'Calendar/RatePage.dart';
 import 'Login/providers/login.dart';
 import 'firebase_options.dart';
 
@@ -171,6 +172,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Home'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+              },
+            ),
+            ListTile(
+              title: const Text('Rate'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Rate()));
               },
             ),
             ListTile(

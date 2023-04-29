@@ -24,7 +24,7 @@ const generateResponse = function(intent) {
   switch (intent.status) {
     case "requires_action":
       return {
-        clientSecret: intent.clientSecret,
+        clientSecret: intent.client_secret,
         requiresAction: true,
         status: intent.status,
       };
@@ -34,7 +34,7 @@ const generateResponse = function(intent) {
       };
     case "succeeded":
       console.log("Payment succeeded");
-      return {clientSecret: intent.clientSecret, status: intent.status};
+      return {clientSecret: intent.client_secret, status: intent.status};
     default:
       return {error: "Failed"};
   }
@@ -42,7 +42,7 @@ const generateResponse = function(intent) {
 
 exports.StripePayEndpointMethodId =
 functions.https.onRequest(async (req, res)=>{
-  const {paymentMethodId, items, useStripeSdk} = req.body;
+  const {useStripeSdk, paymentMethodId, currency, items} = req.body;
   // calculate Order Amount
   const orderAmount = calculateOrderAmount(items);
 
@@ -54,13 +54,16 @@ functions.https.onRequest(async (req, res)=>{
         confirm: true,
         confirmation_method: "manual",
         payment_method: paymentMethodId,
+        currency: currency,
         use_stripe_sdk: useStripeSdk,
       };
       // Create a intent object
       const intent = await stripe.paymentIntents.create(params);
 
       console.log(`Intent: ${intent}`);
+
       return res.send(generateResponse(intent));
+
     }
     return res.sendStatus(400);
   } catch (e) {
@@ -83,4 +86,21 @@ functions.https.onRequest(async (req, res)=>{
   } catch (e) {
     return res.send({error: e.message});
   }
+});
+
+exports.StripeTransfer=
+functions.https.onRequest(async(req, res)=>{
+    const {destination_id, amount} = req.body;
+
+    try{
+        const params = {
+            amount: amount,
+            currency: 'aud',
+            destination: destination_id,
+        }
+        const transfer = await stripe.transfers.create(params);
+        return res.send(transfer);
+    } catch (e) {
+        return res.send({error: e.message});
+    }
 });
