@@ -234,6 +234,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
     _statusNames.add('Working');
     _statusNames.add('Rating');
     _statusNames.add('Complete');
+    _statusNames.add('Unavailable');
   }
 
 }

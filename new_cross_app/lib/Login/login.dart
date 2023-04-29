@@ -136,6 +136,7 @@ class _LoginState extends State<LoginPage> {
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(emailController.text);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
+          await HelperFunctions.saveUserIdSF(snapshot.docs[0]['uid']);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const ChatRoom()));
         } else {

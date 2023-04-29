@@ -17,9 +17,12 @@ class CardFormScreen extends StatelessWidget {
           children: [
             Text('Card Form', style: Theme.of(context).textTheme.headline5),
             const SizedBox(height: 20),
+
             // credit card form
             CardFormField(controller: CardFormEditController()),
+
             const SizedBox(height: 10),
+
             // pay button
             ElevatedButton(
                 onPressed: () {},

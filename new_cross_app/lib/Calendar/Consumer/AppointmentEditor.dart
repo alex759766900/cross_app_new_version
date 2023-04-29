@@ -1,6 +1,5 @@
 part of booking_Calendar;
 
-
 class AppointmentEditor extends StatefulWidget {
   const AppointmentEditor({super.key});
 
@@ -19,8 +18,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                 leading: const Text(''),
-                title: Text(_subject)
-            ),
+                title: Text(_subject)),
             const Divider(
               height: 1.0,
               thickness: 1,
@@ -35,22 +33,21 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       Expanded(
                         flex: 7,
                         child: GestureDetector(
-                            child: Text(
-                                DateFormat('EEE, MMM dd yyyy')
-                                    .format(_startDate),
-                                textAlign: TextAlign.left),
-                            ),
+                          child: Text(
+                              DateFormat('EEE, MMM dd yyyy').format(_startDate),
+                              textAlign: TextAlign.left),
+                        ),
                       ),
                       Expanded(
                           flex: 3,
                           child: false
                               ? const Text('')
                               : GestureDetector(
-                              child: Text(
-                                DateFormat('hh:mm a').format(_startDate),
-                                textAlign: TextAlign.right,
-                              ),
-                             )),
+                                  child: Text(
+                                    DateFormat('hh:mm a').format(_startDate),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                )),
                     ])),
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -61,11 +58,11 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       Expanded(
                         flex: 7,
                         child: GestureDetector(
-                            child: Text(
-                              DateFormat('EEE, MMM dd yyyy').format(_endDate),
-                              textAlign: TextAlign.left,
-                            ),
-                            /*onTap: () async {
+                          child: Text(
+                            DateFormat('EEE, MMM dd yyyy').format(_endDate),
+                            textAlign: TextAlign.left,
+                          ),
+                          /*onTap: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
                                 initialDate: _endDate,
@@ -92,18 +89,19 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                                   }
                                 });
                               }
-                            }*/),
+                            }*/
+                        ),
                       ),
                       Expanded(
                           flex: 3,
                           child: _isAllDay
                               ? const Text('')
                               : GestureDetector(
-                              child: Text(
-                                DateFormat('hh:mm a').format(_endDate),
-                                textAlign: TextAlign.right,
-                              ),
-                              )),
+                                  child: Text(
+                                    DateFormat('hh:mm a').format(_endDate),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                )),
                     ])),
             const Divider(
               height: 1.0,
@@ -128,6 +126,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               title: Text(
                 _statusNames[_selectedStatusIndex],
               ),
+
               /*onTap: () {
                 showDialog<Widget>(
                   context: context,
@@ -179,118 +178,114 @@ class AppointmentEditorState extends State<AppointmentEditor> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-            //最上方一行 new event
-            appBar: AppBar(
-              title: Text(getTile()),
-              backgroundColor: _colorCollection[_selectedStatusIndex],
-              //x 按钮
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+          //最上方一行 new event
+          appBar: AppBar(
+            title: Text(getTile()),
+            backgroundColor: _colorCollection[_selectedStatusIndex],
+            //x 按钮
+            leading: IconButton(
+              icon: const Icon(
+                Icons.close,
+                color: Colors.white,
               ),
-              // √ botton
-              actions: <Widget>[
-                IconButton(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    icon: const Icon(
-                      Icons.done,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      final List<Booking> meetings = <Booking>[];
-                      //如果是已存在的appointment，从列表中移除，加上更改的
-                      print(_selectedAppointment!.key);
-                      print(_selectedAppointment.toString());
-
-                      if (_selectedAppointment != null) {
-                        int remove=0;
-                        for (int i=0; i<_events.appointments!.length;i++){
-                          Booking b=_events.appointments![i];
-                          if (b.key==_selectedAppointment!.key){
-                            print('find');
-                           remove=i;
-                           break;
-                          }
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            // √ botton
+            actions: <Widget>[
+              IconButton(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                  icon: const Icon(
+                    Icons.done,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    final List<Booking> meetings = <Booking>[];
+                    //如果是已存在的appointment，从列表中移除，加上更改的
+                    if (_selectedAppointment != null) {
+                      int remove = 0;
+                      for (int i = 0; i < _events.appointments!.length; i++) {
+                        Booking b = _events.appointments![i];
+                        if (b.key == _selectedAppointment!.key) {
+                          print('find');
+                          remove = i;
+                          break;
                         }
-                        _events.appointments!.removeAt(remove);
-                        print(_events.appointments!.length);
-                        _events.notifyListeners(CalendarDataSourceAction.remove, <Booking>[]..add(_selectedAppointment!));}
-                      meetings.add(Booking(
+                      }
+                      _events.appointments!.removeAt(remove);
+                      print(_events.appointments!.length);
+                      _events.notifyListeners(CalendarDataSourceAction.remove,
+                          <Booking>[]..add(_selectedAppointment!));
+                    }
+                    meetings.add(Booking(
                         from: _startDate,
                         to: _endDate,
                         status: _statusNames[_selectedStatusIndex],
-                        /*startTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],
-                        endTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],*/
                         description: _notes,
-                        //isAllDay: _isAllDay,
                         eventName: _subject == '' ? '(No title)' : _subject,
-                        consumerName: '',
-                        tradieName: '',
+                        consumerName: _consumerName,
+                        tradieName: _tradieName,
                         key: selectedKey,
+                        consumerId: _consumerId,
+                        tradieId: _tradieId
+
                         ///eventName: _subject =_subject,
-                      ));
+                        ));
 
-                      _events.appointments!.add(meetings[0]);
+                    _events.appointments!.add(meetings[0]);
 
-                      _events.notifyListeners(
-                          CalendarDataSourceAction.add, meetings);
-                      colRef.doc(_selectedAppointment?.key).update({
-                        'eventName': _subject,
-                        'from': _startDate.toString(),
-                        'to': _endDate.toString(),
-                        'status':'Pending',
-                        'tradieName':_tradieName,
-                        'consumerName':_consumerName,
-                        'description':_notes,
-                        'key':selectedKey,
-                        //TODO: Add new variables to store data
-                        'tradieId':_tradieId,
-                        'consumerId':_consumerId,
-                      });
+                    _events.notifyListeners(
+                        CalendarDataSourceAction.add, meetings);
+                    colRef.doc(_selectedAppointment?.key).update({
+                      'eventName': _subject,
+                      'from': _startDate.toString(),
+                      'to': _endDate.toString(),
+                      'status': 'Pending',
+                      'tradieName': _tradieName,
+                      'consumerName': _consumerName,
+                      'description': _notes,
+                      'key': selectedKey,
+                      'tradieId': _tradieId,
+                      'consumerId': _consumerId,
+                    });
+                    _selectedAppointment = null;
+
+                    //_consumer.bookings.add(meetings[0]);
+                    Navigator.pop(context);
+                  })
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+            child: Stack(
+              children: <Widget>[_getAppointmentEditor(context)],
+            ),
+          ),
+          floatingActionButton: _selectedAppointment == null
+              ? const Text('')
+              : FloatingActionButton(
+                  onPressed: () {
+                    if (_selectedAppointment != null) {
+                      _events.appointments!.removeAt(
+                          _events.appointments!.indexOf(_selectedAppointment));
+                      _events.notifyListeners(CalendarDataSourceAction.remove,
+                          <Booking>[]..add(_selectedAppointment!));
+                      try {
+                        colRef.doc(_selectedAppointment?.key).delete();
+                      } catch (e) {}
                       _selectedAppointment = null;
-
-                      //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
-                    })
-              ],
-            ),
-            body: Padding(
-              padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
-              child: Stack(
-                children: <Widget>[_getAppointmentEditor(context)],
-              ),
-            ),
-            floatingActionButton: _selectedAppointment == null
-                ? const Text('')
-                : FloatingActionButton(
-              onPressed: () {
-                if (_selectedAppointment != null) {
-                  _events.appointments!.removeAt(_events.appointments!
-                      .indexOf(_selectedAppointment));
-                  _events.notifyListeners(CalendarDataSourceAction.remove,
-                      <Booking>[]..add(_selectedAppointment!));
-
-                  try {
-                    colRef.doc(_selectedAppointment?.key).delete();
-                  } catch (e) {}
-                  _selectedAppointment = null;
-                  Navigator.pop(context);
-                }
-              },
-              child:
-                const Text('Cancel',selectionColor: Colors.white,),
-              /*const Icon(Icons.delete_outline, color: Colors.white),*/
-              backgroundColor: Colors.red,
-            )));
+                    }
+                  },
+                  child: const Text(
+                    'Cancel',
+                    selectionColor: Colors.white,
+                  ),
+                  /*const Icon(Icons.delete_outline, color: Colors.white),*/
+                  backgroundColor: Colors.red,
+                ),
+        ));
   }
 
   String getTile() {

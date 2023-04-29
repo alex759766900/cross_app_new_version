@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.6"
+  animated_text_kit:
+    dependency: "direct main"
+    description:
+      name: animated_text_kit
+      sha256: "37392a5376c9a1a503b02463c38bc0342ef814ddbb8f9977bc90f2a84b22fa92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.2"
   args:
     dependency: transitive
     description:
@@ -34,7 +42,7 @@ packages:
     source: hosted
     version: "2.10.0"
   bloc:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: bloc
       sha256: "658a5ae59edcf1e58aac98b000a71c762ad8f46f1394c34a52050cafb3e11a80"
@@ -113,6 +121,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.0"
+  cloud_functions:
+    dependency: "direct main"
+    description:
+      name: cloud_functions
+      sha256: e22ff122e75ccb6d9d521415d35c25807ba6300932ec3c8ca8ccb73dc5aa39b6
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.1"
+  cloud_functions_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_functions_platform_interface
+      sha256: d92bd40b3fbcfe32babac91c6423725ace783880f9d06c7c92d44249afc3abfb
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.1"
+  cloud_functions_web:
+    dependency: transitive
+    description:
+      name: cloud_functions_web
+      sha256: deffdf2f54d47d88192b82d331065f4a419e49616d1b662785af64556a1760ce
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.1"
   collection:
     dependency: transitive
     description:
@@ -448,6 +480,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  getwidget:
+    dependency: "direct main"
+    description:
+      name: getwidget
+      sha256: "6bdf191f91de5f80f9abd49e3cffaef66256167aaa091626ac78d5c81c645335"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: bd7e671d26fd39c78cba82070fa34ef1f830b0e7ed1aeebccabc6561302a7ee5
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.9"
   google_fonts:
     dependency: "direct main"
     description:
@@ -973,6 +1021,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  url_strategy:
+    dependency: "direct main"
+    description:
+      name: url_strategy
+      sha256: "42b68b42a9864c4d710401add17ad06e28f1c1d5500c93b98c431f6b0ea4ab87"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   uuid:
     dependency: transitive
     description:

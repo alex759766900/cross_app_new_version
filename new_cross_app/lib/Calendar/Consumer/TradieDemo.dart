@@ -42,8 +42,7 @@ class TradieDemoState extends State<TradieDemo> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => new ConsumerBooking(
-                                        tradie: 'Tom',
-                                        work: 'Wall Repair',
+                                        tradie: '7ylyCreV44uORAfvRxJT'
                                       )));
                         },
                         child: const Text(
@@ -68,8 +67,8 @@ class TradieDemoState extends State<TradieDemo> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => new ConsumerBooking(
-                                        tradie: 'Jack',
-                                        work: 'Wall Repair',
+                                        tradie: '7ylyCreV44uORAfvRxJT',
+
                                       )));
                         },
                         child: const Text(

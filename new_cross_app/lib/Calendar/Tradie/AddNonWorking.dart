@@ -16,10 +16,9 @@ class AddNonWorkingState extends State<AddNonWorking> {
           children: <Widget>[
             //Booking Title
             ListTile(
-              contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-              leading: const Text(''),
-              title: Text('Unavailable')
-            ),
+                contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+                leading: const Text(''),
+                title: Text('Unavailable')),
             const Divider(
               height: 1.0,
               thickness: 1,
@@ -192,7 +191,7 @@ class AddNonWorkingState extends State<AddNonWorking> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(user_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -200,13 +199,13 @@ class AddNonWorkingState extends State<AddNonWorking> {
             ),
             //Status
             ListTile(
-                contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
-                leading: Icon(Icons.lens,
-                    color:_colorCollection[_statusNames.indexOf('Unavailable')]),
-                title: Text(
-                 'Unavailable',
-                ),
-                /*onTap: () {
+              contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+              leading: Icon(Icons.lens,
+                  color: _colorCollection[_statusNames.indexOf('Unavailable')]),
+              title: Text(
+                'Unavailable',
+              ),
+              /*onTap: () {
                   showDialog<Widget>(
                     context: context,
                     barrierDismissible: true,
@@ -214,7 +213,8 @@ class AddNonWorkingState extends State<AddNonWorking> {
                       return _ColorPicker();
                     },
                   ).then((dynamic value) => setState(() {}));
-                }*/),
+                }*/
+            ),
             const Divider(
               height: 1.0,
               thickness: 1,
@@ -259,7 +259,8 @@ class AddNonWorkingState extends State<AddNonWorking> {
             //最上方一行 new event
             appBar: AppBar(
               title: Text(getTile()),
-              backgroundColor: _colorCollection[_statusNames.indexOf('Unavailable')],
+              backgroundColor:
+                  _colorCollection[_statusNames.indexOf('Unavailable')],
               //x 按钮
               leading: IconButton(
                 icon: const Icon(
@@ -280,8 +281,8 @@ class AddNonWorkingState extends State<AddNonWorking> {
                     ),
                     onPressed: () async {
                       final Booking? newTimeAppointment =
-                      _isInterceptExistingAppointments(
-                          _startDate,_endDate);
+                          _isInterceptExistingAppointments(
+                              _startDate, _endDate);
                       AlertDialog alert_conflict;
                       if (newTimeAppointment != null) {
                         Widget okButton = TextButton(
@@ -299,42 +300,59 @@ class AddNonWorkingState extends State<AddNonWorking> {
                         );
 
                         await showDialog<bool>(
-                      context: context,
-                      builder: (BuildContext context) {
-                      return alert_conflict;
-                      },
-                      );
-                      return;
+                          context: context,
+                          builder: (BuildContext context) {
+                            return alert_conflict;
+                          },
+                        );
+                        return;
                       }
                       final List<Booking> meetings = <Booking>[];
                       //如果是已存在的appointment，从列表中移除，加上更改的
-                      if (_selectedAppointment != null) {
-                        _events.appointments!.removeAt(_events.appointments!
-                            .indexOf(_selectedAppointment));
-                        _events.notifyListeners(CalendarDataSourceAction.remove,
-                            <Booking>[]..add(_selectedAppointment!));
+                      if (_selectedAppointment == null) {
+                        print('new booking');
+                        final meetings = <Booking>[];
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: "Unavailable",
+                          consumerName: _consumerName,
+                          tradieName: user_tradieName,
+                          description: _notes,
+                          eventName: "Unavailable",
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
+                        List<String> keys = <String>[];
+                        if (_events.appointments!.isNotEmpty ||
+                            _events.appointments != null) {
+                          for (int i = 0;
+                              i < _events.appointments!.length;
+                              i++) {
+                            Booking b = _events.appointments![i];
+                            keys.add(b.key);
+                          }
+                        }
+                        colRef.doc().set({
+                          'eventName': "Unavailable",
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Unavailable',
+                          'tradieName': user_tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+
+                        var k = await getKey(keys);
+                        colRef.doc(k).update({'key': k});
                       }
-                      meetings.add(Booking(
-                        from: _startDate,
-                        to: _endDate,
-                        status: 'Unavailable',
-                        /*startTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],
-                        endTimeZone: _selectedTimeZoneIndex == 0
-                            ? ''
-                            : _timeZoneCollection[_selectedTimeZoneIndex],*/
-                        description: _notes,
-                        //isAllDay: _isAllDay,
-                        eventName: 'Unavailable',
-
-                        ///eventName: _subject =_subject,
-                      ));
-
-                      _events.appointments!.add(meetings[0]);
-
-                      _events.notifyListeners(
-                          CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
@@ -370,25 +388,62 @@ class AddNonWorkingState extends State<AddNonWorking> {
                   )));
   }
 
+  Future<String> getKey(List<String> oldkeys) async {
+    String newKey = '';
+    await colRef.where('key', isEqualTo: '').get().then(
+      (QuerySnapshot snapshot) {
+        if (snapshot.docs.length > 1) {
+          for (var b in snapshot.docs) {
+            if (oldkeys.indexOf(b.id) == -1) {
+              var v = b.data() as Map<String, dynamic>;
+              if (v['consumerId'] == _consumerId) {
+                newKey = b.id;
+                return newKey;
+              }
+            }
+          }
+        }
+        for (var b in snapshot.docs) {
+          if (oldkeys.indexOf(b.id) == -1) {
+            newKey = b.id;
+            print(newKey);
+            return newKey;
+          }
+        }
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return newKey;
+  }
+
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
   }
+
   dynamic _isInterceptExistingAppointments(DateTime from, DateTime to) {
-    if(from == null || to==null ||_events ==null || _events.appointments == null || _events.appointments!.isEmpty)
-      return null;
+    if (from == null ||
+        to == null ||
+        _events == null ||
+        _events.appointments == null ||
+        _events.appointments!.isEmpty) return null;
     for (int i = 0; i < _events.appointments!.length; i++) {
       Booking appointment = _events.appointments![i];
-      if (_isSameDay(appointment.from, from)&&_isSameDay(appointment.to, to)&&(
-          (appointment.from.hour<from.hour&&from.hour<appointment.to.hour)
-              ||(appointment.from.hour<to.hour&&to.hour<appointment.to.hour)
-              ||(appointment.from.hour<from.hour&&to.hour<appointment.to.hour)
-              ||(appointment.from.hour==from.hour&&to.hour==appointment.to.hour)))
-      {
+      if (_isSameDay(appointment.from, from) &&
+          _isSameDay(appointment.to, to) &&
+          ((appointment.from.hour < from.hour &&
+                  from.hour < appointment.to.hour) ||
+              (appointment.from.hour < to.hour &&
+                  to.hour < appointment.to.hour) ||
+              (appointment.from.hour < from.hour &&
+                  to.hour < appointment.to.hour) ||
+              (appointment.from.hour == from.hour &&
+                  to.hour == appointment.to.hour))) {
         return appointment;
       }
     }
     return null;
   }
+
   bool _isSameDay(DateTime date1, DateTime date2) {
     if (date1 == date2) {
       return true;

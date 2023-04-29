@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/Home%20Page/home.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/chat/screens/chat_screen.dart';
@@ -15,6 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
+//import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'package:new_cross_app/stripe/check_out.dart';
 import 'package:provider/provider.dart';
 import 'Login/providers/login.dart';
 import 'firebase_options.dart';
@@ -170,9 +173,10 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('FirebaseTest'),
+              title: const Text('Home'),
               onTap: () {
-                var data = getFirebaseExample();
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Home()));
               },
             ),
             ListTile(
@@ -196,6 +200,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => const ChatRoom()));
               },
             ),
+            ListTile(
+              title: const Text('Check Out'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const StripeApp()));
+              },
+            )
           ],
         ),
       ),
