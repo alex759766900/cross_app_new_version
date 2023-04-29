@@ -22,12 +22,10 @@ class PaymentCreateIntent extends PaymentEvent {
   List<Object> get props => [billingDetails, items];
 }
 
-class PaymentConfirmPayment extends PaymentEvent {
+class PaymentConfirmIntent extends PaymentEvent {
   final String clientSecret;
 
-  const PaymentConfirmPayment({
-    required this.clientSecret,
-  });
+  const PaymentConfirmIntent({required this.clientSecret,});
 
   @override
   List<Object> get props => [clientSecret];
