@@ -1,21 +1,22 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+//import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:new_cross_app/Login/providers/login.dart';
+//import 'package:http/http.dart' as http;
+import 'package:new_cross_app/Login/login.dart';
+//import 'package:new_cross_app/Login/providers/login.dart';
 //import 'package:jemma/routes.dart';
 //import 'package:new_cross_app/Login/utils/adaptive.dart';
 import 'package:new_cross_app/Login/utils/constants.dart';
-import 'package:new_cross_app/Login/utils/notification.dart';
+//import 'package:new_cross_app/Login/utils/notification.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/decoration_image_container.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/input_fields.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/show_snackbar.dart';
-import 'package:new_cross_app/Sign_up/widgets/signup/signup_google_row.dart';
+import 'package:new_cross_app/Sign_up/widgets/signup/login_row.dart';
 import 'package:logger/logger.dart';
 //import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -24,9 +25,7 @@ import '../main.dart';
 import '../services/auth_service.dart';
 
 /// Screen through which Customer users can Sign up.
-///
-/// Idea of using SizedBox for spacing instead of padding is from this:
-/// https://stackoverflow.com/a/52774984/11200630
+
 class SignupComstomer extends StatefulWidget {
   const SignupComstomer({Key? key}) : super(key: key);
 
@@ -109,7 +108,7 @@ class _SignupComstomerPageState extends State<SignupComstomer> {
 
                       SizedBox(height: max(1.75.ph(size), 10)),
 
-                      SignupGoogle(size: size)
+                      LoginRow(size: size)
                     ]),
                   ),
                 ),
@@ -126,12 +125,6 @@ class _SignupComstomerPageState extends State<SignupComstomer> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-
-        /*floatingActionButton: isWeb()? null: FloatingActionButton(
-          backgroundColor: Colors.white,
-          onPressed: () { Navigator.pop(context);},
-          child: const Icon(Icons.arrow_back, color: Colors.black87),
-        )*/
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () => {
@@ -152,7 +145,8 @@ class _SignupComstomerPageState extends State<SignupComstomer> {
               emailController.text, passwordController.text)
           .then((value) {
         if (value == true) {
-          // saving the shared preference state
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const LoginPage()));
         } else {
           showSnackbar(context, kMenuColor, value);
           setState(() {
