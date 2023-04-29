@@ -1,10 +1,10 @@
 const functions = require("firebase-functions");
-const stripe = require("stripe")(functions.config().stripe.testkey);
-// const stripe = require('stripe')(functions.config().stripe.secret_key);
+//const stripe = require("stripe")(functions.config().stripe.testkey);
+const stripe = require('stripe')('sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI');
 
 const calculateOrderAmount = (items) => {
-  const prices = []; // Add 'let' before variable declaration
-  const catalog = [ // Add 'let' before variable declaration
+  const prices = [];
+  const catalog = [
     {"id": "0", "price": 2.99},
     {"id": "1", "price": 3.99},
     {"id": "2", "price": 4.99},
@@ -42,9 +42,13 @@ const generateResponse = function(intent) {
 
 exports.StripePayEndpointMethodId =
 functions.https.onRequest(async (req, res)=>{
-  const {paymentMethodId, items, useStripeSdk} = req.body;
+  const {paymentMethodId, items, useStripeSdk，currency} = req.body;
+
+  console.log('req.body:  ',req.body);
+
   // calculate Order Amount
   const orderAmount = calculateOrderAmount(items);
+  console.log('orderAmount:  ',orderAmount);
 
   try {
     if (paymentMethodId) {
@@ -55,7 +59,9 @@ functions.https.onRequest(async (req, res)=>{
         confirmation_method: "manual",
         payment_method: paymentMethodId,
         use_stripe_sdk: useStripeSdk,
+        currency：'usd',
       };
+      console.log('params:',params)
       // Create a intent object
       const intent = await stripe.paymentIntents.create(params);
 
@@ -84,3 +90,38 @@ functions.https.onRequest(async (req, res)=>{
     return res.send({error: e.message});
   }
 });
+
+
+// From chatGPT
+//exports.stripePayEndpointMethodId = functions.https.onRequest(async (req, res) => {
+//  try {
+//    const { useStripeSdk, paymentMethodId, currency, items } = req.body;
+//    const { amount, description } = items[0];
+//    const paymentIntent = await stripe.paymentIntents.create({
+//      payment_method: paymentMethodId,
+//      amount,
+//      currency,
+//      description,
+//      confirm: useStripeSdk,
+//      metadata: {
+//        integration_check: 'accept_a_payment',
+//      },
+//    });
+//    res.json({
+//      clientSecret: paymentIntent.client_secret,
+//      requiresAction: paymentIntent.requires_action,
+//    });
+//  } catch (err) {
+//    res.status(500).json({ error: err.message });
+//  }
+//});
+//
+//exports.stripePayEndpointIntentId = functions.https.onRequest(async (req, res) => {
+//  try {
+//    const { paymentIntentId } = req.body;
+//    const paymentIntent = await stripe.paymentIntents.confirm(paymentIntentId);
+//    res.json(paymentIntent);
+//  } catch (err) {
+//    res.status(500).json({ error: err.message });
+//  }
+//});

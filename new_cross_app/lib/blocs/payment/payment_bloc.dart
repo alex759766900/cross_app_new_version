@@ -9,7 +9,7 @@ part 'payment_event.dart';
 part 'payment_state.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
-  PaymentBloc() : super(PaymentInitial()) {
+  PaymentBloc() : super(const PaymentState()) {
     on<PaymentStart>(_onPaymentStart);
     on<PaymentCreateIntent>(_onPaymentCreateIntent);
     // /PaymentConfirmIntent
@@ -112,8 +112,6 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     );
     return jsonDecode(response.body);
   }
-
-
 }
 
 
