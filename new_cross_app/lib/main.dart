@@ -14,6 +14,7 @@ import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
+import 'package:new_cross_app/Profile/profile.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:provider/provider.dart';
 import 'Login/providers/login.dart';
@@ -194,6 +195,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const ChatRoom()));
+              },
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Profile()));
               },
             ),
           ],
