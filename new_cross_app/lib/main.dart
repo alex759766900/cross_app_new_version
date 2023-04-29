@@ -12,6 +12,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
 import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'package:new_cross_app/stripe/check_out.dart';
 import 'package:provider/provider.dart';
 import 'Login/providers/login.dart';
 import 'firebase_options.dart';
@@ -192,6 +193,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => const Signup()));
               },
             ),
+            ListTile(
+              title: const Text('Check Out'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const StripeApp()));
+              },
+            )
           ],
         ),
       ),
