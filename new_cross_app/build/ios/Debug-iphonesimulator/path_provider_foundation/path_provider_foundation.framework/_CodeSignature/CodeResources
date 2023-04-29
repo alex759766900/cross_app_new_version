@@ -14,7 +14,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		SS6pm57Ki+Mtq1NrKYu3CfymBkU=
+		XHgfgqGuBLVK6cFhe+ogBP5Pnz4=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -22,11 +22,11 @@
 		</data>
 		<key>Modules/path_provider_foundation.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		I9wG7xAx/Igq/pKXKZJLbCgq67s=
+		KmLEABVJMgPRXnzCyPsx0tcnyvo=
 		</data>
 		<key>Modules/path_provider_foundation.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		qjYOFA5C3PE+nRKMHRR/YjmwT6o=
+		/uCskHN/iu8MPdW3OhQ3qf9Dxrg=
 		</data>
 		<key>Modules/path_provider_foundation.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -38,7 +38,7 @@
 		</data>
 		<key>Modules/path_provider_foundation.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		mfPtX3SYSJzFj3Xsm07it9QMtI8=
+		D6k3tAPe+ZXfBqzHWTs/xpkbnNs=
 		</data>
 		<key>Modules/path_provider_foundation.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -50,7 +50,7 @@
 		</data>
 		<key>Modules/path_provider_foundation.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		AbIvqcqSdDz4F489PChJC76NJek=
+		50hNpkUDjEOm/TJWHd/k14LsdXg=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -80,14 +80,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Aj9aUrzWrqzY5y4tp8l/c3TsVcYlVmRFK6rqngSL7Gc=
+			XQA9Z5YV+KczFlMN1GRGDJ6+CKujdBcgJopgJ9qu4H4=
 			</data>
 		</dict>
 		<key>Modules/path_provider_foundation.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			W17Pt0a0X3YqaBtiMujSKBqQT1k9qqfhOQV4KNg6ioc=
+			flWvRY6iBF7JdfFPL6QALa38MF+xnG/jgX/BnORkKwk=
 			</data>
 		</dict>
 		<key>Modules/path_provider_foundation.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -108,7 +108,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			uWqSluabNgiODdMlKKC4+kUq8RSPuM2CfbunFTvN6WE=
+			+rusXzz029D3SoyS7pyGGeGcnX0sBZ04ctdmkxwVBrs=
 			</data>
 		</dict>
 		<key>Modules/path_provider_foundation.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -129,7 +129,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HksIDgaqYwbr9dlu4RBdXedaLtzBl972r1h93h0YdEs=
+			BZSWUlu/Iqo1Ihiv4agO3J+QOAfDVk+wY81FJOmX0z8=
 			</data>
 		</dict>
 	</dict>

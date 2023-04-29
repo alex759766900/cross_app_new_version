@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/Home%20Page/home.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/stripe/card_form_screen.dart';
@@ -167,9 +168,9 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('FirebaseTest'),
+              title: const Text('Home'),
               onTap: () {
-                var data = getFirebaseExample();
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
               },
             ),
             ListTile(

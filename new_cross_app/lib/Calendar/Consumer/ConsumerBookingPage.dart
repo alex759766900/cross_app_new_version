@@ -1,16 +1,8 @@
 library booking_calendar;
 
-//import 'dart:js_util';
-
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
-import 'package:new_cross_app/Calendar/Consumer/Tradie.dart';
-import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
-import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
 part 'BookingEditor.dart';
@@ -31,7 +23,6 @@ List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
 List<String> _statusNames = <String>[];
 String _tradie = '';
-String _work = '';
 String selectedKey='';
 String _tradieName = '';
 String _consumerName='';
@@ -54,6 +45,7 @@ String _subject = '';
 String _notes = '';
 
 class ConsumerBookingState extends State<ConsumerBooking> {
+
   late Stream<QuerySnapshot> _usersStream;
   String tradie;
   ConsumerBookingState(this.tradie){
@@ -70,7 +62,8 @@ class ConsumerBookingState extends State<ConsumerBooking> {
   CalendarController calendarController = CalendarController();
   @override
   void initState() {
-    appointments = getBookingDetails(_tradie);
+    setUpBooking();
+    appointments = <Booking>[];
     _bookings = DataSource(appointments);
     _selectedAppointment = null;
     _selectedStatusIndex = 0;
@@ -154,7 +147,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
           if (booking.consumerId != user_consumerId) {
             return Container(
               color: Colors.deepOrange.withOpacity(0.5),
-              child: Text('Unavaliable'),
+              child: const Text('Unavaliable'),
             );
           } else {
             return Container(
@@ -269,14 +262,15 @@ class Booking {
   Booking(
       {required this.from,
       required this.to,
-      this.status = 'Pending',
+      this.status = '',
       this.eventName = '',
       this.tradieName = '',
       this.consumerName = '',
       this.description = '',
       this.key='',
       this.consumerId='',
-      this.tradieId=''});
+      this.tradieId='',
+      this.quote=0});
 
   final String tradieName;
   final String consumerName;
@@ -288,16 +282,17 @@ class Booking {
   String key;
   String consumerId;
   String tradieId;
+  num quote;
 }
 
-List<Booking> getBookingDetails(String tradie) {
+void setUpBooking() {
   _statusNames.add('Pending');
   _statusNames.add('Confirmed');
   _statusNames.add('Working');
   _statusNames.add('Rating');
   _statusNames.add('Complete');
+  _statusNames.add('Unavailable');
 
-  _colorCollection = <Color>[];
   _colorCollection.add(const Color(0xFF0F8644));
   _colorCollection.add(const Color(0xFF8B1FA9));
   _colorCollection.add(const Color(0xFFD20100));
@@ -307,42 +302,5 @@ List<Booking> getBookingDetails(String tradie) {
   _colorCollection.add(const Color(0xFF3D4FB5));
   _colorCollection.add(const Color(0xFFE47C73));
   _colorCollection.add(const Color(0xFF636363));
-  List<Booking> bookings = <Booking>[];
-  DateTime today = DateTime.now();
-  if (tradie == 'Jack') {
-    Booking b1 = Booking(
-        from: DateTime(today.year, today.month, today.day, 10, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 11, 0, 0),
-        tradieName: 'Jack',
-        consumerName: 'Black',
-        eventName: 'Painting',
-        status: 'Pending');
-    Booking b2 = Booking(
-        from: DateTime(today.year, today.month, today.day, 12, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 14, 0, 0),
-        tradieName: 'Jack',
-        consumerName: 'Lance',
-        eventName: 'Painting',
-        status: 'Pending');
-    bookings.add(b1);
-    bookings.add(b2);
-  } else {
-    Booking b1 = Booking(
-        from: DateTime(today.year, today.month, today.day, 10, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 11, 0, 0),
-        tradieName: 'Tom',
-        consumerName: 'Black',
-        eventName: 'Painting',
-        status: 'Pending');
-    Booking b2 = Booking(
-        from: DateTime(today.year, today.month, today.day, 15, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 17, 0, 0),
-        tradieName: 'Tom',
-        consumerName: 'Lance',
-        eventName: 'Painting',
-        status: 'Pending');
-    bookings.add(b1);
-    bookings.add(b2);
-  }
-  return bookings;
+
 }

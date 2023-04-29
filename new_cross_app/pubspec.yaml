@@ -40,7 +40,7 @@ dependencies:
   # https://www.youtube.com/watch?v=YWonKJ0RBs8&t=369s
   flutter_stripe: ^8.0.0
 #  flutter_stripe_web: 4.0.1
-  flutter_stripe_web: ^3.0.0
+  #flutter_stripe_web: ^3.0.0
   http: ^0.13.5
   # How to enable Stripe payments in your flutter Apps[2022]:
   # https://www.youtube.com/watch?v=tpILK64NM6M&t=486s
@@ -76,6 +76,10 @@ dependencies:
   cloud_firestore: ^4.4.4
   intl: ^0.17.0
   cloud_functions: ^4.1.1
+  getwidget: ^3.1.1
+  animated_text_kit: ^4.2.2
+  go_router: ^6.5.9
+  url_strategy:
 
 
 dev_dependencies:

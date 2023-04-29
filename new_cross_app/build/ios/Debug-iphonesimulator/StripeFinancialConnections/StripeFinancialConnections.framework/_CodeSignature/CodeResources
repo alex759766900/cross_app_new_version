@@ -14,15 +14,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		MhJ9ni065Xs3gBX1kWCrHjy/+Yo=
+		y8KIDIJcwbyLl5cbR2kcpkWHXPc=
 		</data>
 		<key>Modules/StripeFinancialConnections.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		IuuxfJV3WQma5tce7hkp0CNeUBU=
+		Nm21IQh7Uhuzug7T2CNsipCWnjc=
 		</data>
 		<key>Modules/StripeFinancialConnections.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		oQsl2wyGTVWmvTlV5yGSbhOq6hk=
+		TJEoGHNkk5wAx34L+f2PzPwM9I4=
 		</data>
 		<key>Modules/StripeFinancialConnections.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -34,7 +34,7 @@
 		</data>
 		<key>Modules/StripeFinancialConnections.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		UcMsW/AZSsRr6HyWPWrHGEibzos=
+		HysB9jUQciThhdX5bjQi7cP3Q/g=
 		</data>
 		<key>Modules/StripeFinancialConnections.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Modules/StripeFinancialConnections.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		mW3FC+y+h7xiryrK19rygRvesBU=
+		X0l47EiEDSOSE1VrIm9nFxDln1A=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>StripeFinancialConnections.bundle/Info.plist</key>
 		<data>
-		LuD41/oySFJVgzvlHZ/XsTj7oCI=
+		Pwru/3vqOjgJUPXd7P0zoGaOxrs=
 		</data>
 		<key>StripeFinancialConnections.bundle/back_arrow@3x.png</key>
 		<data>
@@ -526,14 +526,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			yh8DelpCe/NBdDEHv5ouXmx0vzuUyHHQYp6sElAgIuM=
+			nXJuK98MS+UG5MCRpIlK/+78uuLVHaUq+eJlIYN1mCY=
 			</data>
 		</dict>
 		<key>Modules/StripeFinancialConnections.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FOMwMGU04fe3BqhwRwoM/AYtaiJQgzEWX4KcNwooIJU=
+			z+ZzoUlAz+bzKrPXOukyzXSg9eu1fguTiqM9HjhjXTg=
 			</data>
 		</dict>
 		<key>Modules/StripeFinancialConnections.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -554,7 +554,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			G+TZeb41zjF7+PKU7gj/hopfPhRddvcExNcENA5GYRI=
+			BNb1mMhTGRc9dcTRwk/ED8gBS9qac3uMuoaFrliAoUA=
 			</data>
 		</dict>
 		<key>Modules/StripeFinancialConnections.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -575,7 +575,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Yd3DN7Vgp0MewoFfC+MXQwQ7u6X9zlz7G7dhgfJ7uVw=
+			j5y8iLtqGPUTUJUNkWYfaMd4ChUXuW9loOspOcodfHY=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -589,7 +589,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			9TOIfv23Xg11SK4cSH14+6xz2bydP5mAoMep/ILmiIY=
+			UrH97p1C6JWUwXzKfOZ2OnLZo7Y/cZF0NtUss0qqF3U=
 			</data>
 		</dict>
 		<key>StripeFinancialConnections.bundle/back_arrow@3x.png</key>
