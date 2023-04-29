@@ -1,4 +1,6 @@
 //import 'package:chatapp/helper/authenticate.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:new_cross_app/Login/utils/constants.dart';
 import 'package:new_cross_app/helper/constants.dart';
@@ -173,39 +175,44 @@ class ChatRoomsTile extends StatelessWidget {
   ChatRoomsTile({Key? key, required this.userName, required this.chatRoomId})
       : super(key: key);
 
-  Future<Map<String, dynamic>> GetLastMessage() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('chatRoom')
-        .doc(chatRoomId)
-        .collection('chats')
-        .orderBy('time', descending: true)
-        .limit(1)
-        .get();
-
-    print(querySnapshot.docs.length);
-    print("the last message length should be 1!");
-
-    if (querySnapshot.docs.isNotEmpty) {
-      Map<String, dynamic> messageData =
-          (querySnapshot.docs[0].data() as Map<String, dynamic>);
-      String messageText = messageData['message'];
-      String sender = messageData['sendBy'];
-      bool Readstatus = messageData['Isread'];
-      bool isUnreadAndNotSentByUser =
-          Readstatus == false && sender != Constants.myName;
-      return {'text': messageText, 'status': isUnreadAndNotSentByUser};
-    } else {
-      return {'text': "Start your chat!", 'status': false};
-    }
-
-    // add a default return statement
-    return {};
+  Stream<Map<String, dynamic>> GetLastMessage() async* {
+    final controller = StreamController<Map<String, dynamic>>();
+    controller.onListen = () {
+      try {
+        FirebaseFirestore.instance
+            .collection('chatRoom')
+            .doc(chatRoomId)
+            .collection('chats')
+            .orderBy('time', descending: true)
+            .limit(1)
+            .snapshots()
+            .listen((QuerySnapshot querySnapshot) {
+          if (querySnapshot.docs.isNotEmpty) {
+            Map<String, dynamic> messageData =
+                (querySnapshot.docs[0].data() as Map<String, dynamic>);
+            String messageText = messageData['message'];
+            String sender = messageData['sendBy'];
+            bool Readstatus = messageData['Isread'];
+            bool isUnreadAndNotSentByUser =
+                Readstatus == false && sender != Constants.myName;
+            controller
+                .add({'text': messageText, 'status': isUnreadAndNotSentByUser});
+          } else {
+            controller.add({'text': "Start your chat!", 'status': false});
+          }
+        });
+      } catch (e) {
+        print(e.toString());
+      }
+    };
+    yield* controller.stream;
+    controller.onCancel = () {};
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: GetLastMessage(),
+    return StreamBuilder<Map<String, dynamic>>(
+      stream: GetLastMessage(),
       builder: (context, snapshot) {
         String latestMessage =
             snapshot.hasData ? snapshot.data!['text'] : "Start your chat!";

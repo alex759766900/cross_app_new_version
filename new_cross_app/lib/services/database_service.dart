@@ -154,6 +154,7 @@ class DatabaseService {
       //print("update fail!");
       //}
 
+      /*
       // Listen for new unread messages
       FirebaseFirestore.instance
           .collection('chatRoom')
@@ -183,6 +184,7 @@ class DatabaseService {
         // Commit the batched write
         batch.commit();
       });
+      */
     } catch (e) {
       // Handle the error gracefully
       print('Error: $e');
