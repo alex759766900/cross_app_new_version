@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:new_cross_app/blocs/payment/payment_bloc.dart';
+
 import 'package:new_cross_app/stripe/screens/card_form_screen.dart';
 import 'package:new_cross_app/stripe/screens/.env';
 
@@ -8,12 +7,10 @@ import 'package:new_cross_app/stripe/screens/.env';
 
 //import 'package:stripe/stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 /// sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey =
-      stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
+  Stripe.publishableKey = stripePublishableKey;//JemmaAUGroup@gmail.com code:JemmaTeam2023
   await Stripe.instance.applySettings();
   // TODO Replace with your actual merchant identifier
   Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
@@ -24,19 +21,16 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PaymentBloc(),
-      child: MaterialApp(
-        title: 'Jemma Australia',
-        theme: ThemeData(
-          colorScheme: const ColorScheme.light(
-              primary: Color(0xFF000A1F), secondary: Color(0xFF000A1F)),
-          // primarySwatch: Colors.green,
-          primaryColor: Colors.white,
-        ),
-        home: const CardFormScreen(),
-        // HomeScreen,
+    return MaterialApp(
+      title: 'Jemma Australia',
+      theme: ThemeData(
+        colorScheme: const ColorScheme.light(
+            primary: Color(0xFF000A1F), secondary: Color(0xFF000A1F)),
+        // primarySwatch: Colors.green,
+        primaryColor: Colors.white,
       ),
+      home: const CardFormScreen(),
+      // HomeScreen,
     );
   }
 }

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Payment</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        .card-input {
+            margin-bottom: 16px;
+        }
+        .card-errors {
+            color: red;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="text-center">Stripe Credit Card Payment</h2>
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="card-element">Credit Card</label>
+                    <div class="card-input" id="card-element"></div>
+                    <div id="card-errors" class="card-errors" role="alert"></div>
+                </div>
+                <button id="submit" class="btn btn-primary">Submit Payment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+        // Your Stripe publishable key
+        var stripePublicKey = 'your_stripe_publishable_key';
+        var stripe = Stripe(stripePublicKey);
+        var elements = stripe.elements();
+
+        // Create an instance of the card Element.
+        var style = {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+        var card = elements.create('card', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>.
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element.
+        card.on('change', function(event) {
+          var displayError = document.getElementById('card-errors');
+          if (event.error) {
+            displayError.textContent = event.error.message;
+          } else {
+            displayError.textContent = '';
+          }
+        });
+
+        // Handle form submission.
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+
+          var name = document.getElementById('name').value;
+          var email = document.getElementById('email').value;
+
+          stripe.createToken(card).then(function(result) {
+            if (result.error) {
+              // Inform the user if there was an error.
+              var errorElement
+                // ...
+                stripe.createToken(card).then(function(result) {
+                    if (result.error) {
+                        // Inform the user if there was an error.
+                        var errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error.message;
+                    } else {
+                        // Send the token to your server.
+                        stripeTokenHandler(result.token, name, email);
+                    }
+                });
+            });
+
+            function stripeTokenHandler(token, name, email) {
+                // Add the token, name and email to the form as hidden inputs
+                var form = document.getElementById('payment-form');
+                var tokenInput = document.createElement('input');
+                tokenInput.setAttribute('type', 'hidden');
+                tokenInput.setAttribute('name', 'stripeToken');
+                tokenInput.setAttribute('value', token.id);
+                form.appendChild(tokenInput);
+
+                var nameInput = document.createElement('input');
+                nameInput.setAttribute('type', 'hidden');
+                nameInput.setAttribute('name', 'name');
+                nameInput.setAttribute('value', name);
+                form.appendChild(nameInput);
+
+                var emailInput = document.createElement('input');
+                emailInput.setAttribute('type', 'hidden');
+                emailInput.setAttribute('name', 'email');
+                emailInput.setAttribute('value', email);
+                form.appendChild(emailInput);
+
+                // Submit the form
+                form.submit();
+            }
+        </script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:html';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
