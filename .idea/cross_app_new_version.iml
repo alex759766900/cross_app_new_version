@@ -8,6 +8,7 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/.idea/gen" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/device_info_plus/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/device_info_plus/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/ios/.symlinks/plugins/device_info_plus/build" />
@@ -62,6 +63,15 @@
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/ios/.symlinks/plugins/stripe_ios/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/ios/.symlinks/plugins/stripe_ios/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/ios/.symlinks/plugins/stripe_ios/build" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/build" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_linux/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_linux/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_linux/build" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/linux/flutter/ephemeral/.plugin_symlinks/path_provider_linux/build" />
@@ -80,6 +90,15 @@
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/macos/Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/build" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/device_info_plus/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_windows/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_windows/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/flutter_secure_storage_windows/build" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/new_cross_app/windows/flutter/ephemeral/.plugin_symlinks/path_provider_windows/build" />
