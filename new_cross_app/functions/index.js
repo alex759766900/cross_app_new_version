@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const stripe = require("stripe")(functions.config().stripe.testkey);
+// const stripe = require('stripe')(functions.config().stripe.secret_key);
 
 const calculateOrderAmount = (items) => {
   const prices = []; // Add 'let' before variable declaration
