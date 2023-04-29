@@ -1,32 +1,11 @@
-import 'dart:convert';
+//import 'dart:convert';
 import 'dart:math';
-//import 'dart:js' as js;
-import 'package:hive/hive.dart';
-import 'package:http/http.dart';
 
 import 'package:flutter/material.dart';
-import 'package:new_cross_app/Login/models/user.dart';
-import 'package:new_cross_app/Login/providers/login.dart';
-import 'package:new_cross_app/Login/repository.dart';
-
-//import 'package:jemma/routes.dart';
-import 'package:new_cross_app/Login/utils/adaptive.dart';
-import 'package:new_cross_app/Login/utils/constants.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
-import 'package:new_cross_app/Login/utils/notification.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/account_details.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/address_details.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/bank_details.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/card_details.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/company_details.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/decoration_image_container.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/personal_details.dart';
-//import 'package:new_cross_app/Sign_up/widgets/signup/tradesperson_profile_details.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
-//import 'package:provider/provider.dart';
 
-import '../Login/login.dart';
 import '../main.dart';
 
 enum SignupOf { customer, tradesperson }
@@ -122,15 +101,6 @@ class _SignupState extends State<Signup> {
                       ]))),
                 ]))),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        /*floatingActionButton: isWeb()
-            ? null
-            : FloatingActionButton(
-                backgroundColor: Colors.white,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Icon(Icons.arrow_back, color: Colors.black87)));*/
-        // TODO: Need to discuss with other guys on this.
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.white,
             onPressed: () {

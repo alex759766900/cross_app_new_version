@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:new_cross_app/helper/helper_function.dart';
 import 'package:new_cross_app/services/database_service.dart';
 
 class AuthService {
@@ -27,6 +28,7 @@ class AuthService {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
               email: email, password: password))
           .user!;
+      //user.sendEmailVerification();
 
       if (user != null) {
         //call out database to update the user data
@@ -57,5 +59,15 @@ class AuthService {
     }
   }
 
-  //sign out
+  // signout
+  Future signOut() async {
+    try {
+      await HelperFunctions.saveUserLoggedInStatus(false);
+      await HelperFunctions.saveUserEmailSF("");
+      await HelperFunctions.saveUserNameSF("");
+      await firebaseAuth.signOut();
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:new_cross_app/chat/screens/chat_screen.dart';
 
 Container buildChatComposer() {
   return Container(
@@ -17,9 +18,12 @@ Container buildChatComposer() {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.emoji_emotions_outlined,
-                  color: Colors.grey[500],
+                IconButton(
+                  icon: const Icon(
+                    Icons.emoji_emotions_outlined,
+                    size: 28,
+                  ),
+                  onPressed: () {},
                 ),
                 const SizedBox(
                   width: 10,
@@ -33,10 +37,6 @@ Container buildChatComposer() {
                     ),
                   ),
                 ),
-                Icon(
-                  Icons.attach_file,
-                  color: Colors.grey[500],
-                )
               ],
             ),
           ),
@@ -44,13 +44,20 @@ Container buildChatComposer() {
         const SizedBox(
           width: 16,
         ),
-        const CircleAvatar(
-          backgroundColor: Color(0xFF4CAF50),
-          child: Icon(
-            Icons.mic,
-            color: Colors.white,
+        GestureDetector(
+          onTap: () {
+            // Do something when the CircleAvatar is tapped
+            //addMessage();
+            print('CircleAvatar tapped!');
+          },
+          child: const CircleAvatar(
+            backgroundColor: Color(0xFF4CAF50),
+            child: Icon(
+              Icons.send,
+              color: Colors.white,
+            ),
           ),
-        )
+        ),
       ],
     ),
   );

@@ -1,16 +1,17 @@
 //import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:new_cross_app/Login/login.dart';
 //import 'package:flutter/widgets.dart';
 //import 'package:jemma/routes.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 
-///  Sign up with Google account, that are part of the [Sign Up] screen.
-class SignupGoogle extends StatelessWidget {
+///  Login
+class LoginRow extends StatelessWidget {
   /// [size] is the size of the [Sign Up] screen.
-  const SignupGoogle({
+  const LoginRow({
     Key? key,
     required this.size,
   }) : super(key: key);
@@ -29,11 +30,11 @@ class SignupGoogle extends StatelessWidget {
               padding: EdgeInsets.zero,
             ),
             onPressed: () {
-              //Navigator.pushNamed(
-              //context, Screen.signup.getURL()); //TODO:need navigate to sign up with google page
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             },
             child: const Text(
-              'Sign up with Google account',
+              'Already have a account? Login now',
               style: TextStyle(
                 color: Colors.blue,
               ),

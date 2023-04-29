@@ -1,35 +1,26 @@
 import 'dart:math';
 
-//import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-//import 'package:http/http.dart' as http;
-//import 'package:new_cross_app/Login/providers/login.dart';
-//import 'package:jemma/routes.dart';
-//import 'package:new_cross_app/Login/utils/adaptive.dart';
 import 'package:new_cross_app/Login/utils/constants.dart';
-//import 'package:new_cross_app/Login/utils/notification.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
-//import 'package:new_cross_app/Login/widgets/login/decoration_image_container.dart';
 import 'package:new_cross_app/Login/widgets/login/input_fields.dart';
 import 'package:new_cross_app/Login/widgets/login/signup_row.dart';
 import 'package:logger/logger.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/show_snackbar.dart';
-import 'package:new_cross_app/chat/chat_home_page.dart';
+//import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
+import 'package:new_cross_app/helper/helper_function.dart';
 import 'package:new_cross_app/services/auth_service.dart';
 import 'package:new_cross_app/services/database_service.dart';
-//import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import '../main.dart';
 
 /// Screen through which users can login.
-///
-/// Idea of using SizedBox for spacing instead of padding is from this:
-/// https://stackoverflow.com/a/52774984/11200630
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
   @override
@@ -118,12 +109,6 @@ class _LoginState extends State<LoginPage> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-
-        /*floatingActionButton: isWeb()? null: FloatingActionButton(
-          backgroundColor: Colors.white,
-          onPressed: () { Navigator.pop(context);},
-          child: const Icon(Icons.arrow_back, color: Colors.black87),
-        )*/
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () => {
@@ -144,12 +129,15 @@ class _LoginState extends State<LoginPage> {
               emailController.text, passwordController.text)
           .then((value) async {
         if (value == true) {
+          QuerySnapshot snapshot =
+              await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .gettingUserData(emailController.text);
           // saving the values to our shared preferences
-          //await HelperFunctions.saveUserLoggedInStatus(true);
-          //await HelperFunctions.saveUserEmailSF(email);
-          //await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChatHomePage()));
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmailSF(emailController.text);
+          await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const ChatRoom()));
         } else {
           showSnackbar(context, kMenuColor, value);
           setState(() {

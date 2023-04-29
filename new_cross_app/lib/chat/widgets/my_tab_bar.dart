@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class MyTabBar extends StatelessWidget {
@@ -12,7 +11,9 @@ class MyTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      //margin: const EdgeInsets.symmetric(vertical: 4),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      //padding: const EdgeInsets.symmetric(vertical: 16),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
       height: 80,
       color: const Color(0xFFDDFFB3),
@@ -23,8 +24,8 @@ class MyTabBar extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             )),
-        tabs: [
-          const Tab(
+        tabs: const [
+          Tab(
             icon: Text(
               'Chat',
               style: TextStyle(
@@ -33,7 +34,7 @@ class MyTabBar extends StatelessWidget {
               ),
             ),
           ),
-          const Tab(
+          /*Tab(
             icon: Text(
               'Status',
               style: TextStyle(
@@ -41,7 +42,7 @@ class MyTabBar extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-          ),
+          ),*/
           /*Tab(
             icon: Text(
               'Call',

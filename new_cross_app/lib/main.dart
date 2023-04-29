@@ -5,13 +5,16 @@ import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
+import 'package:new_cross_app/chat/screens/chat_screen.dart';
+import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
+//import 'package:new_cross_app/chat/chatting/screens/chat_home_screen.dart';
 import 'package:new_cross_app/stripe/card_form_screen.dart';
 import 'package:new_cross_app/stripe/cardpayment.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
-import 'package:new_cross_app/chat/chat_home_page.dart';
+//import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:provider/provider.dart';
 import 'Login/providers/login.dart';
 import 'firebase_options.dart';
@@ -108,6 +111,7 @@ getFirebaseExample() {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    //var mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
@@ -130,8 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            ConsumerProfilePage(consumer: 'kmWX5dwrYVnmfbQjMxKX')));
+                        builder: (context) => ConsumerProfilePage(
+                            consumer: 'kmWX5dwrYVnmfbQjMxKX')));
               },
             ),
             ListTile(
@@ -172,13 +176,6 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('ChatTest'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ChatHomePage()));
-              },
-            ),
-            ListTile(
               title: const Text('LoginTest'),
               onTap: () {
                 Navigator.push(context,
@@ -190,6 +187,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Signup()));
+              },
+            ),
+            ListTile(
+              title: const Text('Chat home page Test'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ChatRoom()));
               },
             ),
           ],
