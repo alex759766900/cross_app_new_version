@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:new_cross_app/helper/helper_function.dart';
 import 'package:sizer/sizer.dart';
+
+import '../helper/constants.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -8,8 +11,6 @@ class Profile extends StatefulWidget {
   @override
   ProfileState createState() => ProfileState();
 }
-
-String consumerId = "Siyuan0001";
 
 final databaseReference = FirebaseFirestore.instance;
 final CollectionReference colRef = databaseReference.collection('customers');
@@ -20,17 +21,20 @@ class ProfileState extends State<Profile> {
   final TextEditingController name = new TextEditingController(),
       age = new TextEditingController(),
       phone = new TextEditingController(),
-      aaddress = new TextEditingController(),
-      card = new TextEditingController();
+      aaddress = new TextEditingController();
+      // card = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    getUserData();
+    getUserProfile();
   }
 
-  Future<void> getUserData() async {
-    DocumentSnapshot docSnapshot = await colRef.doc(consumerId).get();
+  Future<void> getUserProfile() async {
+    Constants.myId = (await HelperFunctions.getUserIdFromSF())!;
+    print(Constants.myId);
+
+    DocumentSnapshot docSnapshot = await colRef.doc(Constants.myId).get();
     Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
     setState(() {
@@ -38,7 +42,7 @@ class ProfileState extends State<Profile> {
       age.text = data['age'] ?? '';
       phone.text = data['phone'] ?? '';
       aaddress.text = data['address'] ?? '';
-      card.text = data['card'] ?? '';
+      // card.text = data['card'] ?? '';
     });
   }
 
@@ -170,39 +174,39 @@ class ProfileState extends State<Profile> {
       ),
     );
 
-    Widget bankAccount = Container(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 30.0),
-            child: const Align(
-              alignment: Alignment.centerLeft,
-              child: Icon(Icons.credit_card_outlined, size: 40.0),
-            ),
-          ),
-          Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, right: 15.0, top: 20, bottom: 10),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 300),
-                child: TextFormField(
-                  controller: card,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Card number',
-                      hintText: 'Enter your card number'),
-                ),
-              )),
-        ],
-      ),
-    );
+    // Widget bankAccount = Container(
+    //   child: Column(
+    //     mainAxisSize: MainAxisSize.min,
+    //     children: [
+    //       Padding(
+    //         padding: const EdgeInsets.only(left: 30.0, top: 30.0),
+    //         child: const Align(
+    //           alignment: Alignment.centerLeft,
+    //           child: Icon(Icons.credit_card_outlined, size: 40.0),
+    //         ),
+    //       ),
+    //       Padding(
+    //           padding: const EdgeInsets.only(
+    //               left: 15.0, right: 15.0, top: 20, bottom: 10),
+    //           child: ConstrainedBox(
+    //             constraints: BoxConstraints(maxWidth: 300),
+    //             child: TextFormField(
+    //               controller: card,
+    //               validator: (value) {
+    //                 if (value == null || value.isEmpty) {
+    //                   return 'Please enter some text';
+    //                 }
+    //                 return null;
+    //               },
+    //               decoration: InputDecoration(
+    //                   border: OutlineInputBorder(),
+    //                   labelText: 'Card number',
+    //                   hintText: 'Enter your card number'),
+    //             ),
+    //           )),
+    //     ],
+    //   ),
+    // );
 
     Widget submitbutton = Container(
       padding: const EdgeInsets.only(top: 30.0, bottom: 20.0),
@@ -226,12 +230,12 @@ class ProfileState extends State<Profile> {
             );
 
             // Save the data to the database
-            colRef.doc(consumerId).set({
+            colRef.doc(Constants.myId).set({
               "name": name.text,
               "age": age.text,
               "phone": phone.text,
               "address": aaddress.text,
-              "card": card.text,
+              // "card": card.text,
             });
           }
         },
@@ -262,7 +266,7 @@ class ProfileState extends State<Profile> {
           iconSection,
           personalInformation,
           address,
-          bankAccount,
+          // bankAccount,
           submitbutton,
         ],
       ),
