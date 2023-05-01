@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
+import 'package:new_cross_app/Home%20Page/home.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/chat/screens/chat_screen.dart';
@@ -15,9 +16,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Login/not_logged_in_page.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
-import 'package:new_cross_app/Profile/profile.dart';
-//import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'package:new_cross_app/stripe/check_out.dart';
 import 'package:provider/provider.dart';
+import 'Calendar/RatePage.dart';
 import 'Login/providers/login.dart';
 import 'firebase_options.dart';
 
@@ -68,13 +70,7 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.green,
         ),
-        // home: const MyHomePage(title: 'Jemma'),
-        routes: {
-          '/': (context) => MyHomePage(title: 'Jemma'),
-          '/login': (context) => LoginPage(),
-          '/profile': (context) => Profile(),
-          '/not_logged_in': (context) => NotLoggedInPage(),
-        },
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       );
     });
   }
@@ -142,8 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ConsumerProfilePage(
-                            consumer: 'kmWX5dwrYVnmfbQjMxKX')));
+                        builder: (context) =>
+                            ConsumerProfilePage(consumer: 'kmWX5dwrYVnmfbQjMxKX')));
               },
             ),
             ListTile(
@@ -178,7 +174,19 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('FirebaseTest'),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+              },
+            ),
+            ListTile(
+              title: const Text('Rate'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Rate()));
+              },
+            ),
+            ListTile(
+              title: const Text('ChatTest'),
               onTap: () {
                 var data = getFirebaseExample();
               },
@@ -198,19 +206,12 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('Chat home page Test'),
+              title: const Text('Check Out'),
               onTap: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ChatRoom()));
+                    MaterialPageRoute(builder: (context) => const StripeApp()));
               },
-            ),
-            ListTile(
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Profile()));
-              },
-            ),
+            )
           ],
         ),
       ),

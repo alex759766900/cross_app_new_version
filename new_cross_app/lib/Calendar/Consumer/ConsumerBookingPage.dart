@@ -1,25 +1,20 @@
 library booking_calendar;
 
-//import 'dart:js_util';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
-import 'package:new_cross_app/Calendar/Consumer/Tradie.dart';
-import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
-import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
 part 'BookingEditor.dart';
 
 class ConsumerBooking extends StatefulWidget {
   String tradie;
-  String work;
-  ConsumerBooking({Key? key, required this.tradie, required this.work})
+
+  ConsumerBooking({Key? key, required this.tradie})
       : super(key: key);
 
   @override
-  ConsumerBookingState createState() => ConsumerBookingState();
+  ConsumerBookingState createState() => ConsumerBookingState(tradie);
 }
 
 //Variables
@@ -28,12 +23,19 @@ List<String> _colorNames = <String>[];
 int _selectedStatusIndex = 0;
 List<String> _statusNames = <String>[];
 String _tradie = '';
-String _work = '';
-//int _selectedTimeZoneIndex = 0;
-//List<String> _timeZoneCollection = <String>[];
-late DataSource _bookings;
+String selectedKey='';
+String _tradieName = '';
+String _consumerName='';
+List<Booking> ls=<Booking>[];
+late DataSource _bookings=DataSource(ls);
 Booking? _selectedAppointment;
-Consumer_person _consumer = new Consumer_person('name');
+String user_consumerId ='Th42NDgq4SJZYnOIE3R4';
+String user_consumerName='';
+String user_tradieName='';
+String user_tradieId='';
+String _consumerId='';
+String _tradieId='';
+String user_subject='';
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -43,13 +45,25 @@ String _subject = '';
 String _notes = '';
 
 class ConsumerBookingState extends State<ConsumerBooking> {
-  ConsumerBookingState();
+
+  late Stream<QuerySnapshot> _usersStream;
+  String tradie;
+  ConsumerBookingState(this.tradie){
+    user_tradieId=this.tradie;
+    colRef.where('tradieId', isEqualTo: user_tradieId).snapshots().listen(
+          (event) => print("get query"+_tradieId),
+
+      onError: (error) => print("Listen failed: $error"),
+    );
+    _usersStream = colRef.where('tradieId', isEqualTo: user_tradieId).snapshots();
+  }
 
   late List<Booking> appointments;
   CalendarController calendarController = CalendarController();
   @override
   void initState() {
-    appointments = getBookingDetails(_tradie);
+    setUpBooking();
+    appointments = <Booking>[];
     _bookings = DataSource(appointments);
     _selectedAppointment = null;
     _selectedStatusIndex = 0;
@@ -60,29 +74,66 @@ class ConsumerBookingState extends State<ConsumerBooking> {
 
   @override
   Widget build(BuildContext context) {
-    _tradie = widget.tradie;
-    _work = widget.work;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Choose a date'),
-        leading: IconButton(
-          icon: Icon(Icons.house),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MyApp()));
-          },
-        ),
-      ),
-      body: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-          child: getBookingCalendar(_bookings, onCalendarTapped)),
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: _usersStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
+
+        List<Booking>? list = snapshot.data?.docs
+            .map((e) => Booking(
+          eventName: e['eventName'] ?? '',
+          from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['from']),
+          to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['to']),
+          status: e['status'],
+          consumerName: e['consumerName'] ?? '',
+          tradieName: e['tradieName'] ?? '',
+          description: e['description'] ?? '',
+          key: e['key'],
+          consumerId: e['consumerId'] ?? '',
+          tradieId: e['tradieId'] ?? '',
+        ))
+            .toList();
+        for (var v in list!){
+          if(v.tradieId==user_tradieId){
+            user_tradieName=v.tradieName;
+            break;
+          }
+        }
+        for (var v in list!){
+          if(v.consumerId==user_consumerId){
+            user_consumerName=v.consumerName;
+            user_subject=v.eventName;
+            break;
+          }
+        }
+        _bookings = DataSource(list!);
+
+        return Scaffold(
+            appBar: AppBar(
+                leading: IconButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                      Icons.arrow_back
+                  ),
+                )
+            ),
+            resizeToAvoidBottomInset: true,
+            body: getBookingCalendar(_bookings, onCalendarTapped));
+      },
     );
   }
 
   SfCalendar getBookingCalendar(
       CalendarDataSource dataSource, CalendarTapCallback calendarTapCallback) {
-    print(appointments.length);
-    print(appointments.first);
     return SfCalendar(
         view: CalendarView.month,
         controller: calendarController,
@@ -93,10 +144,10 @@ class ConsumerBookingState extends State<ConsumerBooking> {
         appointmentBuilder: (context, calendarAppointmentDetails) {
           final Booking booking = calendarAppointmentDetails.appointments.first;
           //Container for every meeting
-          if (booking.consumerName != _consumer.name) {
+          if (booking.consumerId != user_consumerId) {
             return Container(
               color: Colors.deepOrange.withOpacity(0.5),
-              child: Text('Unavaliable'),
+              child: const Text('Unavaliable'),
             );
           } else {
             return Container(
@@ -130,24 +181,23 @@ class ConsumerBookingState extends State<ConsumerBooking> {
         return;
       } else {
         setState(() {
-          _selectedAppointment = null;
-          _selectedStatusIndex = 0;
-          //_selectedTimeZoneIndex = 0;
-          _subject = _work;
-          _notes = '';
-          //_tradie=_tradie;
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
-            if (meetingDetails.consumerName == _consumer.name) {
+            if (meetingDetails.consumerId == user_consumerId) {
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
                   _statusNames.indexOf(meetingDetails.status);
-              _tradie = meetingDetails.tradieName;
+              _tradieName = meetingDetails.tradieName;
+              _consumerName=meetingDetails.consumerName;
               _subject = meetingDetails.eventName;
               _notes = meetingDetails.description;
+              selectedKey=meetingDetails.key;
+              _consumerId=meetingDetails.consumerId;
+              _tradieId=meetingDetails.tradieId;
+
               Navigator.push<Widget>(
                 context,
                 MaterialPageRoute(
@@ -162,6 +212,11 @@ class ConsumerBookingState extends State<ConsumerBooking> {
             _startTime =
                 TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
             _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
+            _consumerId=user_consumerId;
+            _tradieId=user_tradieId;
+            _consumerName=user_consumerName;
+            _tradieName=user_tradieName;
+            _subject=user_subject;
             Navigator.push<Widget>(
               context,
               MaterialPageRoute(
@@ -207,14 +262,15 @@ class Booking {
   Booking(
       {required this.from,
       required this.to,
-      this.status = 'Pending',
+      this.status = '',
       this.eventName = '',
       this.tradieName = '',
       this.consumerName = '',
       this.description = '',
       this.key='',
       this.consumerId='',
-      this.tradieId=''});
+      this.tradieId='',
+      this.quote=0});
 
   final String tradieName;
   final String consumerName;
@@ -226,16 +282,17 @@ class Booking {
   String key;
   String consumerId;
   String tradieId;
+  num quote;
 }
 
-List<Booking> getBookingDetails(String tradie) {
+void setUpBooking() {
   _statusNames.add('Pending');
   _statusNames.add('Confirmed');
   _statusNames.add('Working');
   _statusNames.add('Rating');
   _statusNames.add('Complete');
+  _statusNames.add('Unavailable');
 
-  _colorCollection = <Color>[];
   _colorCollection.add(const Color(0xFF0F8644));
   _colorCollection.add(const Color(0xFF8B1FA9));
   _colorCollection.add(const Color(0xFFD20100));
@@ -245,42 +302,5 @@ List<Booking> getBookingDetails(String tradie) {
   _colorCollection.add(const Color(0xFF3D4FB5));
   _colorCollection.add(const Color(0xFFE47C73));
   _colorCollection.add(const Color(0xFF636363));
-  List<Booking> bookings = <Booking>[];
-  DateTime today = DateTime.now();
-  if (tradie == 'Jack') {
-    Booking b1 = Booking(
-        from: DateTime(today.year, today.month, today.day, 10, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 11, 0, 0),
-        tradieName: 'Jack',
-        consumerName: 'Black',
-        eventName: 'Painting',
-        status: 'Pending');
-    Booking b2 = Booking(
-        from: DateTime(today.year, today.month, today.day, 12, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 14, 0, 0),
-        tradieName: 'Jack',
-        consumerName: 'Lance',
-        eventName: 'Painting',
-        status: 'Pending');
-    bookings.add(b1);
-    bookings.add(b2);
-  } else {
-    Booking b1 = Booking(
-        from: DateTime(today.year, today.month, today.day, 10, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 11, 0, 0),
-        tradieName: 'Tom',
-        consumerName: 'Black',
-        eventName: 'Painting',
-        status: 'Pending');
-    Booking b2 = Booking(
-        from: DateTime(today.year, today.month, today.day, 15, 0, 0),
-        to: DateTime(today.year, today.month, today.day, 17, 0, 0),
-        tradieName: 'Tom',
-        consumerName: 'Lance',
-        eventName: 'Painting',
-        status: 'Pending');
-    bookings.add(b1);
-    bookings.add(b2);
-  }
-  return bookings;
+
 }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+
+//import 'package:flutter_stripe_web/flutter_stripe_web.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:new_cross_app/blocs/payment/payment_bloc.dart';
 
 class CardFormScreen extends StatelessWidget {
   const CardFormScreen({Key? key}) : super(key: key);
@@ -11,26 +15,87 @@ class CardFormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Pay with a Credit Card')),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('Card Form', style: Theme.of(context).textTheme.headline5),
-            const SizedBox(height: 20),
-            // credit card form
-            CardFormField(controller: CardFormEditController()),
-            const SizedBox(height: 10),
-            // pay button
-            ElevatedButton(
-              //TODO:
-                onPressed: (){},
-                child: Text('Pay',
-                    style: TextStyle(fontSize: 10.0, color: Colors.green))),
-          ],
-        ),
-      ),
+      body: BlocBuilder<PaymentBloc, PaymentState>(builder: (context, state) {
+        if (state.status == PaymentStatus.initial) {
+          CardFormEditController controller = CardFormEditController(
+            initialDetails: state.cardFieldInputDetails,
+          );
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('Card Form', style: Theme.of(context).textTheme.headline5),
+                const SizedBox(height: 20),
+                CardFormField(controller: controller),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                    onPressed: () {
+                      (controller.details.complete)
+                          ? context.read<PaymentBloc>().add(
+                                const PaymentCreateIntent(
+                                  billingDetails: const BillingDetails(
+                                      email: 'JemmaAUGroup@gmail.com'),
+                                  items: [
+                                    {'id': 0},
+                                    {'id': 1},
+                                  ],
+                                ),
+                              )
+                          : ScaffoldMessenger.of(context).showMaterialBanner(
+                              const SnackBar(
+                                content: Text('The form is not complete.'),
+                                // no as MaterialBanner
+                              ) as MaterialBanner,
+                            );
+                    },
+                    child: Text('Pay',
+                        style: TextStyle(fontSize: 10.0, color: Colors.green))),
+              ],
+            ),
+          );
+        }
+        if (state.status == PaymentStatus.success) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('The Payment is succeed'),
+              const SizedBox(
+                height: 20,
+                width: double.infinity,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<PaymentBloc>().add(PaymentStart());
+                },
+                child: const Text('Back to home'),
+              ),
+            ],
+          );
+        }
+        if (state.status == PaymentStatus.failure) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('The Payment Failed'),
+              const SizedBox(
+                height: 20,
+                width: double.infinity,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<PaymentBloc>().add(PaymentStart());
+                },
+                child: const Text('Try it again.'),
+              ),
+            ],
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+        ;
+      }),
     );
   }
 

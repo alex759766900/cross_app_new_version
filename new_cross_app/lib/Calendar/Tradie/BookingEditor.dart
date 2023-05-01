@@ -1,4 +1,4 @@
-part of booking_calendar;
+part of tradie_calendar;
 
 
 class BookingEditor extends StatefulWidget {
@@ -18,7 +18,7 @@ class BookingEditorState extends State<BookingEditor> {
             ListTile(
                 contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
                 leading: const Text(''),
-                title: Text(_work),
+                title: Text(_subject),
             ),
             const Divider(
               height: 1.0,
@@ -191,7 +191,7 @@ class BookingEditorState extends State<BookingEditor> {
               leading: Icon(
                 Icons.people_alt,
               ),
-              title: Text(_tradie),
+              title: Text(_tradieName),
             ),
             const Divider(
               height: 1.0,
@@ -204,6 +204,18 @@ class BookingEditorState extends State<BookingEditor> {
                   color: _colorCollection[_selectedStatusIndex]),
               title: Text(
                 _statusNames[_selectedStatusIndex],
+              ),
+              trailing: _statusNames[_selectedStatusIndex] != 'Pending'
+                  ? const Text('')
+                  : IconButton(
+                icon: Icon(
+                  Icons.check_circle,
+                  color: _colorCollection[_selectedStatusIndex],
+                ),
+                onPressed: () {
+                  colRef.doc(selectedKey).update({'status': 'Confirmed'});
+                  Navigator.pop(context);
+                },
               ),
             ),
             const Divider(
@@ -244,6 +256,7 @@ class BookingEditorState extends State<BookingEditor> {
 
   @override
   Widget build(BuildContext context) {
+    print(_selectedStatusIndex);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -270,76 +283,93 @@ class BookingEditorState extends State<BookingEditor> {
                       color: Colors.white,
                     ),
                     onPressed: () async{
-                      AlertDialog alert_outBound;
-                      if(_startDate.hour<9||_endDate.hour>17){
-                        Widget OKButton = TextButton(
-                          child: const Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context,true);
-                          },
-                        );
-                        alert_outBound = AlertDialog(
-                          title: const Text("Alert"),
-                          content: const Text('Out of Tradie Working Time'),
-                          actions: [
-                            OKButton,
-                          ],
-                        );
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert_outBound;
-                          },
-                        );
-                        return;
-                      }
-                      final Booking? newTimeAppointment =
-                      _isInterceptExistingAppointments(
-                          _startDate,_endDate);
-                      AlertDialog alert_conflict;
-                      if (newTimeAppointment != null) {
-                        Widget okButton = TextButton(
-                          child: const Text("Ok"),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                        );
-                        alert_conflict = AlertDialog(
-                          title: const Text("Alert"),
-                          content: const Text('Have intercept with existing'),
-                          actions: [
-                            okButton,
-                          ],
-                        );
+                      if(_selectedAppointment==null){
+                        print('new booking');
+                        final meetings = <Booking>[];
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: _statusNames[_selectedStatusIndex],
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: _subject,
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
+                        List<String> keys = <String>[];
+                        if (_events.appointments!.isNotEmpty ||
+                            _events.appointments != null) {
+                          for (int i = 0;
+                          i < _events.appointments!.length;
+                          i++) {
+                            Booking b = _events.appointments![i];
+                            keys.add(b.key);
+                          }
+                        }
+                        colRef.doc().set({
+                          'eventName': _subject,
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': 'Pending',
+                          'tradieName': _tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
 
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return alert_conflict;
-                          },
-                        );
-                        return;
-                      }
-                      final List<Booking> meetings = <Booking>[];
-                      //如果是已存在的appointment，从列表中移除，加上更改的
-                      if (_selectedAppointment != null) {
-                        _bookings.appointments!.removeAt(_bookings.appointments!
-                            .indexOf(_selectedAppointment));
-                        _bookings.notifyListeners(CalendarDataSourceAction.remove,
+                        var k = await getKey(keys);
+                        colRef.doc(k).update({'key': k});
+
+                      }else{
+                        print('old booking');
+                        final meetings = <Booking>[];
+                        int remove = 0;
+                        for (int i = 0; i < _events.appointments!.length; i++) {
+                          Booking b = _events.appointments![i];
+                          if (b.key == _selectedAppointment!.key) {
+                            print('find');
+                            remove = i;
+                            break;
+                          }
+                        }
+                        _events.appointments!.removeAt(remove);
+                        _events.notifyListeners(CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
+                        colRef.doc(_selectedAppointment?.key).update({
+                          'eventName': _subject,
+                          'from': _startDate.toString(),
+                          'to': _endDate.toString(),
+                          'status': _statusNames[_selectedStatusIndex],
+                          'tradieName': _tradieName,
+                          'consumerName': _consumerName,
+                          'description': _notes,
+                          'key': selectedKey,
+                          'tradieId': _tradieId,
+                          'consumerId': _consumerId,
+                        });
+                        meetings.add(Booking(
+                          from: _startDate,
+                          to: _endDate,
+                          status: _statusNames[_selectedStatusIndex],
+                          consumerName: _consumerName,
+                          tradieName: _tradieName,
+                          description: _notes,
+                          eventName: _subject,
+                          consumerId: _consumerId,
+                          tradieId: _tradieId,
+                          key: selectedKey,
+                        ));
+                        _events.appointments!.add(meetings[0]);
+                        _events.notifyListeners(
+                            CalendarDataSourceAction.add, meetings);
                       }
-                      meetings.add(Booking(
-                        from: _startDate,
-                        to: _endDate,
-                        status: _statusNames[_selectedStatusIndex],
-                        consumerName: _consumer.name,
-                        tradieName: _tradie,
-                        description: _notes,
-                        eventName: _work,
-                      ));
-                      _bookings.appointments!.add(meetings[0]);
-                      _bookings.notifyListeners(
-                          CalendarDataSourceAction.add, meetings);
                       _selectedAppointment = null;
                       //_consumer.bookings.add(meetings[0]);
                       Navigator.pop(context);
@@ -358,10 +388,22 @@ class BookingEditorState extends State<BookingEditor> {
                 : FloatingActionButton(
               onPressed: () {
                 if (_selectedAppointment != null) {
-                  _bookings.appointments!.removeAt(_bookings.appointments!
-                      .indexOf(_selectedAppointment));
-                  _bookings.notifyListeners(CalendarDataSourceAction.remove,
+                  int remove = 0;
+                  for (int i = 0; i < _events.appointments!.length; i++) {
+                    Booking b = _events.appointments![i];
+                    if (b.key == _selectedAppointment!.key) {
+                      print('find');
+                      remove = i;
+                      break;
+                    }
+                  }
+                  _events.appointments!.removeAt(remove);
+                  _events.notifyListeners(
+                      CalendarDataSourceAction.remove,
                       <Booking>[]..add(_selectedAppointment!));
+                  try {
+                    colRef.doc(_selectedAppointment?.key).delete();
+                  } catch (e) {}
                   _selectedAppointment = null;
                   Navigator.pop(context);
                 }
@@ -373,40 +415,36 @@ class BookingEditorState extends State<BookingEditor> {
             )));
   }
 
+  Future<String> getKey(List<String> oldkeys) async {
+    String newKey = '';
+    await colRef.where('key', isEqualTo: '').get().then(
+          (QuerySnapshot snapshot) {
+        if (snapshot.docs.length > 1) {
+          for (var b in snapshot.docs) {
+            if (oldkeys.indexOf(b.id) == -1) {
+              var v = b.data() as Map<String, dynamic>;
+              if (v['consumerId'] == _consumerId) {
+                newKey = b.id;
+                return newKey;
+              }
+            }
+          }
+        }
+        for (var b in snapshot.docs) {
+          if (oldkeys.indexOf(b.id) == -1) {
+            newKey = b.id;
+            print(newKey);
+            return newKey;
+          }
+        }
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    return newKey;
+  }
+
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
   }
-  dynamic _isInterceptExistingAppointments(DateTime from, DateTime to) {
-    if(from == null || to==null ||_bookings ==null || _bookings.appointments == null || _bookings.appointments!.isEmpty)
-      return null;
-    for (int i = 0; i < _bookings.appointments!.length; i++) {
-      Booking appointment = _bookings.appointments![i];
-      if (_isSameDay(appointment.from, from)&&_isSameDay(appointment.to, to)&&(
-          (appointment.from.hour<from.hour&&from.hour<appointment.to.hour)
-          ||(appointment.from.hour<to.hour&&to.hour<appointment.to.hour)
-          ||(appointment.from.hour<from.hour&&to.hour<appointment.to.hour)
-          ||(appointment.from.hour==from.hour&&to.hour==appointment.to.hour)))
-      {
-        return appointment;
-      }
-    }
-    return null;
-  }
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    if (date1 == date2) {
-      return true;
-    }
 
-    if (date1 == null || date2 == null) {
-      return false;
-    }
-
-    if (date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day) {
-      return true;
-    }
-
-    return false;
-  }
 }
