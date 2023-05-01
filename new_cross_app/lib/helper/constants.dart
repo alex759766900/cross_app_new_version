@@ -1,4 +1,5 @@
 class Constants {
   static String myName = "";
-  static String myId = "";
+  //TODO: change name to ID
+  static String MyId = "";
 }

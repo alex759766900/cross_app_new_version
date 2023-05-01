@@ -16,6 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Login/not_logged_in_page.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
+//import 'package:new_cross_app/chat/chat_home_page.dart';
+//import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/stripe/check_out.dart';
 import 'package:provider/provider.dart';
@@ -138,8 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            ConsumerProfilePage(consumer: 'kmWX5dwrYVnmfbQjMxKX')));
+                        builder: (context) => ConsumerProfilePage(
+                            consumer: 'kmWX5dwrYVnmfbQjMxKX')));
               },
             ),
             ListTile(
@@ -176,13 +178,15 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Home'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Home()));
               },
             ),
             ListTile(
               title: const Text('Rate'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Rate()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Rate()));
               },
             ),
             ListTile(
@@ -203,6 +207,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Signup()));
+              },
+            ),
+            ListTile(
+              title: const Text('Chat home page Test'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ChatRoom()));
               },
             ),
             ListTile(

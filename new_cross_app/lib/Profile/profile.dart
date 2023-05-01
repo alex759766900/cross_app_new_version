@@ -24,7 +24,7 @@ class ProfileState extends State<Profile> {
       age = new TextEditingController(),
       phone = new TextEditingController(),
       aaddress = new TextEditingController();
-      // card = new TextEditingController();
+  // card = new TextEditingController();
 
   @override
   void initState() {
@@ -34,15 +34,16 @@ class ProfileState extends State<Profile> {
 
   Future<void> getUserProfile() async {
     // Constants.myId = "Siyuan0001";
-    Constants.myId = (await HelperFunctions.getUserIdFromSF()) ?? "";
-    print("id: " + Constants.myId);
+    Constants.MyId = (await HelperFunctions.getUserIdFromSF()) ?? "";
+    print("id: " + Constants.MyId);
 
     // Check if user is logged in
-    if (Constants.myId.isEmpty || Constants.myId=='') {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NotLoggedInPage()));
-      print("you have to log in " + Constants.myId);
+    if (Constants.MyId.isEmpty || Constants.MyId == '') {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => NotLoggedInPage()));
+      print("you have to log in " + Constants.MyId);
     } else {
-      DocumentSnapshot docSnapshot = await colRef.doc(Constants.myId).get();
+      DocumentSnapshot docSnapshot = await colRef.doc(Constants.MyId).get();
       Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
       setState(() {
@@ -67,8 +68,7 @@ class ProfileState extends State<Profile> {
             radius: 60,
           ),
           const IconButton(
-              onPressed: null,
-              icon: const Icon(Icons.edit, size: 40.0)),
+              onPressed: null, icon: const Icon(Icons.edit, size: 40.0)),
         ],
       ),
     );
@@ -223,22 +223,21 @@ class ProfileState extends State<Profile> {
           if (_formkey.currentState!.validate()) {
             showDialog<String>(
               context: context,
-              builder: (BuildContext context) =>
-                  AlertDialog(
-                    title: const Text('Form Submitted'),
-                    content: const Text(
-                        'Your profile information has been submitted.'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Form Submitted'),
+                content:
+                    const Text('Your profile information has been submitted.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
                   ),
+                ],
+              ),
             );
 
             // Save the data to the database
-            colRef.doc(Constants.myId).set({
+            colRef.doc(Constants.MyId).set({
               "name": name.text,
               "age": age.text,
               "phone": phone.text,
@@ -249,15 +248,12 @@ class ProfileState extends State<Profile> {
         },
         child: const Text('Submit'),
         style: ElevatedButton.styleFrom(
-          primary: Theme
-              .of(context)
-              .primaryColor,
+          primary: Theme.of(context).primaryColor,
           onPrimary: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-
         ),
       ),
     );
@@ -265,9 +261,7 @@ class ProfileState extends State<Profile> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: Theme
-            .of(context)
-            .primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
         controller: scrollController,

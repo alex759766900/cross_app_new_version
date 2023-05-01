@@ -81,6 +81,12 @@ dependencies:
   go_router: ^6.5.9
   url_strategy:
   shared_preferences: ^2.1.0
+  firebase_storage: ^11.1.1
+  firebase_messaging: ^14.4.1
+  cached_network_image: ^3.2.3
+  gallery_saver: ^2.3.2
+  emoji_picker_flutter: ^1.5.4
+  image_picker: ^0.8.7+4
 
 
 dev_dependencies:
