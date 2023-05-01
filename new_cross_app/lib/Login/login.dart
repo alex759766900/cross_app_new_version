@@ -11,6 +11,7 @@ import 'package:new_cross_app/Login/widgets/login/input_fields.dart';
 import 'package:new_cross_app/Login/widgets/login/signup_row.dart';
 import 'package:logger/logger.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
+import 'package:new_cross_app/Home%20Page/home.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/show_snackbar.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';

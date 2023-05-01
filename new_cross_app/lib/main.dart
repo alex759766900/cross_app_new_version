@@ -29,12 +29,12 @@ import 'firebase_options.dart';
 
 import 'package:hive/hive.dart';
 import 'package:new_cross_app/Login/repository.dart';
-//import 'package:jemma/routes.dart';
 import 'package:sizer/sizer.dart';
 import 'Login/config/configure_non_web.dart'
     if (dart.library.html) 'Login/config/configure_web.dart';
 import 'package:logger/logger.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:new_cross_app/helper/helper_function.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(),
@@ -68,3 +68,215 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+Consumer_person consumer = Consumer_person('Lance');
+
+FirebaseFirestore db = FirebaseFirestore.instance;
+
+getFirebaseExample() {
+  var data;
+  final docRef = db.collection("users").doc("consumer");
+  docRef.get().then(
+    (DocumentSnapshot doc) {
+      data = doc.data() as Map<String, dynamic>;
+      print(data);
+      return data;
+    },
+    onError: (e) => print("Error getting document: $e"),
+  );
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    bool? userLoggedIn = await HelperFunctions.getUserLoggedInStatus();
+    setState(() {
+      _isLoggedIn = userLoggedIn ?? false;
+    });
+  }
+
+  void logout() async {
+    await HelperFunctions.saveUserLoggedInStatus(false);
+    print("Logout succusfully. LoggedInStatus: " + (await HelperFunctions.getUserLoggedInStatus()).toString());
+    setState(() {
+      _isLoggedIn = false;
+    });
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_isLoggedIn ? 'Confirm Logout' : 'Not Logged In'),
+          content: Text(_isLoggedIn
+              ? 'Are you sure you want to logout?'
+              : 'You are not logged in.'),
+          actions: <Widget>[
+            if (_isLoggedIn)
+              TextButton(
+                onPressed: () {
+                  logout();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Yes'),
+              ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //var mq = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Home Page"),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.lightGreen,
+              ),
+              child: Text(
+                'Menu',
+              ),
+            ),
+            ListTile(
+              title: const Text('Consumer Calendar'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ConsumerProfilePage(
+                            consumer: 'kmWX5dwrYVnmfbQjMxKX')));
+              },
+            ),
+            ListTile(
+              title: const Text('Tradie Calendar'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TradieProfilePage(
+                              // tradie id in Firebase
+                              tradie: '7ylyCreV44uORAfvRxJT',
+                            )));
+              },
+            ),
+            ListTile(
+              title: const Text('Tradie Selection'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TradieDemo(
+                              consumer: consumer,
+                            )));
+              },
+            ),
+            // Stripe CardPayment
+            ListTile(
+              title: const Text('Stripe Payment'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CardFormScreen()));
+              },
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Home()));
+              },
+            ),
+            ListTile(
+              title: const Text('Rate'),
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => Rate()));
+              },
+            ),
+            ListTile(
+              title: const Text('Chat'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const ChatRoom()));
+              },
+            ),
+            ListTile(
+              title: const Text('Check Out'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const StripeApp()));
+              },
+            ),
+            ListTile(
+              title: const Text('Sign Up'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Signup()));
+              },
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Profile()));
+              },
+            ),
+            Divider(
+              height: 1,
+              color: Colors.grey.withOpacity(0.6),
+            ),
+            ListTile(
+              title: Text(
+                _isLoggedIn ? 'Logout' : 'Login',
+              ),
+              onTap: _isLoggedIn
+                  ? _showLogoutDialog
+                  : () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                  },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
