@@ -16,7 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Login/not_logged_in_page.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
-import 'package:new_cross_app/chat/chat_home_page.dart';
+import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/stripe/check_out.dart';
 import 'package:provider/provider.dart';
 import 'Calendar/RatePage.dart';
