@@ -198,17 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             )));
               },
             ),
-            ListTile(
-              title: const Text('Tradie Selection'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TradieDemo(
-                              consumer: consumer,
-                            )));
-              },
-            ),
+
             // Stripe CardPayment
             ListTile(
               title: const Text('Stripe Payment'),
@@ -217,13 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => CardFormScreen()));
               },
             ),
-            ListTile(
-              title: const Text('Home'),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home()));
-              },
-            ),
+
             ListTile(
               title: const Text('Rate'),
               onTap: () {
@@ -231,13 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     context, MaterialPageRoute(builder: (context) => Rate()));
               },
             ),
-            ListTile(
-              title: const Text('Chat'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ChatRoom()));
-              },
-            ),
+
             ListTile(
               title: const Text('Check Out'),
               onTap: () {
@@ -250,13 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Signup()));
-              },
-            ),
-            ListTile(
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Profile()));
               },
             ),
             Divider(
