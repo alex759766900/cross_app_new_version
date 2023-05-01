@@ -9,6 +9,7 @@ import 'package:new_cross_app/Login/utils/responsive.dart';
 import 'package:new_cross_app/Login/widgets/login/input_fields.dart';
 import 'package:new_cross_app/Login/widgets/login/signup_row.dart';
 import 'package:logger/logger.dart';
+import 'package:new_cross_app/Home%20Page/home.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/show_snackbar.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
@@ -137,8 +138,8 @@ class _LoginState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(emailController.text);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
           await HelperFunctions.saveUserIdSF(snapshot.docs[0]['uid']);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ChatRoom()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => const MyApp()));
         } else {
           showSnackbar(context, kMenuColor, value);
           setState(() {

@@ -28,12 +28,12 @@ import 'firebase_options.dart';
 
 import 'package:hive/hive.dart';
 import 'package:new_cross_app/Login/repository.dart';
-//import 'package:jemma/routes.dart';
 import 'package:sizer/sizer.dart';
 import 'Login/config/configure_non_web.dart'
     if (dart.library.html) 'Login/config/configure_web.dart';
 import 'package:logger/logger.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:new_cross_app/helper/helper_function.dart';
 
 final logger = Logger(
   printer: PrettyPrinter(),
@@ -62,18 +62,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
           primarySwatch: Colors.green,
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const MyHomePage(title: 'Jemma'),
       );
     });
   }
@@ -109,13 +100,65 @@ getFirebaseExample() {
       data = doc.data() as Map<String, dynamic>;
       print(data);
       return data;
-      // ...
     },
     onError: (e) => print("Error getting document: $e"),
   );
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    bool? userLoggedIn = await HelperFunctions.getUserLoggedInStatus();
+    setState(() {
+      _isLoggedIn = userLoggedIn ?? false;
+    });
+  }
+
+  void logout() async {
+    await HelperFunctions.saveUserLoggedInStatus(false);
+    print("Logout succusfully. LoggedInStatus: " + (await HelperFunctions.getUserLoggedInStatus()).toString());
+    setState(() {
+      _isLoggedIn = false;
+    });
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_isLoggedIn ? 'Confirm Logout' : 'Not Logged In'),
+          content: Text(_isLoggedIn
+              ? 'Are you sure you want to logout?'
+              : 'You are not logged in.'),
+          actions: <Widget>[
+            if (_isLoggedIn)
+              TextButton(
+                onPressed: () {
+                  logout();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Yes'),
+              ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //var mq = MediaQuery.of(context).size;
@@ -205,13 +248,6 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('Log In'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()));
-              },
-            ),
-            ListTile(
               title: const Text('Sign Up'),
               onTap: () {
                 Navigator.push(context,
@@ -224,10 +260,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Profile()));
               },
-            )
+            ),
+            Divider(
+              height: 1,
+              color: Colors.grey.withOpacity(0.6),
+            ),
+            ListTile(
+              title: Text(
+                _isLoggedIn ? 'Logout' : 'Login',
+              ),
+              onTap: _isLoggedIn
+                  ? _showLogoutDialog
+                  : () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                  },
+            ),
           ],
         ),
       ),
     );
   }
+
 }
