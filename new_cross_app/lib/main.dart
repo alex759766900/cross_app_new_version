@@ -6,11 +6,15 @@ import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/Home%20Page/home.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
+import 'package:new_cross_app/chat/screens/chat_screen.dart';
+import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
+//import 'package:new_cross_app/chat/chatting/screens/chat_home_screen.dart';
 import 'package:new_cross_app/stripe/card_form_screen.dart';
 import 'package:new_cross_app/stripe/cardpayment.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:new_cross_app/Login/login.dart';
+import 'package:new_cross_app/Login/not_logged_in_page.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
@@ -113,6 +117,7 @@ getFirebaseExample() {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    //var mq = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Home Page"),
@@ -182,6 +187,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(
                     context, MaterialPageRoute(builder: (context) => Rate()));
+              },
+            ),
+            ListTile(
+              title: const Text('ChatTest'),
+              onTap: () {
+                var data = getFirebaseExample();
               },
             ),
             ListTile(

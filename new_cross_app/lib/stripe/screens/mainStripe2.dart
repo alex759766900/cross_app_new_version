@@ -17,11 +17,11 @@ void main() async {
   await Stripe.instance.applySettings();
   // TODO Replace with your actual merchant identifier
   //Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
-  runApp(const MyStripe());
+  runApp(const MyApp());
 }
 
-class MyStripe extends StatelessWidget {
-  const MyStripe({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
