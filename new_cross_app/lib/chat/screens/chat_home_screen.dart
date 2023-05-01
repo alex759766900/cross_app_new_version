@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Login/utils/constants.dart';
 import 'package:new_cross_app/helper/constants.dart';
 import 'package:new_cross_app/helper/helper_function.dart';
@@ -12,18 +13,31 @@ import 'package:new_cross_app/chat/screens/chat_screen.dart';
 import 'package:new_cross_app/chat/screens/search_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../Routes/route_const.dart';
 import '../../main.dart';
 import '../widgets/my_tab_bar.dart';
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({super.key});
+  String userId;
+  ChatRoom({super.key, required this.userId});
 
   @override
-  _ChatRoomState createState() => _ChatRoomState();
+  _ChatRoomState createState() => _ChatRoomState(userId);
 }
 
+final chatRef = FirebaseFirestore.instance.collection('chatRoom');
+
 class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
-  late Stream chatRooms = const Stream.empty();
+  String userId = '';
+  late Stream<QuerySnapshot> chatRooms;
+  _ChatRoomState(String id) {
+    this.userId = id;
+    chatRef.where('user', arrayContains: userId).snapshots().listen(
+        (event) => print("get query"+"chatroom"),
+        onError: (error) => print("Listen failed: $error"));
+    chatRooms = chatRef.where('users', arrayContains: userId).snapshots();
+  }
+
   late TabController tabController;
   int currentTabIndex = 0;
 
@@ -36,7 +50,14 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
   Widget chatRoomsList() {
     return StreamBuilder(
       stream: chatRooms,
-      builder: (context, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text("Loading");
+        }
         if (!snapshot.hasData || snapshot.data?.docs.length == 0) {
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -64,13 +85,17 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
               itemCount: snapshot.data?.docs.length ?? 0,
               shrinkWrap: true,
               itemBuilder: (context, index) {
+                var ulist=snapshot.data!.docs[index]['users'];
+                var talkerId='';
+                for(var u in ulist){
+                  if(u!=userId){
+                    talkerId=u;
+                    break;
+                  }
+                }
                 return ChatRoomsTile(
-                  userName: snapshot.data.docs[index]
-                      .data()['chatRoomId']
-                      .toString()
-                      .replaceAll("_", "")
-                      .replaceAll(Constants.myName, ""),
-                  chatRoomId: snapshot.data.docs[index].data()["chatRoomId"],
+                  userId: talkerId,
+                  chatRoomId: snapshot.data!.docs[index]["chatRoomId"],
                 );
               });
         }
@@ -86,7 +111,7 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
       onTabChange();
     });
     super.initState();
-    getUserInfogetChats();
+    //getUserInfogetChats();
   }
 
   @override
@@ -101,28 +126,22 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
   }
 
   getUserInfogetChats() async {
-    Constants.myName = (await HelperFunctions.getUserNameFromSF())!;
-    print(Constants.myName);
-    DatabaseService().getUserChats(Constants.myName).then((snapshots) {
+    Constants.MyId = (await HelperFunctions.getUserIdFromSF())!;
+    print(Constants.MyId);
+    DatabaseService().getUserChats(Constants.MyId).then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(
-            "we got the data + ${chatRooms.toString()} this is name  ${Constants.myName}");
+            "we got the data + ${chatRooms.toString()} this is name  ${Constants.MyId}");
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    String userId = widget.userId;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MyApp()));
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
         title: const Text(
           'Jemma',
         ),
@@ -160,8 +179,9 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.search),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Search()));
+          GoRouter.of(context).pushNamed(RouterName.ChatSearch, params: {
+            'userId': userId,
+          });
         },
       ),
     );
@@ -169,12 +189,12 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
 }
 
 class ChatRoomsTile extends StatelessWidget {
-  final String userName;
+  final String userId;
   final String chatRoomId;
 
-  ChatRoomsTile({Key? key, required this.userName, required this.chatRoomId})
+  ChatRoomsTile({Key? key, required this.userId, required this.chatRoomId})
       : super(key: key);
-
+  String userName='';
   Stream<Map<String, dynamic>> GetLastMessage() async* {
     final controller = StreamController<Map<String, dynamic>>();
     controller.onListen = () {
@@ -220,15 +240,13 @@ class ChatRoomsTile extends StatelessWidget {
             snapshot.hasData && snapshot.data!['status'] != null
                 ? snapshot.data!['status']
                 : false;
+
         return GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    Chat(chatRoomId: chatRoomId, userName: userName),
-              ),
-            );
+            GoRouter.of(context).pushNamed(RouterName.ChatRoom, params: {
+              'userId': userId,
+              'chatRoomId':chatRoomId,
+            });
           },
           child: Container(
             color: Colors.white,
@@ -244,7 +262,8 @@ class ChatRoomsTile extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      userName.substring(0, 1).toUpperCase(),
+                      //TODO: username
+                      'userName',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Color.fromARGB(255, 87, 87, 87),
@@ -266,7 +285,7 @@ class ChatRoomsTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userName,
+                            HelperFunctions.getUserName(userId),
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               color: Color.fromARGB(255, 87, 87, 87),

@@ -6,8 +6,8 @@ import 'package:new_cross_app/Calendar/Consumer/Tradie.dart';
 
 //ignore: must_be_immutable
 class TradieDemo extends StatefulWidget {
-  Consumer_person consumer;
-  TradieDemo({Key? key, required this.consumer}) : super(key: key);
+  String userId;
+  TradieDemo({Key? key, required this.userId}) : super(key: key);
 
   @override
   TradieDemoState createState() => TradieDemoState();
@@ -16,7 +16,7 @@ class TradieDemo extends StatefulWidget {
 class TradieDemoState extends State<TradieDemo> {
   @override
   Widget build(BuildContext context) {
-    Consumer_person consumer = widget.consumer;
+    String consumer = widget.userId;
     return Scaffold(
         appBar: AppBar(
           title: Text('Select Tradie'),
@@ -42,7 +42,8 @@ class TradieDemoState extends State<TradieDemo> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => new ConsumerBooking(
-                                        tradie: '7ylyCreV44uORAfvRxJT'
+                                        tradie: '7ylyCreV44uORAfvRxJT',
+                                        userId: consumer,
                                       )));
                         },
                         child: const Text(
@@ -68,6 +69,7 @@ class TradieDemoState extends State<TradieDemo> {
                               MaterialPageRoute(
                                   builder: (context) => new ConsumerBooking(
                                         tradie: '7ylyCreV44uORAfvRxJT',
+                                        userId: consumer,
 
                                       )));
                         },

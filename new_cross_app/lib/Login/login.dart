@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:new_cross_app/Login/utils/constants.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 import 'package:new_cross_app/Login/widgets/login/input_fields.dart';
 import 'package:new_cross_app/Login/widgets/login/signup_row.dart';
 import 'package:logger/logger.dart';
+import 'package:new_cross_app/Routes/route_const.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/show_snackbar.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
@@ -137,8 +139,11 @@ class _LoginState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(emailController.text);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
           await HelperFunctions.saveUserIdSF(snapshot.docs[0]['uid']);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const ChatRoom()));
+          String userId=snapshot.docs[0]['uid'];
+          print(userId);
+          GoRouter.of(context).pushNamed(RouterName.homePage,params: {
+            'userId': userId
+          });
         } else {
           showSnackbar(context, kMenuColor, value);
           setState(() {

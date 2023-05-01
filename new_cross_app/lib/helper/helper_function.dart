@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HelperFunctions {
   //keys
+  static final CollectionReference tradieRef=FirebaseFirestore.instance.collection('tradeperson');
+  static final CollectionReference consumerRef=FirebaseFirestore.instance.collection('customers');
   static String userLoggedInKey = "LOGGEDINKEY";
   static String userNameKey = "USERNAMEKEY";
   static String userEmailKey = "USEREMAILKEY";
@@ -50,5 +53,27 @@ class HelperFunctions {
   static Future<String?> getUserIdFromSF() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(userIDKey);
+  }
+  static Future<String?> getUserNameFromId(String userId) async{
+    await tradieRef.get().then((value) {
+      for (var v in value.docs){
+        if (v.id==userId){
+          return v['fullName'];
+        }
+      }
+    }
+    );
+    await consumerRef.get().then((value) {
+      for (var v in value.docs){
+        if (v.id==userId){
+          return v['fullName'];
+        }
+      }
+    }
+    );
+
+  }
+  static String getUserName(String userId){
+    return getUserNameFromId(userId).toString();
   }
 }

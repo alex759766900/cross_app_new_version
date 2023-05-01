@@ -108,10 +108,10 @@ class DatabaseService {
     }
   }
 
-  getUserChats(String itIsMyName) async {
+  getUserChats(String itIsMyId) async {
     return await FirebaseFirestore.instance
         .collection("chatRoom")
-        .where('users', arrayContains: itIsMyName)
+        .where('users', arrayContains: itIsMyId)
         .snapshots();
   }
 

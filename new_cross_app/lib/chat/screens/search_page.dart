@@ -1,5 +1,6 @@
 //import 'package:chatapp/helper/constants.dart';
 //import 'package:chatapp/models/user.dart';
+import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/chat/screens/chat_screen.dart';
 import 'package:new_cross_app/services/database_service.dart';
@@ -9,15 +10,20 @@ import 'package:flutter/material.dart';
 //import 'package:new_cross_app/chat/message.dart';
 
 import '../../Login/utils/constants.dart';
+import '../../Routes/route_const.dart';
 import '../../helper/constants.dart';
 import '../../main.dart';
 
 class Search extends StatefulWidget {
+  String userId;
+  Search({super.key, required this.userId});
   @override
-  _SearchState createState() => _SearchState();
+  _SearchState createState() => _SearchState(userId: userId);
 }
 
 class _SearchState extends State<Search> {
+  String userId;
+  _SearchState({required this.userId});
   DatabaseService databaseservice = DatabaseService();
   TextEditingController searchEditingController = TextEditingController();
   late QuerySnapshot searchResultSnapshot;
@@ -72,12 +78,9 @@ class _SearchState extends State<Search> {
 
     databaseservice.addChatRoom(chatRoom, chatRoomId);
 
-    Navigator.push(
-        context,
-        // TODO: fix route
-        MaterialPageRoute(
-            builder: (context) =>
-                Chat(chatRoomId: chatRoomId, userName: users[1])));
+    GoRouter.of(context).pushNamed(RouterName.chat, params: {
+      'userId': userId,
+    });
   }
 
   Widget userTile(String userName, String userEmail) {
@@ -138,8 +141,9 @@ class _SearchState extends State<Search> {
         leading: IconButton(
           onPressed: () {
             //Navigator.pushNamed(context, Screen.home.getURL());
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ChatRoom()));
+            GoRouter.of(context).pushNamed(RouterName.chat, params: {
+              'userId': userId,
+            });
           },
           icon: const Icon(Icons.arrow_back),
         ),

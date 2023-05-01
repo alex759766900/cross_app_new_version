@@ -9,12 +9,13 @@ part 'BookingEditor.dart';
 
 class ConsumerBooking extends StatefulWidget {
   String tradie;
+  String userId;
 
-  ConsumerBooking({Key? key, required this.tradie})
+  ConsumerBooking({Key? key, required this.tradie,required this.userId})
       : super(key: key);
 
   @override
-  ConsumerBookingState createState() => ConsumerBookingState(tradie);
+  ConsumerBookingState createState() => ConsumerBookingState(tradie,userId);
 }
 
 //Variables
@@ -47,9 +48,11 @@ String _notes = '';
 class ConsumerBookingState extends State<ConsumerBooking> {
 
   late Stream<QuerySnapshot> _usersStream;
-  String tradie;
-  ConsumerBookingState(this.tradie){
-    user_tradieId=this.tradie;
+  String tradie='';
+  String userId='';
+  ConsumerBookingState(String tradie,String userId){
+    user_tradieId=tradie;
+    user_consumerId=userId;
     colRef.where('tradieId', isEqualTo: user_tradieId).snapshots().listen(
           (event) => print("get query"+_tradieId),
 

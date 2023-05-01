@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 //import 'package:jemma/models/searchtradie.dart';
 import 'package:new_cross_app/Home Page/constants.dart';
 import 'package:new_cross_app/Home Page/decorations.dart';
 import 'package:new_cross_app/Home Page/responsive.dart';
+import 'package:new_cross_app/Routes/route_const.dart';
 
 //import '../../routes.dart';
 
@@ -12,9 +14,10 @@ import 'package:new_cross_app/Home Page/responsive.dart';
 ///
 /// Note: Needs to be stateful as to hold onto the dropdown info.
 class SearchBar extends StatelessWidget {
-  const SearchBar({
+  String userId;
+  SearchBar({
     Key? key,
-  }) : super(key: key);
+  required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +55,9 @@ class SearchBar extends StatelessWidget {
     return Container(
       child: ElevatedButton.icon(
         onPressed: () {
-         /* Navigator.of(context).pushNamed(Screen.result.getURL(),
-              arguments: {"suburb":"Belconnen","jobType":"Electrician"});*/
+         GoRouter.of(context).pushNamed(RouterName.TradieDemo,params: {
+           'userId':userId
+         });
         }, // TODO: Replace with search request
         icon: Icon(
           Icons.search,

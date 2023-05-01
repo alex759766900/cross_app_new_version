@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/helper/constants.dart';
 import 'package:new_cross_app/services/database_service.dart';
@@ -7,23 +8,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../Routes/route_const.dart';
+import '../../helper/helper_function.dart';
 import '../../main.dart';
 
 class Chat extends StatefulWidget {
   final String chatRoomId;
-  final String userName;
+  final String userId;
 
-  Chat({super.key, required this.chatRoomId, required this.userName});
+  Chat({super.key, required this.chatRoomId, required this.userId});
 
   @override
   _ChatState createState() => _ChatState();
 }
-
+final chatRef=FirebaseFirestore.instance.collection('chatRoom');
 class _ChatState extends State<Chat> {
   Stream<QuerySnapshot>? chats;
   TextEditingController messageEditingController = TextEditingController();
   //String latestMessageId = '';
-
+  /*_ChatState(String chatRoomId, String userId){
+    //TODO
+    chatRef.where('user', arrayContains: userId).snapshots().listen(
+            (event) => print("get query"),
+        onError: (error) => print("Listen failed: $error"));
+    chats=chatRef.where('users',arrayContains: userId).snapshots();
+  }*/
   Widget chatMessages() {
     if (chats == null) {
       return Container();
@@ -89,17 +98,20 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+    String userId =widget.userId;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const ChatRoom()));
+            GoRouter.of(context).pushNamed(RouterName.chat, params: {
+              'userId': userId,
+            });
           },
           icon: const Icon(Icons.arrow_back),
         ),
         title: Text(
-          widget.userName,
+          //TODO: NAME
+          HelperFunctions.getUserName(userId),
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

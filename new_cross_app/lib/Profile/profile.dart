@@ -8,7 +8,8 @@ import 'package:sizer/sizer.dart';
 import '../helper/constants.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  final String userId;
+  const Profile({Key? key, required this.userId}) : super(key: key);
 
   @override
   ProfileState createState() => ProfileState();
