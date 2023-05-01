@@ -4,6 +4,7 @@ import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/Home%20Page/home.dart';
+import 'package:new_cross_app/Profile/profile.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/chat/screens/chat_screen.dart';
@@ -190,27 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: const Text('ChatTest'),
-              onTap: () {
-                var data = getFirebaseExample();
-              },
-            ),
-            ListTile(
-              title: const Text('LoginTest'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()));
-              },
-            ),
-            ListTile(
-              title: const Text('Sign Up Test'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Signup()));
-              },
-            ),
-            ListTile(
-              title: const Text('Chat home page Test'),
+              title: const Text('Chat'),
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const ChatRoom()));
@@ -221,6 +202,27 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const StripeApp()));
+              },
+            ),
+            ListTile(
+              title: const Text('Log In'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()));
+              },
+            ),
+            ListTile(
+              title: const Text('Sign Up'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Signup()));
+              },
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Profile()));
               },
             )
           ],
