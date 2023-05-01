@@ -6,6 +6,7 @@ class HelperFunctions {
   static String userNameKey = "USERNAMEKEY";
   static String userEmailKey = "USEREMAILKEY";
   static String userIDKey = "USERIDKEY";
+  static String userIdKey = "USEREIDKEY";
 
   // saving the data to SF
 

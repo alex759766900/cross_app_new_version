@@ -153,7 +153,6 @@ class DatabaseService {
       //} else {
       //print("update fail!");
       //}
-
       /*
       // Listen for new unread messages
       FirebaseFirestore.instance
