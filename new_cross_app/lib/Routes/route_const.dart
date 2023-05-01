@@ -9,6 +9,7 @@ class RouterName{
   static const ChatSearch='chat_search';
   static const ChatRoom='chat_room';
   static const TradieDemo='tradieSelection';
+  static const GuestHome='guestHome';
 
 
 }

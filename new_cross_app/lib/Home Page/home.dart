@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 //import 'package:jemma/models/user.dart';
 //import 'package:jemma/repository.dart';
 import 'package:new_cross_app/Home Page/adaptive.dart';
@@ -27,6 +28,7 @@ import '../Login/login.dart';
 import '../Profile/profile.dart';
 import '../Sign_up/signup.dart';
 import '../chat/screens/chat_home_screen.dart';
+import '../helper/helper_function.dart';
 import '../stripe/card_form_screen.dart';
 import '../stripe/check_out.dart';
 
@@ -34,13 +36,82 @@ import '../stripe/check_out.dart';
 ///
 /// Restricting max width of widgets to be 1080 based on the data from:
 /// https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
-class Home extends StatelessWidget {
-  bool isConsumer = true;
-  String userId = '';
-  Home({Key? key, required this.userId}) : super(key: key);
+class Home extends StatefulWidget {
 
+  String userId = '';
+  Home.G({Key? key}): super(key: key);
+  Home(String userId){
+    this.userId=userId;
+  }
+
+  @override
+  HomeState createState() => HomeState(userId:userId );
+
+
+}
+final logger = Logger(
+  printer: PrettyPrinter(),
+);
+class HomeState extends State<Home>{
+  String userId;
+  bool isConsumer = true;
+  HomeState({required this.userId});
   static const borderRadius = 40.0;
   static const maxWidth = 1080.0;
+
+  bool _isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    bool? userLoggedIn = await HelperFunctions.getUserLoggedInStatus();
+    setState(() {
+      _isLoggedIn = userLoggedIn ?? false;
+    });
+  }
+
+  void logout() async {
+    await HelperFunctions.saveUserLoggedInStatus(false);
+    print("Logout succusfully. LoggedInStatus: " + (await HelperFunctions.getUserLoggedInStatus()).toString());
+    setState(() {
+      _isLoggedIn = false;
+    });
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_isLoggedIn ? 'Confirm Logout' : 'Not Logged In'),
+          content: Text(_isLoggedIn
+              ? 'Are you sure you want to logout?'
+              : 'You are not logged in.'),
+          actions: <Widget>[
+            if (_isLoggedIn)
+              TextButton(
+                onPressed: () {
+                  logout();
+                  Navigator.of(context).pop();
+                },
+                child: Text('Yes'),
+              ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +154,16 @@ class Home extends StatelessWidget {
                     child: Text(
                       'Menu',
                     ),
+                  ),
+                  ListTile(
+                    title: Text(
+                      _isLoggedIn ? 'Logout' : 'Login',
+                    ),
+                    onTap: _isLoggedIn
+                        ? _showLogoutDialog
+                        : () {
+
+                    },
                   ),
                   ListTile(
                     title: const Text('Home'),

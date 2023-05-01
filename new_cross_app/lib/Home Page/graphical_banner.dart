@@ -21,7 +21,7 @@ class GraphicalBanner extends StatelessWidget {
                 fit: BoxFit.fill
             ),
             boxShadow: defaultShadows,
-            borderRadius: BorderRadius.circular(Home.borderRadius)),
+            borderRadius: BorderRadius.circular(HomeState.borderRadius)),
 
         // AnimatedText container
         child: Container(

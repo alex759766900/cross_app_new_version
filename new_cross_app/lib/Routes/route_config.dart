@@ -23,8 +23,15 @@ class MyRouter{
             name: RouterName.homePage,
             path:'/home/:userId',
             pageBuilder: (context, state) {
-              return MaterialPage(child: Home(userId: state.params['userId']!));
+              return MaterialPage(child: Home(state.params['userId']!));
             },
+        ),
+        GoRoute(
+          name: RouterName.GuestHome,
+          path:'/',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: Home.G());
+          },
         ),
         GoRoute(
           name: RouterName.profilePage,

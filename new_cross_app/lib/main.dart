@@ -104,58 +104,7 @@ getFirebaseExample() {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _isLoggedIn = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
-  void _checkLoginStatus() async {
-    bool? userLoggedIn = await HelperFunctions.getUserLoggedInStatus();
-    setState(() {
-      _isLoggedIn = userLoggedIn ?? false;
-    });
-  }
-
-  void logout() async {
-    await HelperFunctions.saveUserLoggedInStatus(false);
-    print("Logout succusfully. LoggedInStatus: " + (await HelperFunctions.getUserLoggedInStatus()).toString());
-    setState(() {
-      _isLoggedIn = false;
-    });
-  }
-
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(_isLoggedIn ? 'Confirm Logout' : 'Not Logged In'),
-          content: Text(_isLoggedIn
-              ? 'Are you sure you want to logout?'
-              : 'You are not logged in.'),
-          actions: <Widget>[
-            if (_isLoggedIn)
-              TextButton(
-                onPressed: () {
-                  logout();
-                  Navigator.of(context).pop();
-                },
-                child: Text('Yes'),
-              ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,16 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 1,
               color: Colors.grey.withOpacity(0.6),
             ),
-            ListTile(
-              title: Text(
-                _isLoggedIn ? 'Logout' : 'Login',
-              ),
-              onTap: _isLoggedIn
-                  ? _showLogoutDialog
-                  : () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
-                  },
-            ),
+
           ],
         ),
       ),
