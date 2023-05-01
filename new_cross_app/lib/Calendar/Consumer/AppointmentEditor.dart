@@ -118,6 +118,15 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               height: 1.0,
               thickness: 1,
             ),
+            ListTile(
+              contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              leading: Icon(Icons.monetization_on),
+              title: Text(quote.toString()),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1,
+            ),
             //Status
             ListTile(
               contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -126,6 +135,21 @@ class AppointmentEditorState extends State<AppointmentEditor> {
               title: Text(
                 _statusNames[_selectedStatusIndex],
               ),
+              trailing: _statusNames[_selectedStatusIndex] != 'Confirmed'
+                  ? const Text('this')
+                  : IconButton(
+                      icon: Icon(
+                        Icons.check_circle,
+                        color: _colorCollection[_selectedStatusIndex],
+                      ),
+                      onPressed: () {
+                        GoRouter.of(context)
+                            .pushNamed(RouterName.Checkout, params: {
+                          'bookingId': selectedKey,
+                        });
+                        colRef.doc(selectedKey).update({'status': 'Working'});
+                      },
+                    ),
 
               /*onTap: () {
                 showDialog<Widget>(
@@ -228,7 +252,8 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         tradieName: _tradieName,
                         key: selectedKey,
                         consumerId: _consumerId,
-                        tradieId: _tradieId
+                        tradieId: _tradieId,
+                        quote: quote
 
                         ///eventName: _subject =_subject,
                         ));
@@ -248,6 +273,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       'key': selectedKey,
                       'tradieId': _tradieId,
                       'consumerId': _consumerId,
+                      'quote': quote,
                     });
                     _selectedAppointment = null;
 

@@ -5,11 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import '../../Routes/route_const.dart';
 import 'ConsumerBookingPage.dart';
 
 part 'StatusPicker.dart';
@@ -39,6 +41,7 @@ String _tradieName = '';
 String _consumerName='';
 String _tradieId='';
 String _consumerId='';
+late num quote;
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -102,6 +105,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
           key: e['key'],
           consumerId: e['consumerId'] ?? '',
           tradieId: e['tradieId'] ?? '',
+          quote: e['quote'] ?? '',
         ))
             .toList();
         _events = DataSource(list!);
@@ -184,6 +188,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
             _consumerId=meetingDetails.consumerId;
             _tradieId=meetingDetails.tradieId;
             _selectedAppointment = meetingDetails;
+            quote=meetingDetails.quote;
 
             //如果返回appointments 为null，则说明是新的meeting,根据点击的时间点设置信息，并且跳转到appointment editor
           } else {

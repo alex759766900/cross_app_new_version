@@ -11,17 +11,15 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 
 /// sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  Stripe.publishableKey =
-      stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
-  await Stripe.instance.applySettings();
+  String bookingId='';
   // TODO Replace with your actual merchant identifier
   //Stripe.merchantIdentifier = 'YOUR_MERCHANT_IDENTIFIER';
-  runApp(const MyApp());
+  runApp(StripePay(bookingId: bookingId,));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class StripePay extends StatelessWidget {
+  String bookingId;
+  StripePay({super.key,required this.bookingId});
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

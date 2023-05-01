@@ -196,6 +196,17 @@ class BookingEditorState extends State<BookingEditor> {
               height: 1.0,
               thickness: 1,
             ),
+            ListTile(
+              contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              leading: Icon(
+                  Icons.monetization_on
+              ),
+              title: Text(quote.toString()),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1,
+            ),
             //Status
             ListTile(
               contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
@@ -205,13 +216,16 @@ class BookingEditorState extends State<BookingEditor> {
                 _statusNames[_selectedStatusIndex],
               ),
               trailing: _statusNames[_selectedStatusIndex] != 'Confirmed'
-                  ? const Text('')
+                  ? const Text('this')
                   : IconButton(
                       icon: Icon(
                         Icons.check_circle,
                         color: _colorCollection[_selectedStatusIndex],
                       ),
                       onPressed: () {
+                        GoRouter.of(context).pushNamed(RouterName.Checkout,params: {
+                          'bookingId':selectedKey,
+                        });
                         colRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),
@@ -344,6 +358,7 @@ class BookingEditorState extends State<BookingEditor> {
                           consumerId: _consumerId,
                           tradieId: _tradieId,
                           key: selectedKey,
+                          quote: quote,
                         ));
                         _bookings.appointments!.add(meetings[0]);
                         _bookings.notifyListeners(
@@ -369,6 +384,7 @@ class BookingEditorState extends State<BookingEditor> {
                           'key': selectedKey,
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
+                          'quote':quote,
                         });
 
                         var k = await getKey(keys);
@@ -400,6 +416,7 @@ class BookingEditorState extends State<BookingEditor> {
                           'key': selectedKey,
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
+                          'quote':quote,
                         });
                         meetings.add(Booking(
                           from: _startDate,
@@ -412,6 +429,7 @@ class BookingEditorState extends State<BookingEditor> {
                           consumerId: _consumerId,
                           tradieId: _tradieId,
                           key: selectedKey,
+                          quote: quote,
                         ));
                         _bookings.appointments!.add(meetings[0]);
                         _bookings.notifyListeners(

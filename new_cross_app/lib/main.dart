@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
@@ -22,6 +23,7 @@ import 'package:new_cross_app/Sign_up/signup.dart';
 //import 'package:new_cross_app/chat/chat_home_page.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/stripe/check_out.dart';
+import 'package:new_cross_app/stripe/screens/.env';
 import 'package:provider/provider.dart';
 import 'Calendar/RatePage.dart';
 import 'Login/providers/login.dart';
@@ -45,6 +47,9 @@ main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Stripe.publishableKey =
+      stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
+  await Stripe.instance.applySettings();
 
   runApp(const MyApp());
 }
@@ -165,13 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
 
-            ListTile(
-              title: const Text('Check Out'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const StripeApp()));
-              },
-            ),
             ListTile(
               title: const Text('Sign Up'),
               onTap: () {

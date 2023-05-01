@@ -9,12 +9,14 @@ import 'package:new_cross_app/Routes/route_const.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/chat/screens/search_page.dart';
+import 'package:new_cross_app/stripe/screens/mainStripe2.dart';
 //import 'package:new_cross_app/main.dart';
 
 import '../Calendar/Consumer/TradieDemo.dart';
 import '../ErrorPage.dart';
 import '../Home Page/home.dart';
 import '../chat/screens/chat_screen.dart';
+import '../stripe/check_out.dart';
 
 class MyRouter{
   GoRouter router = GoRouter(
@@ -42,7 +44,7 @@ class MyRouter{
         ),
         GoRoute(
           name: RouterName.Login,
-          path:'/',
+          path:'/login',
           pageBuilder: (context, state) {
             return MaterialPage(child: LoginPage());
           },
@@ -56,7 +58,7 @@ class MyRouter{
         ),
         GoRoute(
           name: RouterName.CalendarTradie,
-          path:'/calendarT',
+          path:'/calendarT/:userId',
           pageBuilder: (context, state) {
             return MaterialPage(child: LoginPage());
           },
@@ -94,6 +96,20 @@ class MyRouter{
           path:'/tradieSelection/:userId',
           pageBuilder: (context, state) {
             return MaterialPage(child: TradieDemo( userId: state.params['userId']!));
+          },
+        ),
+        GoRoute(
+          name: RouterName.Checkout,
+          path:'/checkout/:bookingId',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: StripeApp( bookingId: state.params['bookingId']!));
+          },
+        ),
+        GoRoute(
+          name: RouterName.Pay,
+          path:'/Pay/:bookingId',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: StripePay( bookingId: state.params['bookingId']!));
           },
         ),
         ],

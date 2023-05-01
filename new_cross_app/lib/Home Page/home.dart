@@ -233,9 +233,7 @@ class HomeState extends State<Home>{
                   TextButton(
                       onPressed: () {
                         GoRouter.of(context)
-                            .pushNamed(RouterName.SignUp, params: {
-                          'userId': userId,
-                        });
+                            .pushNamed(RouterName.SignUp);
                       },
                       child: const Text(
                         'Sign Up',

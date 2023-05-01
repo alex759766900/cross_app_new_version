@@ -2,9 +2,12 @@ library booking_calendar;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
+
+import '../../Routes/route_const.dart';
 part 'BookingEditor.dart';
 
 class ConsumerBooking extends StatefulWidget {
@@ -30,13 +33,14 @@ String _consumerName='';
 List<Booking> ls=<Booking>[];
 late DataSource _bookings=DataSource(ls);
 Booking? _selectedAppointment;
-String user_consumerId ='Th42NDgq4SJZYnOIE3R4';
+String user_consumerId ='';
 String user_consumerName='';
 String user_tradieName='';
 String user_tradieId='';
 String _consumerId='';
 String _tradieId='';
 String user_subject='';
+late num quote=0;
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -101,18 +105,19 @@ class ConsumerBookingState extends State<ConsumerBooking> {
           key: e['key'],
           consumerId: e['consumerId'] ?? '',
           tradieId: e['tradieId'] ?? '',
+          quote: e['quote'] ?? '',
         ))
             .toList();
         for (var v in list!){
           if(v.tradieId==user_tradieId){
             user_tradieName=v.tradieName;
+            user_subject=v.eventName;
             break;
           }
         }
         for (var v in list!){
           if(v.consumerId==user_consumerId){
             user_consumerName=v.consumerName;
-            user_subject=v.eventName;
             break;
           }
         }
@@ -200,6 +205,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
               selectedKey=meetingDetails.key;
               _consumerId=meetingDetails.consumerId;
               _tradieId=meetingDetails.tradieId;
+              quote=meetingDetails.quote;
 
               Navigator.push<Widget>(
                 context,

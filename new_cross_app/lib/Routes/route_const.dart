@@ -10,6 +10,8 @@ class RouterName{
   static const ChatRoom='chat_room';
   static const TradieDemo='tradieSelection';
   static const GuestHome='guestHome';
+  static const Checkout='CheckOut';
+  static const Pay='Pay';
 
 
 }

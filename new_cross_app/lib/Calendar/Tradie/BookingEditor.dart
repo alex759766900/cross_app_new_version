@@ -197,6 +197,17 @@ class BookingEditorState extends State<BookingEditor> {
               height: 1.0,
               thickness: 1,
             ),
+            ListTile(
+              contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              leading: Icon(
+                Icons.monetization_on
+              ),
+              title: Text(quote.toString()),
+            ),
+            const Divider(
+              height: 1.0,
+              thickness: 1,
+            ),
             //Status
             ListTile(
               contentPadding: const EdgeInsets.fromLTRB(5, 2, 5, 2),

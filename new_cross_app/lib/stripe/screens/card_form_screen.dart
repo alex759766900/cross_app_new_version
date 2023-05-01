@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:go_router/go_router.dart';
 
 //import 'package:flutter_stripe_web/flutter_stripe_web.dart';
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:new_cross_app/Routes/route_const.dart';
 import 'package:new_cross_app/blocs/payment/payment_bloc.dart';
 
 class CardFormScreen extends StatelessWidget {
@@ -67,7 +69,7 @@ class CardFormScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  context.read<PaymentBloc>().add(PaymentStart());
+                  GoRouter.of(context).pushNamed(RouterName.homePage);
                 },
                 child: const Text('Back to home'),
               ),

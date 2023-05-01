@@ -46,6 +46,7 @@ String _consumerId='';
 String user_tradieName='';
 String user_tradieId='7ylyCreV44uORAfvRxJT';
 String user_subject='';
+late num quote;
 
 final databaseReference = FirebaseFirestore.instance;
 final CollectionReference colRef=databaseReference.collection('bookings');
@@ -147,6 +148,7 @@ class TradieProfileState extends State<TradieProfilePage> {
           key: e['key'],
           consumerId: e['consumerId'] ?? '',
           tradieId: e['tradieId'] ?? '',
+          quote: e['quote'] ?? '',
         ))
             .toList();
         for (var v in list!){
@@ -270,6 +272,7 @@ class TradieProfileState extends State<TradieProfilePage> {
               selectedKey=meetingDetails.key;
               _consumerId=meetingDetails.consumerId;
               _tradieId=meetingDetails.tradieId;
+              quote=meetingDetails.quote;
 
               Navigator.push<Widget>(
                 context,
@@ -290,6 +293,7 @@ class TradieProfileState extends State<TradieProfilePage> {
             // _consumerName=user_consumerName;
             _tradieName=user_tradieName;
             _subject=user_subject;
+
             Navigator.push<Widget>(
               context,
               MaterialPageRoute(
@@ -373,7 +377,8 @@ class Booking {
         this.description = '',
         this.key='',
         this.consumerId='',
-        this.tradieId=''});
+        this.tradieId='',
+        this.quote=0});
 
   final String tradieName;
   final String consumerName;
@@ -385,4 +390,5 @@ class Booking {
   String key;
   String consumerId;
   String tradieId;
+  num quote;
 }
