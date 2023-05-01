@@ -64,12 +64,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart'; // 添加这一行�
 import 'package:http/http.dart' as http;
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 
-main() {
-  runApp(Rate());
-}
 
 class Rate extends StatefulWidget {
-  Rate({Key? key}) : super(key: key);
+  String bookingId;
+  Rate({Key? key,required this.bookingId}) : super(key: key);
 
   @override
   RateState createState() => RateState();

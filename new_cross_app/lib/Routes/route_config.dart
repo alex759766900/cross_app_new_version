@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
+import 'package:new_cross_app/Calendar/RatePage.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Profile/profile.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
@@ -110,6 +111,13 @@ class MyRouter{
           path:'/Pay/:bookingId',
           pageBuilder: (context, state) {
             return MaterialPage(child: StripePay( bookingId: state.params['bookingId']!));
+          },
+        ),
+        GoRoute(
+          name: RouterName.Rate,
+          path:'/rate/:bookingId',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: Rate( bookingId: state.params['bookingId']!));
           },
         ),
         ],

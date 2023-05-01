@@ -136,7 +136,21 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                 _statusNames[_selectedStatusIndex],
               ),
               trailing: _statusNames[_selectedStatusIndex] != 'Confirmed'
-                  ? const Text('this')
+                  ? IconButton(
+                      onPressed: () {
+                        if (_statusNames[_selectedStatusIndex] == 'Rating') {
+                          GoRouter.of(context).pushNamed(RouterName.Rate,
+                              params: {'bookingId': selectedKey});
+                        }
+                      },
+                      icon: _statusNames[_selectedStatusIndex] != 'Rating'
+                          ? Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_circle,
+                            ))
                   : IconButton(
                       icon: Icon(
                         Icons.check_circle,

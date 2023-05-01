@@ -162,13 +162,6 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
 
-            ListTile(
-              title: const Text('Rate'),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Rate()));
-              },
-            ),
 
             ListTile(
               title: const Text('Sign Up'),

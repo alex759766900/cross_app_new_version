@@ -11,7 +11,8 @@ class RouterName{
   static const TradieDemo='tradieSelection';
   static const GuestHome='guestHome';
   static const Checkout='CheckOut';
-  static const Pay='Pay';
+  static const Pay='pay';
+  static const Rate='rate';
 
 
 }

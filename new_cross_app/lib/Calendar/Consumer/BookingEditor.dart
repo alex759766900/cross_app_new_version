@@ -198,9 +198,7 @@ class BookingEditorState extends State<BookingEditor> {
             ),
             ListTile(
               contentPadding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-              leading: Icon(
-                  Icons.monetization_on
-              ),
+              leading: Icon(Icons.monetization_on),
               title: Text(quote.toString()),
             ),
             const Divider(
@@ -216,15 +214,30 @@ class BookingEditorState extends State<BookingEditor> {
                 _statusNames[_selectedStatusIndex],
               ),
               trailing: _statusNames[_selectedStatusIndex] != 'Confirmed'
-                  ? const Text('this')
+                  ? IconButton(
+                      onPressed: () {
+                        if (_statusNames[_selectedStatusIndex] == 'Rating') {
+                          GoRouter.of(context).pushNamed(RouterName.Rate,
+                              params: {'bookingId': selectedKey});
+                        }
+                      },
+                      icon: _statusNames[_selectedStatusIndex] == 'Rating'
+                          ? Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_circle,
+                            ))
                   : IconButton(
                       icon: Icon(
                         Icons.check_circle,
                         color: _colorCollection[_selectedStatusIndex],
                       ),
                       onPressed: () {
-                        GoRouter.of(context).pushNamed(RouterName.Checkout,params: {
-                          'bookingId':selectedKey,
+                        GoRouter.of(context)
+                            .pushNamed(RouterName.Checkout, params: {
+                          'bookingId': selectedKey,
                         });
                         colRef.doc(selectedKey).update({'status': 'Working'});
                       },
@@ -294,7 +307,7 @@ class BookingEditorState extends State<BookingEditor> {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      if(_selectedAppointment==null){
+                      if (_selectedAppointment == null) {
                         print('new booking');
                         final meetings = <Booking>[];
                         AlertDialog alert_outBound;
@@ -321,8 +334,8 @@ class BookingEditorState extends State<BookingEditor> {
                           return;
                         }
                         final Booking? newTimeAppointment =
-                        _isInterceptExistingAppointments(
-                            _startDate, _endDate);
+                            _isInterceptExistingAppointments(
+                                _startDate, _endDate);
                         AlertDialog alert_conflict;
                         if (newTimeAppointment != null) {
                           Widget okButton = TextButton(
@@ -367,8 +380,8 @@ class BookingEditorState extends State<BookingEditor> {
                         if (_bookings.appointments!.isNotEmpty ||
                             _bookings.appointments != null) {
                           for (int i = 0;
-                          i < _bookings.appointments!.length;
-                          i++) {
+                              i < _bookings.appointments!.length;
+                              i++) {
                             Booking b = _bookings.appointments![i];
                             keys.add(b.key);
                           }
@@ -384,17 +397,18 @@ class BookingEditorState extends State<BookingEditor> {
                           'key': selectedKey,
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
-                          'quote':quote,
+                          'quote': quote,
                         });
 
                         var k = await getKey(keys);
                         colRef.doc(k).update({'key': k});
-
-                      }else{
+                      } else {
                         print('old booking');
                         final meetings = <Booking>[];
                         int remove = 0;
-                        for (int i = 0; i < _bookings.appointments!.length; i++) {
+                        for (int i = 0;
+                            i < _bookings.appointments!.length;
+                            i++) {
                           Booking b = _bookings.appointments![i];
                           if (b.key == _selectedAppointment!.key) {
                             print('find');
@@ -403,7 +417,8 @@ class BookingEditorState extends State<BookingEditor> {
                           }
                         }
                         _bookings.appointments!.removeAt(remove);
-                        _bookings.notifyListeners(CalendarDataSourceAction.remove,
+                        _bookings.notifyListeners(
+                            CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
                         colRef.doc(_selectedAppointment?.key).update({
                           'eventName': _subject,
@@ -416,7 +431,7 @@ class BookingEditorState extends State<BookingEditor> {
                           'key': selectedKey,
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
-                          'quote':quote,
+                          'quote': quote,
                         });
                         meetings.add(Booking(
                           from: _startDate,
@@ -435,7 +450,6 @@ class BookingEditorState extends State<BookingEditor> {
                         _bookings.notifyListeners(
                             CalendarDataSourceAction.add, meetings);
                       }
-
 
                       _selectedAppointment = null;
                       //_consumer.bookings.add(meetings[0]);
@@ -456,7 +470,9 @@ class BookingEditorState extends State<BookingEditor> {
                     onPressed: () {
                       if (_selectedAppointment != null) {
                         int remove = 0;
-                        for (int i = 0; i < _bookings.appointments!.length; i++) {
+                        for (int i = 0;
+                            i < _bookings.appointments!.length;
+                            i++) {
                           Booking b = _bookings.appointments![i];
                           if (b.key == _selectedAppointment!.key) {
                             print('find');
