@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:new_cross_app/Login/login.dart';
+import 'package:new_cross_app/Login/not_logged_in_page.dart';
 import 'package:new_cross_app/helper/helper_function.dart';
 import 'package:sizer/sizer.dart';
 
@@ -31,19 +33,25 @@ class ProfileState extends State<Profile> {
   }
 
   Future<void> getUserProfile() async {
-    Constants.myId = (await HelperFunctions.getUserIdFromSF())!;
-    print(Constants.myId);
+    // Constants.myId = "Siyuan0001";
+    Constants.myId = (await HelperFunctions.getUserIdFromSF()) ?? "";
+    print("id: " + Constants.myId);
 
-    DocumentSnapshot docSnapshot = await colRef.doc(Constants.myId).get();
-    Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+    // Check if user is logged in
+    if (Constants.myId.isEmpty || Constants.myId=='') {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NotLoggedInPage()));
+      print("you have to log in " + Constants.myId);
+    } else {
+      DocumentSnapshot docSnapshot = await colRef.doc(Constants.myId).get();
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
-    setState(() {
-      name.text = data['name'] ?? '';
-      age.text = data['age'] ?? '';
-      phone.text = data['phone'] ?? '';
-      aaddress.text = data['address'] ?? '';
-      // card.text = data['card'] ?? '';
-    });
+      setState(() {
+        name.text = data['name'] ?? '';
+        age.text = data['age'] ?? '';
+        phone.text = data['phone'] ?? '';
+        aaddress.text = data['address'] ?? '';
+      });
+    }
   }
 
   @override
@@ -155,7 +163,7 @@ class ProfileState extends State<Profile> {
               padding: const EdgeInsets.only(
                   left: 15.0, right: 15.0, top: 20, bottom: 10),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 300),
+                constraints: BoxConstraints(maxWidth: 400),
                 child: TextFormField(
                   controller: aaddress,
                   validator: (value) {
@@ -249,6 +257,7 @@ class ProfileState extends State<Profile> {
             borderRadius: BorderRadius.circular(30.0),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 20),
+
         ),
       ),
     );
