@@ -41,10 +41,10 @@ String _notes = '';
 String selectedKey='';
 String _tradieName = '';
 String _consumerName='';
-String _tradieId='';
+String _tradieId='C6lHBZcGEyVSO7wSbozURFpObKV2';
 String _consumerId='';
 String user_tradieName='';
-String user_tradieId='7ylyCreV44uORAfvRxJT';
+String user_tradieId='C6lHBZcGEyVSO7wSbozURFpObKV2';
 String user_subject='';
 late num quote;
 
@@ -53,11 +53,12 @@ final CollectionReference colRef=databaseReference.collection('bookings');
 
 class TradieProfileState extends State<TradieProfilePage> {
 
-  String tradie='';
+  String tradie='C6lHBZcGEyVSO7wSbozURFpObKV2';
   late Stream<QuerySnapshot> _usersStream;
 
   TradieProfileState(String this.tradie){
-    _tradieId=this.tradie;
+    //_tradieId=this.tradie;
+    //user_tradieId=this.tradie;
     print(_tradieId);
     colRef.where('tradieId', isEqualTo: _tradieId).snapshots().listen(
           (event) => print("get query"+_tradieId),
@@ -169,13 +170,6 @@ class TradieProfileState extends State<TradieProfilePage> {
         return Scaffold(
             appBar: AppBar(
               title: Text('Current Bookings'),
-              leading: IconButton(
-                icon: Icon(Icons.house),
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => MyApp()));
-                },
-              ),
             ),
             resizeToAvoidBottomInset: true,
             body: Padding(

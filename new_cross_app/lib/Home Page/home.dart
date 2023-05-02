@@ -1,3 +1,4 @@
+library home;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,6 @@ import 'package:new_cross_app/Home Page/graphical_banner.dart';
 import 'package:new_cross_app/Home Page/login_button.dart';
 import 'package:new_cross_app/Home Page/nav_bar.dart';
 import 'package:new_cross_app/Home Page/notification_panel.dart';
-import 'package:new_cross_app/Home Page/search_bar.dart';
 import 'package:new_cross_app/Home Page/web_footer.dart';
 import 'package:new_cross_app/Home Page/about_jemma.dart';
 import 'package:new_cross_app/Home Page/why_jemma.dart';
@@ -25,13 +25,16 @@ import '../Calendar/Consumer/TradieDemo.dart';
 import '../Calendar/RatePage.dart';
 import '../Calendar/Tradie/TradieProfilePage.dart';
 import '../Login/login.dart';
+import '../Login/utils/constants.dart';
 import '../Profile/profile.dart';
 import '../Sign_up/signup.dart';
 import '../chat/screens/chat_home_screen.dart';
 import '../helper/helper_function.dart';
 import '../stripe/card_form_screen.dart';
 import '../stripe/check_out.dart';
+import 'decorations.dart';
 
+part 'package:new_cross_app/Home Page/search_bar.dart';
 /// Home screen for guests and customers
 ///
 /// Restricting max width of widgets to be 1080 based on the data from:
@@ -52,6 +55,7 @@ class Home extends StatefulWidget {
 final logger = Logger(
   printer: PrettyPrinter(),
 );
+bool _isLoggedIn = false;
 class HomeState extends State<Home>{
   String userId;
   bool isConsumer = true;
@@ -59,7 +63,7 @@ class HomeState extends State<Home>{
   static const borderRadius = 40.0;
   static const maxWidth = 1080.0;
 
-  bool _isLoggedIn = false;
+  //bool _isLoggedIn = false;
 
   @override
   void initState() {
@@ -143,7 +147,7 @@ class HomeState extends State<Home>{
               })*/
       ),
       drawer: Drawer(
-        child: userId != ''
+        child: _isLoggedIn==true
             ? ListView(
                 padding: EdgeInsets.zero,
                 children: [
@@ -154,16 +158,6 @@ class HomeState extends State<Home>{
                     child: Text(
                       'Menu',
                     ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      _isLoggedIn ? 'Logout' : 'Login',
-                    ),
-                    onTap: _isLoggedIn
-                        ? _showLogoutDialog
-                        : () {
-
-                    },
                   ),
                   ListTile(
                     title: const Text('Home'),
@@ -184,7 +178,7 @@ class HomeState extends State<Home>{
                   //TODO: Test User Type
                   isConsumer == true
                       ? ListTile(
-                          title: const Text('Consumer Calendar'),
+                          title: const Text('Calendar'),
                           onTap: () {
                             GoRouter.of(context).pushNamed(
                                 RouterName.CalendarConsumer,
@@ -194,7 +188,7 @@ class HomeState extends State<Home>{
                           },
                         )
                       : ListTile(
-                          title: const Text('Tradie Calendar'),
+                          title: const Text('Calendar'),
                           onTap: () {
                             GoRouter.of(context)
                                 .pushNamed(RouterName.CalendarTradie, params: {
@@ -208,6 +202,16 @@ class HomeState extends State<Home>{
                       GoRouter.of(context).pushNamed(RouterName.chat, params: {
                         'userId': userId,
                       });
+                    },
+                  ),
+                  ListTile(
+                    title: Text(
+                      _isLoggedIn ? 'Logout' : 'Login',
+                    ),
+                    onTap: _isLoggedIn
+                        ? _showLogoutDialog
+                        : () {
+
                     },
                   ),
                 ],

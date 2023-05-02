@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
-//import 'package:jemma/models/searchtradie.dart';
-import 'package:new_cross_app/Home Page/constants.dart';
-import 'package:new_cross_app/Home Page/decorations.dart';
-import 'package:new_cross_app/Home Page/responsive.dart';
-import 'package:new_cross_app/Routes/route_const.dart';
+part of home;
+//import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:go_router/go_router.dart';
+// //import 'package:jemma/models/searchtradie.dart';
+// import 'package:new_cross_app/Home Page/constants.dart';
+// import 'package:new_cross_app/Home Page/decorations.dart';
+// import 'package:new_cross_app/Home Page/responsive.dart';
+// import 'package:new_cross_app/Routes/route_const.dart';
 
 //import '../../routes.dart';
 
@@ -55,9 +56,12 @@ class SearchBar extends StatelessWidget {
     return Container(
       child: ElevatedButton.icon(
         onPressed: () {
-         GoRouter.of(context).pushNamed(RouterName.TradieDemo,params: {
-           'userId':userId
-         });
+          if(_isLoggedIn){
+            GoRouter.of(context).pushNamed(RouterName.TradieDemo,params: {
+              'userId':userId
+            });
+          }
+
         }, // TODO: Replace with search request
         icon: Icon(
           Icons.search,

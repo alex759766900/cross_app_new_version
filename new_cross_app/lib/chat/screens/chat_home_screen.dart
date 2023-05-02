@@ -145,6 +145,14 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
         title: const Text(
           'Jemma',
         ),
+        leading: IconButton(
+          onPressed: () {
+            GoRouter.of(context).pushNamed(RouterName.homePage, params: {
+              'userId': userId,
+            });
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         elevation: 0,
       ),
       body: Column(
@@ -195,10 +203,13 @@ class ChatRoomsTile extends StatelessWidget {
   ChatRoomsTile({Key? key, required this.userId, required this.chatRoomId})
       : super(key: key);
   String userName='';
+
   Stream<Map<String, dynamic>> GetLastMessage() async* {
     final controller = StreamController<Map<String, dynamic>>();
-    controller.onListen = () {
+    controller.onListen = () async {
       try {
+        userName=(await HelperFunctions.getUserNameFromId(userId))!;
+        print(userName);
         FirebaseFirestore.instance
             .collection('chatRoom')
             .doc(chatRoomId)
@@ -229,8 +240,10 @@ class ChatRoomsTile extends StatelessWidget {
     controller.onCancel = () {};
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return StreamBuilder<Map<String, dynamic>>(
       stream: GetLastMessage(),
       builder: (context, snapshot) {
@@ -263,7 +276,7 @@ class ChatRoomsTile extends StatelessWidget {
                   child: Center(
                     child: Text(
                       //TODO: username
-                      'userName',
+                      userName,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Color.fromARGB(255, 87, 87, 87),
@@ -285,7 +298,8 @@ class ChatRoomsTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            HelperFunctions.getUserName(userId),
+                            //TODO
+                            userName,
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               color: Color.fromARGB(255, 87, 87, 87),

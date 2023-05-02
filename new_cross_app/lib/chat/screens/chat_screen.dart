@@ -33,6 +33,7 @@ class _ChatState extends State<Chat> {
         onError: (error) => print("Listen failed: $error"));
     chats=chatRef.where('users',arrayContains: userId).snapshots();
   }*/
+  String userName='';
   Widget chatMessages() {
     if (chats == null) {
       return Container();
@@ -87,13 +88,14 @@ class _ChatState extends State<Chat> {
   }
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     DatabaseService().getChats(widget.chatRoomId).then((val) {
       setState(() {
         chats = val;
       });
     });
+
   }
 
   @override
@@ -111,7 +113,7 @@ class _ChatState extends State<Chat> {
         ),
         title: Text(
           //TODO: NAME
-          HelperFunctions.getUserName(userId),
+          userName,
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

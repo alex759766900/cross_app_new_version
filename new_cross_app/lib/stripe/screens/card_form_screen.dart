@@ -69,7 +69,7 @@ class CardFormScreen extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  GoRouter.of(context).pushNamed(RouterName.homePage);
+                  GoRouter.of(context).pushNamed(RouterName.homePage,params: {'userId': '1P1AuzZ4ElZTBrIV9WaaTpuTzbu1'});
                 },
                 child: const Text('Back to home'),
               ),

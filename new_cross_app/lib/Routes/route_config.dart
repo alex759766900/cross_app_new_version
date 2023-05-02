@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/RatePage.dart';
+import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Profile/profile.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
@@ -61,7 +62,7 @@ class MyRouter{
           name: RouterName.CalendarTradie,
           path:'/calendarT/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: LoginPage());
+            return MaterialPage(child:TradieProfilePage(tradie: state.params['userId']!,));
           },
         ),
         GoRoute(

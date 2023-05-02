@@ -3,8 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HelperFunctions {
   //keys
-  static final CollectionReference tradieRef=FirebaseFirestore.instance.collection('tradeperson');
-  static final CollectionReference consumerRef=FirebaseFirestore.instance.collection('customers');
+  static final CollectionReference tradieRef =
+      FirebaseFirestore.instance.collection('tradeperson');
+  static final CollectionReference consumerRef =
+      FirebaseFirestore.instance.collection('customers');
   static String userLoggedInKey = "LOGGEDINKEY";
   static String userNameKey = "USERNAMEKEY";
   static String userEmailKey = "USEREMAILKEY";
@@ -54,26 +56,41 @@ class HelperFunctions {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(userIDKey);
   }
-  static Future<String?> getUserNameFromId(String userId) async{
-    await tradieRef.get().then((value) {
-      for (var v in value.docs){
-        if (v.id==userId){
-          return v['fullName'];
+
+  static Future<String?> getUserNameFromId(String userId) async {
+    String userName='';
+    tradieRef.get().then((querySnapshot) {
+        print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          if(docSnapshot.id==userId){
+            if(docSnapshot.data()!=null){
+              var data = docSnapshot.data() as Map<String, dynamic>;
+              userName=data['fullName'];
+
+              return userName;
+            }
+          }
         }
-      }
-    }
+      },
+      onError: (e) => print("Error completing: $e"),
     );
-    await consumerRef.get().then((value) {
-      for (var v in value.docs){
-        if (v.id==userId){
-          return v['fullName'];
+    consumerRef.get().then((querySnapshot) {
+      print("Successfully completed");
+      for (var docSnapshot in querySnapshot.docs) {
+        if(docSnapshot.id==userId){
+          if(docSnapshot.data()!=null){
+            userName=docSnapshot['fullName'];
+
+            return userName;
+          }
         }
       }
-    }
+
+    },
+      onError: (e) => print("Error completing: $e"),
     );
 
-  }
-  static String getUserName(String userId){
-    return getUserNameFromId(userId).toString();
+
+
   }
 }
