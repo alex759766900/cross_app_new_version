@@ -12,7 +12,7 @@ class Profile extends StatefulWidget {
   const Profile({Key? key, required this.userId}) : super(key: key);
 
   @override
-  ProfileState createState() => ProfileState();
+  ProfileState createState() => ProfileState(userId: userId);
 }
 
 final databaseReference = FirebaseFirestore.instance;
@@ -20,6 +20,8 @@ final CollectionReference colRef = databaseReference.collection('customers');
 
 class ProfileState extends State<Profile> {
   final _formkey = GlobalKey<FormState>();
+  String userId;
+  ProfileState({required this.userId});
   var scrollController = ScrollController();
   final TextEditingController name = new TextEditingController(),
       age = new TextEditingController(),
@@ -30,21 +32,21 @@ class ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
-    getUserProfile();
+    getUserProfile(userId);
   }
 
-  Future<void> getUserProfile() async {
+  Future<void> getUserProfile(String userId) async {
     // Constants.myId = "Siyuan0001";
-    Constants.MyId = (await HelperFunctions.getUserIdFromSF()) ?? "";
-    print("id: " + Constants.MyId);
+    /*Constants.MyId = (await HelperFunctions.getUserIdFromSF()) ?? "";
+    print("id: " + Constants.MyId);*/
 
     // Check if user is logged in
-    if (Constants.MyId.isEmpty || Constants.MyId == '') {
+    if (userId.isEmpty || userId == '') {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => NotLoggedInPage()));
-      print("you have to log in " + Constants.MyId);
+      print("you have to log in ");
     } else {
-      DocumentSnapshot docSnapshot = await colRef.doc(Constants.MyId).get();
+      DocumentSnapshot docSnapshot = await colRef.doc(userId).get();
       Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
       setState(() {
@@ -238,7 +240,7 @@ class ProfileState extends State<Profile> {
             );
 
             // Save the data to the database
-            colRef.doc(Constants.MyId).set({
+            colRef.doc(userId).update({
               "name": name.text,
               "age": age.text,
               "phone": phone.text,

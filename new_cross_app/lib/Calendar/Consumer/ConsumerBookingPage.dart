@@ -34,13 +34,13 @@ List<Booking> ls=<Booking>[];
 late DataSource _bookings=DataSource(ls);
 Booking? _selectedAppointment;
 String user_consumerId ='';
-String user_consumerName='';
-String user_tradieName='';
+String user_consumerName='Christine';
+String user_tradieName='Jack';
 String user_tradieId='';
 String _consumerId='';
 String _tradieId='';
-String user_subject='';
-late num quote=0;
+String user_subject='Painting';
+late num quote=40;
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -108,7 +108,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
           quote: e['quote'] ?? '',
         ))
             .toList();
-        for (var v in list!){
+        /*for (var v in list!){
           if(v.tradieId==user_tradieId){
             user_tradieName=v.tradieName;
             user_subject=v.eventName;
@@ -120,7 +120,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
             user_consumerName=v.consumerName;
             break;
           }
-        }
+        }*/
         _bookings = DataSource(list!);
 
         return Scaffold(

@@ -47,9 +47,9 @@ main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Stripe.publishableKey =
+  /*Stripe.publishableKey =
       stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
-  await Stripe.instance.applySettings();
+  await Stripe.instance.applySettings();*/
 
   runApp(const MyApp());
 }

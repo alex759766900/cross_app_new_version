@@ -17,11 +17,19 @@ void main() async {
   runApp(StripePay(bookingId: bookingId,));
 }
 
+
 class StripePay extends StatelessWidget {
   String bookingId;
   StripePay({super.key,required this.bookingId});
+  Future<void> initializeStripe() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    Stripe.publishableKey =
+        stripePublishableKey; //JemmaAUGroup@gmail.com code:JemmaTeam2023
+    await Stripe.instance.applySettings();
+  }
   @override
   Widget build(BuildContext context) {
+    initializeStripe();
     return BlocProvider(
       create: (context) => PaymentBloc(),
       child: MaterialApp(

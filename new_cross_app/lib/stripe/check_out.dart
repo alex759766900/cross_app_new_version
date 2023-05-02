@@ -12,32 +12,31 @@ import 'package:flutter/material.dart';
 class StripeApp extends StatelessWidget {
   String bookingId;
   StripeApp({Key? key, required this.bookingId}) : super(key: key);
+  Booking booking = Booking(from: DateTime.now(), to: DateTime.now());
+  Future<Booking> getBooking() async {
+    var data = await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingId)
+        .get();
+    booking = Booking(
+      eventName: data['eventName'] ?? '',
+      from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(data['from']),
+      to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(data['to']),
+      status: data['status'],
+      consumerName: data['consumerName'] ?? '',
+      tradieName: data['tradieName'] ?? '',
+      description: data['description'] ?? '',
+      key: data['key'],
+      quote: data['quote'] ?? '',
+      consumerId: data['consumerId'] ?? '',
+      tradieId: data['tradieId'] ?? '',
+    );
+
+    return booking;
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('bookingId' + bookingId);
-    Booking booking = Booking(from: DateTime.now(), to: DateTime.now());
-    FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(bookingId)
-        .get()
-        .then((value) {
-      var data = value.data()!;
-      booking = Booking(
-        eventName: data['eventName'] ?? '',
-        from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(data['from']),
-        to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(data['to']),
-        status: data['status'],
-        consumerName: data['consumerName'] ?? '',
-        tradieName: data['tradieName'] ?? '',
-        description: data['description'] ?? '',
-        key: data['key'],
-        quote: data['quote'] ?? '',
-        consumerId: data['consumerId'] ?? '',
-        tradieId: data['tradieId'] ?? '',
-      );
-    });
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -49,45 +48,70 @@ class StripeApp extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text("Request Information", style: TextStyle(fontSize: 30.0)),
-          Container(
-              color: Colors.lightGreen,
-              height: 200.0,
-              child: Row(children: [
-                Image(
-                    image: NetworkImage(
-                        'https://www.tradieshirts.com.au/rshared/ssc/i/riq/5717778/1600/1600/t/0/0/Tradie%20Shirts%20Printed%20Sydney1.jpg?1621509120')),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Type of work:"),
-                    Text("The number of worker:"),
-                    Text("From:"),
-                    Text("To:"),
-                    Text("Money:"),
-                    Text("Name:"),
-                    Text("Status:")
-                  ],
+          SizedBox(
+            child: Container(
+                color: Colors.lightGreen,
+                height: 180.0,
+                  child: Row(children: [
+                    Image(
+                        image: NetworkImage(
+                            'https://www.tradieshirts.com.au/rshared/ssc/i/riq/5717778/1600/1600/t/0/0/Tradie%20Shirts%20Printed%20Sydney1.jpg?1621509120')),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text("Work:"),
+                              Text(booking.eventName),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("From:"),
+                              Text(booking.from.toString()),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("To:"),
+                              Text(booking.to.toString()),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Quote:"),
+                              Text('40'),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Tradie Name:"),
+                              Text(booking.tradieName),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Status:"),
+                              Text(booking.status),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(booking.eventName),
-                    Text(booking.from.toString()),
-                    Text(booking.to.toString()),
-                    Text(booking.quote.toString()),
-                    Text(booking.tradieName),
-                    Text(booking.status)
-                  ],
-                ),
-              ])),
+          ),
           ElevatedButton(
               child: Text("make a payment"),
               onPressed: () {
-               GoRouter.of(context).pushNamed(RouterName.Pay,params: {
-                 'bookingId':bookingId
-               });
+                FirebaseFirestore.instance
+                    .collection('bookings')
+                    .doc(bookingId)
+                    .update({'status': 'Rating'});
+                GoRouter.of(context).pushNamed(RouterName.Pay,
+                    params: {'bookingId': bookingId});
               })
         ],
       )),
@@ -107,7 +131,7 @@ class Booking {
       this.key = '',
       this.consumerId = '',
       this.tradieId = '',
-      this.quote = 0});
+      this.quote=0});
 
   final String tradieName;
   final String consumerName;
