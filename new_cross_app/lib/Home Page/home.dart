@@ -147,7 +147,7 @@ class HomeState extends State<Home>{
               })*/
       ),
       drawer: Drawer(
-        child: _isLoggedIn==true
+        child: userId !=''
             ? ListView(
                 padding: EdgeInsets.zero,
                 children: [

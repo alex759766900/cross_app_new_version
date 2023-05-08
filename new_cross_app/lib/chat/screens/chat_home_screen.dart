@@ -32,6 +32,7 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
   late Stream<QuerySnapshot> chatRooms;
   _ChatRoomState(String id) {
     this.userId = id;
+    print(userId);
     chatRef.where('user', arrayContains: userId).snapshots().listen(
         (event) => print("get query"+"chatroom"),
         onError: (error) => print("Listen failed: $error"));

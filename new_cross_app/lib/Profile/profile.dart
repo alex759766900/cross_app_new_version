@@ -241,9 +241,9 @@ class ProfileState extends State<Profile> {
 
             // Save the data to the database
             colRef.doc(userId).update({
-              "name": name.text,
+              "fullname": name.text,
               "age": age.text,
-              "phone": phone.text,
+              "Phone": phone.text,
               "address": aaddress.text,
               // "card": card.text,
             });
