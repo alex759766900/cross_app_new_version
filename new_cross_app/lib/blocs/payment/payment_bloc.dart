@@ -5,6 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+// import 'package:stripe_payment/stripe_payment.dart';
+
 part 'payment_event.dart';
 part 'payment_state.dart';
 

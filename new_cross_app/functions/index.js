@@ -1,3 +1,6 @@
+/*
+ 1. Customer transfer to Jemma
+*/
 const functions = require("firebase-functions");
 const stripe = require("stripe")(functions.config().stripe.testkey);
 // const stripe = require('stripe')(functions.config().stripe.secret_key);
@@ -104,3 +107,61 @@ functions.https.onRequest(async(req, res)=>{
         return res.send({error: e.message});
     }
 });
+
+/*
+ 2. Jemma transfer to Tradie
+*/
+exports.StripeConnectTransfer =
+functions.https.onRequest(async (req, res) => {
+  const {destination_id, amount} = req.body;
+  // TODO：check the status of booking
+  try {
+    const params = {
+      amount: amount,
+      currency: 'usd',
+      destination: destination_id,
+    };
+    // TODO：change to tradie's Stripe account
+    const transfer = await stripe.transfers.create(params);
+
+    return res.send(transfer);
+  } catch (e) {
+    return res.send({error: e.message});
+  }
+});
+
+
+//const functions = require('firebase-functions');
+//const admin = require('firebase-admin');
+//admin.initializeApp();
+//
+//// const stripe = require('stripe')('sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI');
+//
+//exports.createPayment = functions.https.onCall(async (data, context) => {
+//  // check if the user login
+//  if (!context.auth) {
+//    throw new functions.https.HttpsError('unauthenticated', 'The function must be called while authenticated.');
+//  }
+//
+//  const paymentMethodId = data.paymentMethodId;
+//  const destinationAccountId = data.destinationAccountId;
+//
+//  try {
+//    const paymentIntent = await stripe.paymentIntents.create({
+//      payment_method: paymentMethodId,
+//      amount: 1000, // Amount in cents
+//      currency: 'usd',
+//      confirmation_method: 'manual',
+//      confirm: true,
+//      application_fee_amount: 100, // Application fee in cents
+//      transfer_data: {
+//        destination: destinationAccountId,
+//      },
+//    });
+//
+//    return {status: 'success'};
+//  } catch (error) {
+//    console.error(error);
+//    throw new functions.https.HttpsError('internal', 'Failed to create the payment: ' + error.message);
+//  }
+//});
