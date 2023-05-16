@@ -17,6 +17,8 @@ class TradieDemoState extends State<TradieDemo> {
   @override
   Widget build(BuildContext context) {
     String consumer = widget.userId;
+    print('tradie selection page consumer ');
+    print(consumer);
     return Scaffold(
         appBar: AppBar(
           title: Text('Select Tradie'),

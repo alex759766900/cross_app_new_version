@@ -1,4 +1,6 @@
 library home;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,28 +37,28 @@ import '../stripe/check_out.dart';
 import 'decorations.dart';
 
 part 'package:new_cross_app/Home Page/search_bar.dart';
+
 /// Home screen for guests and customers
 ///
 /// Restricting max width of widgets to be 1080 based on the data from:
 /// https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide
 class Home extends StatefulWidget {
-
   String userId = '';
-  Home.G({Key? key}): super(key: key);
-  Home(String userId){
-    this.userId=userId;
+  Home.G({Key? key}) : super(key: key);
+  Home(String userId) {
+    this.userId = userId;
   }
 
   @override
-  HomeState createState() => HomeState(userId:userId );
-
-
+  HomeState createState() => HomeState(userId: userId);
 }
+
 final logger = Logger(
   printer: PrettyPrinter(),
 );
 bool _isLoggedIn = false;
-class HomeState extends State<Home>{
+
+class HomeState extends State<Home> {
   String userId;
   bool isConsumer = true;
   HomeState({required this.userId});
@@ -80,7 +82,8 @@ class HomeState extends State<Home>{
 
   void logout() async {
     await HelperFunctions.saveUserLoggedInStatus(false);
-    print("Logout succusfully. LoggedInStatus: " + (await HelperFunctions.getUserLoggedInStatus()).toString());
+    print("Logout succusfully. LoggedInStatus: " +
+        (await HelperFunctions.getUserLoggedInStatus()).toString());
     setState(() {
       _isLoggedIn = false;
     });
@@ -116,11 +119,9 @@ class HomeState extends State<Home>{
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Consumer_person consumer = Consumer_person('Lance');
     var scrollController = ScrollController();
     return Scaffold(
       endDrawer: const NotificationPanel(),
@@ -147,7 +148,7 @@ class HomeState extends State<Home>{
               })*/
       ),
       drawer: Drawer(
-        child: userId !=''
+        child: userId != ''
             ? ListView(
                 padding: EdgeInsets.zero,
                 children: [
@@ -208,11 +209,7 @@ class HomeState extends State<Home>{
                     title: Text(
                       _isLoggedIn ? 'Logout' : 'Login',
                     ),
-                    onTap: _isLoggedIn
-                        ? _showLogoutDialog
-                        : () {
-
-                    },
+                    onTap: _isLoggedIn ? _showLogoutDialog : () {},
                   ),
                 ],
               )
@@ -236,8 +233,7 @@ class HomeState extends State<Home>{
                       )),
                   TextButton(
                       onPressed: () {
-                        GoRouter.of(context)
-                            .pushNamed(RouterName.SignUp);
+                        GoRouter.of(context).pushNamed(RouterName.SignUp);
                       },
                       child: const Text(
                         'Sign Up',
@@ -279,4 +275,21 @@ class HomeState extends State<Home>{
       ),
     );
   }
+}
+
+Future<void> isConsumer(userId) async{
+  await FirebaseFirestore.instance
+      .collection('users')
+      .where('userId', isEqualTo: userId)
+      .get()
+      .then(
+    (querySnapshot) {
+      print("get user type completed");
+      for (var docSnapshot in querySnapshot.docs) {
+        //TODO: FIND USER
+      }
+    },
+    onError: (e) => print("Error completing: $e"),
+  );
+
 }

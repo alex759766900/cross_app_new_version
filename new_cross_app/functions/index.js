@@ -8,8 +8,8 @@ const stripe = require("stripe")(functions.config().stripe.testkey);
 const calculateOrderAmount = (items) => {
   const prices = []; // Add 'let' before variable declaration
   const catalog = [ // Add 'let' before variable declaration
-    {"id": "0", "price": 2.99},
-    {"id": "1", "price": 3.99},
+    {"id": "0", "price": 20},
+    {"id": "1", "price": 20},
     {"id": "2", "price": 4.99},
     {"id": "3", "price": 5.99},
     {"id": "4", "price": 6.99},

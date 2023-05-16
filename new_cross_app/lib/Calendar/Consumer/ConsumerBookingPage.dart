@@ -34,13 +34,13 @@ List<Booking> ls=<Booking>[];
 late DataSource _bookings=DataSource(ls);
 Booking? _selectedAppointment;
 String user_consumerId ='';
-String user_consumerName='Christine';
-String user_tradieName='Jack';
+String user_consumerName='';
+String user_tradieName='';
 String user_tradieId='';
 String _consumerId='';
 String _tradieId='';
-String user_subject='Painting';
-late num quote=40;
+String user_subject='';
+late num quote;
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
@@ -48,13 +48,15 @@ late TimeOfDay _endTime;
 bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
-
+final db = FirebaseFirestore.instance;
+final consumerRef = db.collection('customers');
+final tradieRef = db.collection('tradeperson');
 class ConsumerBookingState extends State<ConsumerBooking> {
 
   late Stream<QuerySnapshot> _usersStream;
-  String tradie='';
-  String userId='';
-  ConsumerBookingState(String tradie,String userId){
+  String tradie;
+  String userId;
+  ConsumerBookingState(this.tradie, this.userId) {
     user_tradieId=tradie;
     user_consumerId=userId;
     colRef.where('tradieId', isEqualTo: user_tradieId).snapshots().listen(
@@ -63,7 +65,18 @@ class ConsumerBookingState extends State<ConsumerBooking> {
       onError: (error) => print("Listen failed: $error"),
     );
     _usersStream = colRef.where('tradieId', isEqualTo: user_tradieId).snapshots();
+    getName(user_tradieId, user_consumerId);
   }
+  Future<void> getName(tradieId, consumerId)async {
+    await tradieRef.where('uid', isEqualTo: tradieId).get().then((value) => {
+      user_tradieName=value.docs[0]['fullName'],
+      user_subject = value.docs[0]['job']
+    });
+    await consumerRef.where('uid', isEqualTo: consumerId).get().then((value) => user_consumerName=value.docs[0]['fullName']);
+
+  }
+
+
 
   late List<Booking> appointments;
   CalendarController calendarController = CalendarController();
@@ -81,7 +94,6 @@ class ConsumerBookingState extends State<ConsumerBooking> {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<QuerySnapshot>(
       stream: _usersStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

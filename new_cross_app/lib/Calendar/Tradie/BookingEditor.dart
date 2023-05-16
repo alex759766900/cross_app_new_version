@@ -202,7 +202,22 @@ class BookingEditorState extends State<BookingEditor> {
               leading: Icon(
                 Icons.monetization_on
               ),
-              title: Text(quote.toString()),
+              title: TextField(
+                controller: TextEditingController(text: quote.toString()),
+                onChanged: (String value) {
+                  quote = num.parse(value);
+                },
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w400),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Add Quote',
+                ),
+              ),
             ),
             const Divider(
               height: 1.0,

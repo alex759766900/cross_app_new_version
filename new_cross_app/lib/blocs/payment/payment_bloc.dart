@@ -35,7 +35,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     final paymentIntentResult = await _callPayEndpointMethodId(
       useStripeSdk: true,
       paymentMethodId: paymentMethod.id,
-      currency: 'usd',
+      currency: 'aud',
       items: event.items,
     );
 
