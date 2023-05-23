@@ -1,5 +1,7 @@
 library home;
 
+import 'dart:js_interop';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -57,20 +59,23 @@ final logger = Logger(
   printer: PrettyPrinter(),
 );
 bool _isLoggedIn = false;
-
+late bool _isConsumer;
 class HomeState extends State<Home> {
   String userId;
-  bool isConsumer = true;
   HomeState({required this.userId});
   static const borderRadius = 40.0;
   static const maxWidth = 1080.0;
 
   //bool _isLoggedIn = false;
-
+  
   @override
   void initState() {
     super.initState();
     _checkLoginStatus();
+    isConsumer(userId).then((value){
+      print(value);
+      _isConsumer = value;
+    });
   }
 
   void _checkLoginStatus() async {
@@ -177,7 +182,7 @@ class HomeState extends State<Home> {
                     },
                   ),
                   //TODO: Test User Type
-                  isConsumer == true
+                   _isConsumer == true
                       ? ListTile(
                           title: const Text('Calendar'),
                           onTap: () {
@@ -277,19 +282,24 @@ class HomeState extends State<Home> {
   }
 }
 
-Future<void> isConsumer(userId) async{
+Future<bool> isConsumer(userId) async{
+  late bool result;
   await FirebaseFirestore.instance
-      .collection('users')
-      .where('userId', isEqualTo: userId)
+      .collection('customers')
+      .where('uid', isEqualTo: userId)
       .get()
       .then(
     (querySnapshot) {
-      print("get user type completed");
-      for (var docSnapshot in querySnapshot.docs) {
-        //TODO: FIND USER
+      if(querySnapshot.docs.isNotEmpty){
+        print('it is consumer');
+        result= true;
+      }else{
+        print('it is tradie');
+        result = false;
       }
     },
     onError: (e) => print("Error completing: $e"),
   );
+  return result;
 
 }

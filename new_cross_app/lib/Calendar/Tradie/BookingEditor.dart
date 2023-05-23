@@ -9,6 +9,7 @@ class BookingEditor extends StatefulWidget {
 
 class BookingEditorState extends State<BookingEditor> {
   Widget _getAppointmentEditor(BuildContext context) {
+    var textFieldC= TextEditingController(text: quote.toString());
     return Container(
         color: Colors.white,
         child: ListView(
@@ -203,11 +204,17 @@ class BookingEditorState extends State<BookingEditor> {
                 Icons.monetization_on
               ),
               title: TextField(
-                controller: TextEditingController(text: quote.toString()),
-                onChanged: (String value) {
-                  quote = num.parse(value);
+                controller: textFieldC,
+                onChanged: (value){
+                  print(value);
+                  try{
+                    if(value.isNotEmpty){ quote = num.parse(value);}
+
+                  }catch(e){
+                    print(e);
+                  }
                 },
-                keyboardType: TextInputType.multiline,
+                keyboardType: TextInputType.number,
                 maxLines: null,
                 style: const TextStyle(
                     fontSize: 18,
@@ -255,9 +262,8 @@ class BookingEditorState extends State<BookingEditor> {
                 Icons.subject,
                 color: Colors.black87,
               ),
-              title: TextField(
-                controller: TextEditingController(text: _notes),
-                onChanged: (String value) {
+              title: Text(_notes,
+                /*onChanged: (String value) {
                   _notes = value;
                 },
                 keyboardType: TextInputType.multiline,
@@ -269,7 +275,7 @@ class BookingEditorState extends State<BookingEditor> {
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Add Note',
-                ),
+                ),*/
               ),
             ),
             const Divider(
@@ -379,6 +385,7 @@ class BookingEditorState extends State<BookingEditor> {
                           'key': selectedKey,
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
+                          'quote':quote,
                         });
                         meetings.add(Booking(
                           from: _startDate,
@@ -391,6 +398,7 @@ class BookingEditorState extends State<BookingEditor> {
                           consumerId: _consumerId,
                           tradieId: _tradieId,
                           key: selectedKey,
+                          quote: quote,
                         ));
                         _events.appointments!.add(meetings[0]);
                         _events.notifyListeners(

@@ -228,7 +228,7 @@ class AddNonWorkingState extends State<AddNonWorking> {
               ),
               title: TextField(
                 controller: TextEditingController(text: _notes),
-                onChanged: (String value) {
+                /*onChanged: (String value) {
                   _notes = value;
                 },
                 keyboardType: TextInputType.multiline,
@@ -240,7 +240,7 @@ class AddNonWorkingState extends State<AddNonWorking> {
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Add Note',
-                ),
+                ),*/
               ),
             ),
             const Divider(
@@ -343,11 +343,11 @@ class AddNonWorkingState extends State<AddNonWorking> {
                           'to': _endDate.toString(),
                           'status': 'Unavailable',
                           'tradieName': user_tradieName,
-                          'consumerName': _consumerName,
+                          'consumerName': 'null',
                           'description': _notes,
                           'key': selectedKey,
                           'tradieId': _tradieId,
-                          'consumerId': _consumerId,
+                          'consumerId': 'null',
                         });
 
                         var k = await getKey(keys);

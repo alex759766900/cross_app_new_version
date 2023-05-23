@@ -38,36 +38,33 @@ late TimeOfDay _endTime;
 bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
-String selectedKey='';
+String selectedKey = '';
 String _tradieName = '';
-String _consumerName='';
-String _tradieId='C6lHBZcGEyVSO7wSbozURFpObKV2';
-String _consumerId='';
-String user_tradieName='';
-String user_tradieId='C6lHBZcGEyVSO7wSbozURFpObKV2';
-String user_subject='';
+String _consumerName = '';
+String _tradieId = '';
+String _consumerId = '';
+String user_tradieName = '';
+//String user_tradieId='C6lHBZcGEyVSO7wSbozURFpObKV2';
+String user_subject = '';
 late num quote;
 
 final databaseReference = FirebaseFirestore.instance;
-final CollectionReference colRef=databaseReference.collection('bookings');
+final CollectionReference colRef = databaseReference.collection('bookings');
 
 class TradieProfileState extends State<TradieProfilePage> {
-
-  String tradie='C6lHBZcGEyVSO7wSbozURFpObKV2';
+  String tradie = '';
   late Stream<QuerySnapshot> _usersStream;
 
-  TradieProfileState(String this.tradie){
-    //_tradieId=this.tradie;
+  TradieProfileState(String this.tradie) {
+    _tradieId = this.tradie;
     //user_tradieId=this.tradie;
     print(_tradieId);
     colRef.where('tradieId', isEqualTo: _tradieId).snapshots().listen(
-          (event) => print("get query"+_tradieId),
-
-      onError: (error) => print("Listen failed: $error"),
-    );
-    print("this"+_tradieId);
+          (event) => print("get query" + _tradieId),
+          onError: (error) => print("Listen failed: $error"),
+        );
+    print("this" + _tradieId);
     _usersStream = colRef.where('tradieId', isEqualTo: _tradieId).snapshots();
-
   }
 
   late List<String> eventNameCollection;
@@ -139,34 +136,21 @@ class TradieProfileState extends State<TradieProfilePage> {
 
         List<Booking>? list = snapshot.data?.docs
             .map((e) => Booking(
-          eventName: e['eventName'] ?? '',
-          from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['from']),
-          to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['to']),
-          status: e['status'],
-          consumerName: e['consumerName'] ?? '',
-          tradieName: e['tradieName'] ?? '',
-          description: e['description'] ?? '',
-          key: e['key'],
-          consumerId: e['consumerId'] ?? '',
-          tradieId: e['tradieId'] ?? '',
-          quote: e['quote'] ?? '',
-        ))
+                  eventName: e['eventName'] ?? '',
+                  from: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['from']),
+                  to: DateFormat('yyyy-MM-dd HH:mm:ss.sss').parse(e['to']),
+                  status: e['status'],
+                  consumerName: e['consumerName'] ?? '',
+                  tradieName: e['tradieName'] ?? '',
+                  description: e['description'] ?? '',
+                  key: e['key'],
+                  consumerId: e['consumerId'] ?? '',
+                  tradieId: e['tradieId'] ?? '',
+                  quote: e['quote'] ?? '',
+                ))
             .toList();
-        for (var v in list!){
-          if(v.tradieId==user_tradieId){
-            user_tradieName=v.tradieName;
-            break;
-          }
-        }
-        for (var v in list!){
-          if(v.tradieId==user_tradieId){
-            user_tradieName=v.tradieName;
-            user_subject=v.eventName;
-            break;
-          }
-        }
-        _events = DataSource(list!);
-
+        getName(_tradieId).then((value) {user_tradieName = value;});
+        _events=DataSource(list!);
         return Scaffold(
             appBar: AppBar(
               title: Text('Current Bookings'),
@@ -182,7 +166,8 @@ class TradieProfileState extends State<TradieProfilePage> {
                 _endDate = today;
                 _startTime =
                     TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
-                _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
+                _endTime =
+                    TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
 
                 Navigator.push<Widget>(
                   context,
@@ -248,25 +233,26 @@ class TradieProfileState extends State<TradieProfilePage> {
       if (calendarTapDetails.targetElement != CalendarElement.calendarCell &&
           calendarTapDetails.targetElement != CalendarElement.appointment) {
         return;
-      } else if(calendarTapDetails.targetElement == CalendarElement.appointment) {
+      } else if (calendarTapDetails.targetElement ==
+          CalendarElement.appointment) {
         setState(() {
           if (calendarTapDetails.appointments != null &&
               calendarTapDetails.appointments!.length == 1) {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
-            if (meetingDetails.tradieId == user_tradieId) {
+            if (meetingDetails.tradieId == _tradieId) {
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
                   _statusNames.indexOf(meetingDetails.status);
               _tradieName = meetingDetails.tradieName;
-              _consumerName=meetingDetails.consumerName;
+              _consumerName = meetingDetails.consumerName;
               _subject = meetingDetails.eventName;
               _notes = meetingDetails.description;
-              selectedKey=meetingDetails.key;
-              _consumerId=meetingDetails.consumerId;
-              _tradieId=meetingDetails.tradieId;
-              quote=meetingDetails.quote;
+              selectedKey = meetingDetails.key;
+              _consumerId = meetingDetails.consumerId;
+              _tradieId = meetingDetails.tradieId;
+              quote = meetingDetails.quote;
 
               Navigator.push<Widget>(
                 context,
@@ -282,11 +268,11 @@ class TradieProfileState extends State<TradieProfilePage> {
             _startTime =
                 TimeOfDay(hour: _startDate.hour, minute: _startDate.minute);
             _endTime = TimeOfDay(hour: _endDate.hour, minute: _endDate.minute);
-            _consumerId=user_tradieId;
-            _tradieId=user_tradieId;
+            _consumerId = 'user_tradieId';
+            _tradieId = 'user_tradieId';
             // _consumerName=user_consumerName;
-            _tradieName=user_tradieName;
-            _subject=user_subject;
+            _tradieName = user_tradieName;
+            _subject = user_subject;
 
             Navigator.push<Widget>(
               context,
@@ -329,8 +315,8 @@ class TradieProfileState extends State<TradieProfilePage> {
     _statusNames.add('Complete');
     _statusNames.add('Unavailable');
   }
-
 }
+
 class DataSource extends CalendarDataSource {
   DataSource(List<Booking> source) {
     appointments = source;
@@ -363,16 +349,16 @@ class DataSource extends CalendarDataSource {
 class Booking {
   Booking(
       {required this.from,
-        required this.to,
-        this.status = 'Pending',
-        this.eventName = '',
-        this.tradieName = '',
-        this.consumerName = '',
-        this.description = '',
-        this.key='',
-        this.consumerId='',
-        this.tradieId='',
-        this.quote=0});
+      required this.to,
+      this.status = 'Pending',
+      this.eventName = '',
+      this.tradieName = '',
+      this.consumerName = '',
+      this.description = '',
+      this.key = '',
+      this.consumerId = '',
+      this.tradieId = '',
+      this.quote = 0});
 
   final String tradieName;
   final String consumerName;
@@ -385,4 +371,16 @@ class Booking {
   String consumerId;
   String tradieId;
   num quote;
+}
+
+Future<String> getName(userId) async {
+  await FirebaseFirestore.instance
+      .collection('tradeperson')
+      .doc(userId)
+      .get()
+      .then((value) {
+        print('getname');
+    return value.data()!['fullName'].toString();
+  });
+  return 'not Found';
 }

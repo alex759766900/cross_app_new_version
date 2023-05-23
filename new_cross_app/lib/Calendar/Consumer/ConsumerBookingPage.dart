@@ -40,7 +40,7 @@ String user_tradieId='';
 String _consumerId='';
 String _tradieId='';
 String user_subject='';
-late num quote;
+late num quote=0;
 late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
