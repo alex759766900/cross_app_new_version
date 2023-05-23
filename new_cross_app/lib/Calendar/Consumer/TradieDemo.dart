@@ -83,6 +83,60 @@ class TradieDemoState extends State<TradieDemo> {
                       ),
                     ],
                   ),
+                  Column(
+                    children: [
+                      Container(
+                          width: 150,
+                          height: 150,
+                          child: Image(
+                            image: AssetImage('images/Jack.jpg'),
+                          )),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => new ConsumerBooking(
+                                    tradie: '93kYkjf3g0OkB2ZLI5yx8krxQb53',
+                                    userId: consumer,
+
+                                  )));
+                        },
+                        child: const Text(
+                          'Jack',
+                          textScaleFactor: 5.0,
+                          selectionColor: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                          width: 150,
+                          height: 150,
+                          child: Image(
+                            image: AssetImage('images/Jack.jpg'),
+                          )),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => new ConsumerBooking(
+                                    tradie: '93kYkjf3g0OkB2ZLI5yx8krxQb53',
+                                    userId: consumer,
+
+                                  )));
+                        },
+                        child: const Text(
+                          'Jack',
+                          textScaleFactor: 5.0,
+                          selectionColor: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
