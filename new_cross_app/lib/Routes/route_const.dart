@@ -13,6 +13,7 @@ class RouterName{
   static const Checkout='CheckOut';
   static const Pay='pay';
   static const Rate='rate';
+  static const Booking='calendar_booking';
 
 
 }

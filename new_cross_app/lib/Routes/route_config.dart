@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:new_cross_app/Calendar/Consumer/ConsumerBookingPage.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerProfilePage.dart';
 import 'package:new_cross_app/Calendar/RatePage.dart';
 import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
@@ -101,10 +102,17 @@ class MyRouter{
           },
         ),
         GoRoute(
-          name: RouterName.Checkout,
-          path:'/checkout/:bookingId',
+          name: RouterName.Booking,
+          path:'/booking/:userId/:tradieId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: StripeApp( bookingId: state.params['bookingId']!));
+            return MaterialPage(child: ConsumerBooking( userId: state.params['userId']!, tradie: state.params['tradieId']!));
+          },
+        ),
+        GoRoute(
+          name: RouterName.Checkout,
+          path:'/checkout/:bookingId/:userId',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: StripeApp( bookingId: state.params['bookingId']!, userId: state.params['userId']!));
           },
         ),
         GoRoute(

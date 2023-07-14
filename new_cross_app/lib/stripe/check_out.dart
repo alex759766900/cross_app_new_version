@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 
 class StripeApp extends StatelessWidget {
   String bookingId;
-  StripeApp({Key? key, required this.bookingId}) : super(key: key);
+  String userId;
+  StripeApp({Key? key, required this.bookingId,required this.userId}) : super(key: key);
   Booking booking = Booking(from: DateTime.now(), to: DateTime.now());
   Future<Booking> getBooking() async {
     var data = await FirebaseFirestore.instance
@@ -110,8 +111,8 @@ class StripeApp extends StatelessWidget {
                     .collection('bookings')
                     .doc(bookingId)
                     .update({'status': 'Rating'});
-                GoRouter.of(context).pushNamed(RouterName.Pay,
-                    params: {'bookingId': bookingId});
+                GoRouter.of(context).pushNamed(RouterName.homePage,
+                    params: {'userId': userId});
               })
         ],
       )),

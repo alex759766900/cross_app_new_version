@@ -78,11 +78,11 @@ class _SignupState extends State<Signup> {
                               /* Tradesperson Icon */
                               GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
+                                    /*Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const SignupTradePerson()));
+                                                const SignupTradePerson()));*/
                                   },
                                   child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -104,6 +104,7 @@ class _SignupState extends State<Signup> {
         floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.white,
             onPressed: () {
+
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const MyApp()));
             },

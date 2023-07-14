@@ -160,6 +160,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         GoRouter.of(context)
                             .pushNamed(RouterName.Checkout, params: {
                           'bookingId': selectedKey,
+                          'userId':_consumerId,
                         });
                         colRef.doc(selectedKey).update({'status': 'Working'});
                       },
