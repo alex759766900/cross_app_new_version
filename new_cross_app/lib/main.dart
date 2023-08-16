@@ -109,8 +109,6 @@ getFirebaseExample() {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   @override
   Widget build(BuildContext context) {
     //var mq = MediaQuery.of(context).size;
@@ -162,23 +160,22 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
 
-
             ListTile(
               title: const Text('Sign Up'),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Signup()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SignupComstomer()));
               },
             ),
             Divider(
               height: 1,
               color: Colors.grey.withOpacity(0.6),
             ),
-
           ],
         ),
       ),
     );
   }
-
 }

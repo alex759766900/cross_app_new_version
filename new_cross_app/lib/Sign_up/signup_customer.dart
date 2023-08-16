@@ -13,6 +13,7 @@ import 'package:new_cross_app/Login/utils/constants.dart';
 //import 'package:new_cross_app/Login/utils/notification.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
+import 'package:new_cross_app/Home Page/home.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/decoration_image_container.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/input_fields.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/show_snackbar.dart';
@@ -128,8 +129,8 @@ class _SignupComstomerPageState extends State<SignupComstomer> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.white,
           onPressed: () => {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Signup()))
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const MyApp()))
           },
           child: const Icon(Icons.arrow_back, color: Colors.black87),
         ));

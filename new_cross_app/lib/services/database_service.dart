@@ -21,6 +21,7 @@ class DatabaseService {
     return await CostumerCollection.doc(uid).set({
       "fullName": fullName,
       "email": email,
+      "Is_Tradie": false,
       "Phone": "",
       "address": "",
       "Chatlist": [],

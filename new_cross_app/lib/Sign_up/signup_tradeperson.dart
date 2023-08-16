@@ -1,5 +1,8 @@
-import 'dart:math';
 
+// 融合注册后弃用
+
+/*
+import 'dart:math';
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/widgets.dart';
@@ -157,3 +160,4 @@ class _SignupTradePersonPageState extends State<SignupTradePerson> {
     }
   }
 }
+*/

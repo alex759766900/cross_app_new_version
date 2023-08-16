@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 //import 'package:jemma/routes.dart';
 //import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
-import 'package:new_cross_app/Sign_up/signup.dart';
+import 'package:new_cross_app/Sign_up/signup_customer.dart';
 
 ///  Sign up and forgot TextButtons, that are part of the [Login] screen.
 class SignupForgotRow extends StatelessWidget {
@@ -29,8 +29,10 @@ class SignupForgotRow extends StatelessWidget {
               padding: EdgeInsets.zero,
             ),
             onPressed: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Signup()))
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const SignupComstomer()))
             },
             child: const Text(
               "Don't have an account?   Register here",

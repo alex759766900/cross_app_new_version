@@ -41,6 +41,8 @@ class AuthService {
     }
   }
 
+  // TODO：更新新的tradie注册
+  /*
   //sign up for trade person uesr
   Future registerTradepersonWithEmailAndPassword(
       String fullName, String email, String password) async {
@@ -58,6 +60,7 @@ class AuthService {
       return e.message;
     }
   }
+  */
 
   // signout
   Future signOut() async {

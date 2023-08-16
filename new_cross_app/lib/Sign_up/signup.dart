@@ -1,6 +1,9 @@
 //import 'dart:convert';
-import 'dart:math';
 
+// 融合注册后弃用
+
+/*
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
@@ -111,3 +114,4 @@ class _SignupState extends State<Signup> {
             child: const Icon(Icons.arrow_back, color: Colors.black87)));
   }
 }
+*/
