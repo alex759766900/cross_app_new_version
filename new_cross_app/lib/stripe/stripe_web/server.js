@@ -1,7 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
-const stripe = require('stripe')('YOUR_STRIPE_SECRET_KEY');
+const stripe = require('stripe')('sk_test_wsFx86XDJWwmE4dMskBgJYrt');
 
 exports.createConnectAccount = functions.https.onRequest(async (req, res) => {
   try {

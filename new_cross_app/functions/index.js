@@ -2,8 +2,40 @@
  1. Customer transfer to Jemma
 */
 const functions = require("firebase-functions");
+const admin = require('firebase-admin');
+admin.initializeApp();
 const stripe = require("stripe")(functions.config().stripe.testkey);
 // const stripe = require('stripe')(functions.config().stripe.secret_key);
+const sendLink=function(accountLinks){
+    return accountLinks.url
+}
+const cors = require('cors')({ origin: true });
+exports.createConnectAccount = functions.https.onRequest(async (req, res) => {cors(req, res,async () => {
+    try {
+        // 使用 Stripe API 创建 Connect 账号
+        const account = await stripe.accounts.create({
+          type: 'express',
+        });
+        const accountLinks = await stripe.accountLinks.create({
+            account: account.id,
+            refresh_url: 'https://jemma-b0fcd.web.app/#/refresh',
+            return_url: 'https://jemma-b0fcd.web.app/#/',
+            type: 'account_onboarding',
+        })
+        //res.redirect(accountLinks.url)
+        return res.send(accountLinks.url)
+        //res.json({url: accountLinks.url});
+      } catch (error) {
+        console.error(error);
+        return res.send({error: error.message});
+      }
+      //res.redirect(accountLinks.url)
+    // 云函数的处理代码...
+  });
+});
+
+
+
 
 const calculateOrderAmount = (items) => {
   const prices = []; // Add 'let' before variable declaration
