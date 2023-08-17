@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Calendar/Consumer/ConsumerBookingPage.dart';
@@ -10,6 +8,7 @@ import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Profile/profile.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
 import 'package:new_cross_app/Sign_up/signup.dart';
+import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/chat/screens/search_page.dart';
 import 'package:new_cross_app/stripe/screens/mainStripe2.dart';
@@ -21,117 +20,143 @@ import '../Home Page/home.dart';
 import '../chat/screens/chat_screen.dart';
 import '../stripe/check_out.dart';
 
-class MyRouter{
+class MyRouter {
   GoRouter router = GoRouter(
       routes: [
         GoRoute(
-            name: RouterName.homePage,
-            path:'/home/:userId',
-            pageBuilder: (context, state) {
-              return MaterialPage(child: Home(state.params['userId']!));
-            },
+          name: RouterName.homePage,
+          path: '/home/:userId',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: Home(state.params['userId']!));
+          },
         ),
         GoRoute(
           name: RouterName.GuestHome,
-          path:'/',
+          path: '/',
           pageBuilder: (context, state) {
             return MaterialPage(child: Home.G());
           },
         ),
         GoRoute(
           name: RouterName.profilePage,
-          path:'/profile/:userId',
+          path: '/profile/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: Profile(userId: state.params['userId']!));
+            return MaterialPage(
+                child: Profile(userId: state.params['userId']!));
           },
         ),
         GoRoute(
           name: RouterName.Login,
-          path:'/login',
+          path: '/login',
           pageBuilder: (context, state) {
             return MaterialPage(child: LoginPage());
           },
         ),
         GoRoute(
           name: RouterName.SignUp,
-          path:'/signUp',
+          path: '/signUp',
           pageBuilder: (context, state) {
-            return MaterialPage(child: Signup());
+            // return MaterialPage(child: Signup());
+            return MaterialPage(child: SignupComstomer());
           },
         ),
         GoRoute(
           name: RouterName.CalendarTradie,
-          path:'/calendarT/:userId',
+          path: '/calendarT/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child:TradieProfilePage(tradie: state.params['userId']!,));
+            return MaterialPage(
+                child: TradieProfilePage(
+              tradie: state.params['userId']!,
+            ));
           },
         ),
         GoRoute(
           name: RouterName.CalendarConsumer,
-          path:'/calendarC/:userId',
+          path: '/calendarC/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: ConsumerProfilePage(consumer: state.params['userId']!,));
+            return MaterialPage(
+                child: ConsumerProfilePage(
+              consumer: state.params['userId']!,
+            ));
           },
         ),
         GoRoute(
           name: RouterName.chat,
-          path:'/chat/:userId',
+          path: '/chat/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: ChatRoom( userId: state.params['userId']!,));
+            return MaterialPage(
+                child: ChatRoom(
+              userId: state.params['userId']!,
+            ));
           },
         ),
         GoRoute(
           name: RouterName.ChatSearch,
-          path:'/chatSearch/:userId',
+          path: '/chatSearch/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: Search( userId: state.params['userId']!,));
+            return MaterialPage(
+                child: Search(
+              userId: state.params['userId']!,
+            ));
           },
         ),
         GoRoute(
           name: RouterName.ChatRoom,
-          path:'/chatRoom/:userId/:chatRoomId',
+          path: '/chatRoom/:userId/:chatRoomId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: Chat( userId: state.params['userId']!, chatRoomId:  state.params['chatRoomId']!,));
+            return MaterialPage(
+                child: Chat(
+              userId: state.params['userId']!,
+              chatRoomId: state.params['chatRoomId']!,
+            ));
           },
         ),
         GoRoute(
           name: RouterName.TradieDemo,
-          path:'/tradieSelection/:userId',
+          path: '/tradieSelection/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: TradieDemo( userId: state.params['userId']!));
+            return MaterialPage(
+                child: TradieDemo(userId: state.params['userId']!));
           },
         ),
         GoRoute(
           name: RouterName.Booking,
-          path:'/booking/:userId/:tradieId',
+          path: '/booking/:userId/:tradieId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: ConsumerBooking( userId: state.params['userId']!, tradie: state.params['tradieId']!));
+            return MaterialPage(
+                child: ConsumerBooking(
+                    userId: state.params['userId']!,
+                    tradie: state.params['tradieId']!));
           },
         ),
         GoRoute(
           name: RouterName.Checkout,
-          path:'/checkout/:bookingId/:userId',
+          path: '/checkout/:bookingId/:userId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: StripeApp( bookingId: state.params['bookingId']!, userId: state.params['userId']!));
+            return MaterialPage(
+                child: StripeApp(
+                    bookingId: state.params['bookingId']!,
+                    userId: state.params['userId']!));
           },
         ),
         GoRoute(
           name: RouterName.Pay,
-          path:'/Pay/:bookingId',
+          path: '/Pay/:bookingId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: StripePay( bookingId: state.params['bookingId']!));
+            return MaterialPage(
+                child: StripePay(bookingId: state.params['bookingId']!));
           },
         ),
         GoRoute(
           name: RouterName.Rate,
-          path:'/rate/:bookingId',
+          path: '/rate/:bookingId',
           pageBuilder: (context, state) {
-            return MaterialPage(child: Rate( bookingId: state.params['bookingId']!));
+            return MaterialPage(
+                child: Rate(bookingId: state.params['bookingId']!));
           },
         ),
-        ],
-    errorPageBuilder: (context, state){
+      ],
+      errorPageBuilder: (context, state) {
         return MaterialPage(child: ErrorPage());
-    }
-  );
+      });
 }
