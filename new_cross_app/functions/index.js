@@ -4,12 +4,15 @@
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 admin.initializeApp();
-const stripe = require("stripe")(functions.config().stripe.testkey);
+const stripe = require("stripe")('sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI');
 // const stripe = require('stripe')(functions.config().stripe.secret_key);
 const sendLink=function(accountLinks){
     return accountLinks.url
 }
 const cors = require('cors')({ origin: true });
+//Stripe TODO: 1. connect stripe with other page 2.add webhook to monitor status and send notification 3.mobile side stripe debug and setting
+
+//TODO: pass user id and return url to redirect
 exports.createConnectAccount = functions.https.onRequest(async (req, res) => {cors(req, res,async () => {
     try {
         // 使用 Stripe API 创建 Connect 账号
@@ -21,20 +24,89 @@ exports.createConnectAccount = functions.https.onRequest(async (req, res) => {co
             refresh_url: 'https://jemma-b0fcd.web.app/#/refresh',
             return_url: 'https://jemma-b0fcd.web.app/#/',
             type: 'account_onboarding',
+        });
+        // TODO: return account id
+        return res.send({
+            url:accountLinks.url,
+            id: account.id
         })
-        //res.redirect(accountLinks.url)
-        return res.send(accountLinks.url)
-        //res.json({url: accountLinks.url});
       } catch (error) {
         console.error(error);
         return res.send({error: error.message});
       }
-      //res.redirect(accountLinks.url)
-    // 云函数的处理代码...
+  });
+});
+exports.StripeCheckOut = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const { price, userId, product_name } = req.body;
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: 'payment',
+        line_items: [
+          {
+            price_data: {
+              currency: 'aud',
+              unit_amount: parseInt(price),
+              product_data: {
+                name: product_name
+              }
+            },
+            quantity: 1
+          }
+        ],
+        success_url: 'http://localhost:3000/success',
+        cancel_url: 'https://jemma-b0fcd.web.app/#/cancel',
+      });
+
+      // 返回 session.url 和 session.amount_total
+      return res.send({
+        url: session.url,
+        amount: session.amount_total
+      });
+    } catch (error) {
+      console.error(error);
+      return res.send({ error: error.message });
+    }
   });
 });
 
 
+
+exports.StripePayment = functions.https.onRequest(async (req, res)=> {cors(req, res, async()=>{
+     const {price, accountId, userId} = req.body;
+     try{
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: parseInt(price), // 付款金额（以最小货币单位表示，例如美分）
+          currency: 'aud', // 货币代码
+          application_fee_amount: int(parseInt(price) * 0.05 * 100), // 平台服务费（以最小货币单位表示）
+          transfer_data: {
+            destination: accountId, // 商家的连接账户 ID
+          },
+        });
+        return res.send(paymentIntent.id);
+
+     }catch(error){
+        console.error(error)
+        return res.send({error: error.message})
+     }
+     });
+});
+
+exports.Transfer = functions.https.onRequest(async (req, res)=>{cors(req, res, async()=>{
+    const {accountId, amount}= req.body;
+    try{
+        const transfer = await stripe.transfers.create({
+          amount: parseInt(amount)*0.95,
+          currency: 'aud',
+          destination: accountId,
+        });
+        return res.send(transfer.amount);
+    }catch(error){
+        console.error(error)
+        return res.send({error:error.message})
+    }
+    });
+});
 
 
 const calculateOrderAmount = (items) => {
