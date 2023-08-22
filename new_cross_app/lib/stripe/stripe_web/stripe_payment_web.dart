@@ -7,7 +7,7 @@ void main() {
   runApp(MyApp());
 }
 late int amount;
-String testPageUrl = 'http://localhost:3000';
+//String testPageUrl = 'http://localhost:3000';
 //TODO PRICE IS AMOUNT IN CENTS
 Map<String, String> body={
   'price': '10000',

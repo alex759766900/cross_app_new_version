@@ -13,6 +13,7 @@ const cors = require('cors')({ origin: true });
 //Stripe TODO: 1. connect stripe with other page 2.add webhook to monitor status and send notification 3.mobile side stripe debug and setting
 
 //TODO: pass user id and return url to redirect
+//NOTE: This is function for onboarding tradies
 exports.createConnectAccount = functions.https.onRequest(async (req, res) => {cors(req, res,async () => {
     try {
         // 使用 Stripe API 创建 Connect 账号
@@ -36,6 +37,8 @@ exports.createConnectAccount = functions.https.onRequest(async (req, res) => {co
       }
   });
 });
+
+//NOTE: this is function for checkout
 exports.StripeCheckOut = functions.https.onRequest(async (req, res) => {
   cors(req, res, async () => {
     const { price, userId, product_name } = req.body;
@@ -70,28 +73,7 @@ exports.StripeCheckOut = functions.https.onRequest(async (req, res) => {
   });
 });
 
-
-
-exports.StripePayment = functions.https.onRequest(async (req, res)=> {cors(req, res, async()=>{
-     const {price, accountId, userId} = req.body;
-     try{
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount: parseInt(price), // 付款金额（以最小货币单位表示，例如美分）
-          currency: 'aud', // 货币代码
-          application_fee_amount: int(parseInt(price) * 0.05 * 100), // 平台服务费（以最小货币单位表示）
-          transfer_data: {
-            destination: accountId, // 商家的连接账户 ID
-          },
-        });
-        return res.send(paymentIntent.id);
-
-     }catch(error){
-        console.error(error)
-        return res.send({error: error.message})
-     }
-     });
-});
-
+//Note: this is function for transfer to tradies account
 exports.Transfer = functions.https.onRequest(async (req, res)=>{cors(req, res, async()=>{
     const {accountId, amount}= req.body;
     try{
@@ -109,6 +91,7 @@ exports.Transfer = functions.https.onRequest(async (req, res)=>{cors(req, res, a
 });
 
 
+//Old code, reserve until the end of semester
 const calculateOrderAmount = (items) => {
   const prices = []; // Add 'let' before variable declaration
   const catalog = [ // Add 'let' before variable declaration
