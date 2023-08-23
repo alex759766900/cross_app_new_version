@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Home%20Page/responsive.dart';
+import 'package:new_cross_app/Profile/register_tradie.dart';
 import '../Home Page/constants.dart';
 import '../Home Page/decorations.dart';
 import '../Home Page/home.dart';
@@ -78,7 +79,12 @@ class _ProfileHomeState extends State<ProfileHome> {
               SizedBox(height: 2.5.ph(size)),
               if (_isConsumer)
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterTradiePage()),
+                      );
+                    },
                     child: Text('Register as a tradie',
                         style: TextStyle(color: Colors.black87))),
               if (!_isConsumer)
