@@ -82,6 +82,7 @@ dependencies:
   gallery_saver: ^2.3.2
   emoji_picker_flutter: ^1.5.4
   image_picker: ^0.8.7+4
+  url_launcher: ^6.1.12
 
 
 
@@ -117,6 +118,8 @@ flutter:
     - images/Jemma.png
     - assets/icons/
     - assets/images/
+    - images/five_star.png
+    - images/certificate.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

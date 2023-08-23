@@ -15,7 +15,9 @@ import 'package:new_cross_app/stripe/screens/mainStripe2.dart';
 //import 'package:new_cross_app/main.dart';
 
 import '../Calendar/Consumer/TradieDemo.dart';
-import '../ErrorPage.dart';
+import '../Profile/info_edit_test.dart';
+import '../Profile/profile_home.dart';
+import 'ErrorPage.dart';
 import '../Home Page/home.dart';
 import '../chat/screens/chat_screen.dart';
 import '../stripe/check_out.dart';
@@ -42,7 +44,8 @@ class MyRouter {
           path: '/profile/:userId',
           pageBuilder: (context, state) {
             return MaterialPage(
-                child: Profile(userId: state.params['userId']!));
+                // child: Profile(userId: state.params['userId']!));
+              child: ProfileHome(userId: state.params['userId']!));
           },
         ),
         GoRoute(
@@ -153,6 +156,13 @@ class MyRouter {
           pageBuilder: (context, state) {
             return MaterialPage(
                 child: Rate(bookingId: state.params['bookingId']!));
+          },
+        ),
+        GoRoute(
+          name: RouterName.InfoEdit,
+          path: '/profile/infoEdit',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: InfoEditTest());
           },
         ),
       ],

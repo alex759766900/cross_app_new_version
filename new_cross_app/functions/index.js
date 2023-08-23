@@ -2,9 +2,96 @@
  1. Customer transfer to Jemma
 */
 const functions = require("firebase-functions");
-const stripe = require("stripe")(functions.config().stripe.testkey);
+const admin = require('firebase-admin');
+admin.initializeApp();
+const stripe = require("stripe")('sk_test_51MxqKoCLNEXP0Gmv34Ixc05ATpLLTkXxK1VmLe4rng6eaiPqiyiDn5iYhaeGA9iZXEdDYIEDZDuTQMMvy4lRKW3J003L5D13iI');
 // const stripe = require('stripe')(functions.config().stripe.secret_key);
+const sendLink=function(accountLinks){
+    return accountLinks.url
+}
+const cors = require('cors')({ origin: true });
+//Stripe TODO: 1. connect stripe with other page 2.add webhook to monitor status and send notification 3.mobile side stripe debug and setting
 
+//TODO: pass user id and return url to redirect
+//NOTE: This is function for onboarding tradies
+exports.createConnectAccount = functions.https.onRequest(async (req, res) => {cors(req, res,async () => {
+    try {
+        // 使用 Stripe API 创建 Connect 账号
+        const account = await stripe.accounts.create({
+          type: 'express',
+        });
+        const accountLinks = await stripe.accountLinks.create({
+            account: account.id,
+            refresh_url: 'https://jemma-b0fcd.web.app/#/refresh',
+            return_url: 'https://jemma-b0fcd.web.app/#/',
+            type: 'account_onboarding',
+        });
+        // TODO: return account id
+        return res.send({
+            url:accountLinks.url,
+            id: account.id
+        })
+      } catch (error) {
+        console.error(error);
+        return res.send({error: error.message});
+      }
+  });
+});
+
+//NOTE: this is function for checkout
+exports.StripeCheckOut = functions.https.onRequest(async (req, res) => {
+  cors(req, res, async () => {
+    const { price, userId, product_name } = req.body;
+    try {
+      const session = await stripe.checkout.sessions.create({
+        mode: 'payment',
+        line_items: [
+          {
+            price_data: {
+              currency: 'aud',
+              unit_amount: parseInt(price),
+              product_data: {
+                name: product_name
+              }
+            },
+            quantity: 1
+          }
+        ],
+        success_url: 'http://localhost:3000/success',
+        cancel_url: 'https://jemma-b0fcd.web.app/#/cancel',
+      });
+
+      // 返回 session.url 和 session.amount_total
+      return res.send({
+        url: session.url,
+        amount: session.amount_total
+      });
+    } catch (error) {
+      console.error(error);
+      return res.send({ error: error.message });
+    }
+  });
+});
+
+//Note: this is function for transfer to tradies account
+exports.Transfer = functions.https.onRequest(async (req, res)=>{cors(req, res, async()=>{
+    const {accountId, amount}= req.body;
+    try{
+        const transfer = await stripe.transfers.create({
+          amount: parseInt(amount)*0.95,
+          currency: 'aud',
+          destination: accountId,
+        });
+        return res.send(transfer.amount);
+    }catch(error){
+        console.error(error)
+        return res.send({error:error.message})
+    }
+    });
+});
+
+
+//Old code, reserve until the end of semester
 const calculateOrderAmount = (items) => {
   const prices = []; // Add 'let' before variable declaration
   const catalog = [ // Add 'let' before variable declaration

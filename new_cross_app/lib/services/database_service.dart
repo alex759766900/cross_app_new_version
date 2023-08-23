@@ -30,6 +30,13 @@ class DatabaseService {
     });
   }
 
+  // saving the address of the customer
+  Future savingCustomerAddress(String address) async {
+    return await CostumerCollection.doc(uid).set({
+      "address": address
+    });
+  }
+
   // saving the Tradie_user data
   Future savingTradieData(String fullName, String email) async {
     return await TradieCollection.doc(uid).set({
