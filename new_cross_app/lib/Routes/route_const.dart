@@ -14,6 +14,8 @@ class RouterName{
   static const Pay='pay';
   static const Rate='rate';
   static const Booking='calendar_booking';
+  static const InfoEdit='info_edit';
+
 
 
 }
