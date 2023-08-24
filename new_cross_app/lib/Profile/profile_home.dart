@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Home%20Page/responsive.dart';
 import 'package:new_cross_app/Profile/register_tradie.dart';
 import '../Home Page/constants.dart';
 import '../Home Page/decorations.dart';
 import '../Home Page/home.dart';
-import '../Routes/route_const.dart';
+import 'customer_info_edit.dart';
 
 class ProfileHome extends StatefulWidget {
   String userId;
@@ -17,7 +16,7 @@ class ProfileHome extends StatefulWidget {
   _ProfileHomeState createState() => _ProfileHomeState(userId: userId);
 }
 
-late bool _isConsumer = true;
+bool _isConsumer = true;
 final databaseReference = FirebaseFirestore.instance;
 final CollectionReference colRef = databaseReference.collection('customers');
 
@@ -38,10 +37,6 @@ class _ProfileHomeState extends State<ProfileHome> {
   @override
   void initState() {
     super.initState();
-    isConsumer(userId).then((value) {
-      print(value);
-      _isConsumer = false; //value;
-    });
     getUserProfile(userId);
   }
 
@@ -50,18 +45,19 @@ class _ProfileHomeState extends State<ProfileHome> {
     Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
     setState(() {
-      name = data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
-      address = data['address']?.isEmpty ? 'No Address Information' : data['address'];
+      name =
+          data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
+      address =
+          data['address']?.isEmpty ? 'No Address Information' : data['address'];
       email = data['email']?.isEmpty ? 'No Mail Information' : data['email'];
       phone = data['Phone']?.isEmpty ? 'No Phone Information' : data['Phone'];
+      _isConsumer = !data['Is_Tradie'];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery
-        .of(context)
-        .size;
+    final size = MediaQuery.of(context).size;
     var scrollController = ScrollController();
 
     return Scaffold(
@@ -82,7 +78,8 @@ class _ProfileHomeState extends State<ProfileHome> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RegisterTradiePage()),
+                        MaterialPageRoute(
+                            builder: (context) => RegisterTradiePage()),
                       );
                     },
                     child: Text('Register as a tradie',
@@ -154,74 +151,57 @@ class _ProfileHomeState extends State<ProfileHome> {
               ),
               TextButton(
                   onPressed: () {},
-                  child: Text(strip_acc,
-                      style: TextStyle(color: Colors.black87))),
+                  child:
+                      Text(strip_acc, style: TextStyle(color: Colors.black87))),
             ],
           ),
           // Personal Info
-          SizedBox(
-              width: 5.pw(size)
-          ),
+          SizedBox(width: 5.pw(size)),
           Stack(clipBehavior: Clip.none, children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name,
-                    style: TextStyle(color: Colors.black87,
+                    style: TextStyle(
+                        color: Colors.black87,
                         fontSize: 20,
                         fontWeight: FontWeight.w600)),
-                SizedBox(
-                    height: 6.ph(size)
-                ),
+                SizedBox(height: 6.ph(size)),
                 Text(
                   email,
                   style: TextStyle(color: Colors.black87),
                 ),
-                SizedBox(
-                    height: 3.ph(size)
-                ),
+                SizedBox(height: 3.ph(size)),
                 Container(
-                      width: 25.pw(size),
-                      constraints: const BoxConstraints(minWidth: 150),
+                  width: 25.pw(size),
+                  constraints: const BoxConstraints(minWidth: 150),
                   child: Text(
                     address,
                     style: TextStyle(color: Colors.black87),
                   ),
                 ),
-                SizedBox(
-                    height: 3.ph(size)
-                ),
+                SizedBox(height: 3.ph(size)),
                 Text(
                   phone,
                   style: TextStyle(color: Colors.black87),
                 ),
-                // Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                //   Text(
-                //     person_intro,
-                //     style: TextStyle(color: Colors.black87),
-                //   ),
-                //   Container(
-                //     padding: EdgeInsets.all(4.0),
-                //     margin: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                //     width: 25.pw(size),
-                //     constraints: const BoxConstraints(
-                //         minWidth: 150, maxHeight: 50),
-                //     decoration: BoxDecoration(
-                //         border: Border.all(color: Colors.grey),
-                //         color: Colors.grey.withOpacity(0.15)),
-                //     child: Text(person_intro_cont,
-                //         style: TextStyle(
-                //             color: Colors.black54, fontSize: 10)),
-                //   ),
-                // ]),
               ],
             ),
             Positioned(
                 top: -5,
                 right: 0,
                 child: IconButton(
-                  onPressed: () {
-                    GoRouter.of(context).pushNamed(RouterName.InfoEdit);
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CustomerInfoEdit(userID: userId)),
+                    );
+                    if (result.toString() == 'update') {
+                      await getUserProfile(userId);
+                      setState(() {}); // 更新状态
+                    }
                   },
                   icon: Icon(Icons.edit, size: 20),
                 ))
@@ -248,13 +228,12 @@ class _ProfileHomeState extends State<ProfileHome> {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 'Certification',
-                style: TextStyle(color: kTextColor,
+                style: TextStyle(
+                    color: kTextColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
               ),
-              SizedBox(
-                  height: 2.ph(size)
-              ),
+              SizedBox(height: 2.ph(size)),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -262,9 +241,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                     image: AssetImage("images/certificate.png"),
                     width: 100,
                   ),
-                  SizedBox(
-                      width: 4.pw(size)
-                  ),
+                  SizedBox(width: 4.pw(size)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -305,9 +282,7 @@ class _ProfileHomeState extends State<ProfileHome> {
           style: TextStyle(
               color: kTextColor, fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        SizedBox(
-            height: 2.ph(size)
-        ),
+        SizedBox(height: 2.ph(size)),
         Image(
           image: AssetImage("images/five_star.png"),
           width: 150,
@@ -335,28 +310,24 @@ class _ProfileHomeState extends State<ProfileHome> {
               children: [
                 Text(
                   'Working Time',
-                  style: TextStyle(color: kTextColor,
+                  style: TextStyle(
+                      color: kTextColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
-                    height: 2.ph(size)
-                ),
+                SizedBox(height: 2.ph(size)),
                 Container(
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
-                  constraints: const BoxConstraints(
-                      minWidth: 240, maxHeight: 50),
+                  constraints:
+                      const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
                   child: Text(person_intro_cont,
-                      style: TextStyle(
-                          color: Colors.black54, fontSize: 10)),
+                      style: TextStyle(color: Colors.black54, fontSize: 10)),
                 ),
-                SizedBox(
-                    height: 2.ph(size)
-                ),
+                SizedBox(height: 2.ph(size)),
                 Row(
                   children: [
                     Icon(
@@ -403,24 +374,22 @@ class _ProfileHomeState extends State<ProfileHome> {
               children: [
                 Text(
                   'Work Description',
-                  style: TextStyle(color: kTextColor,
+                  style: TextStyle(
+                      color: kTextColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
-                    height: 2.ph(size)
-                ),
+                SizedBox(height: 2.ph(size)),
                 Container(
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
-                  constraints: const BoxConstraints(
-                      minWidth: 240, maxHeight: 50),
+                  constraints:
+                      const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
                   child: Text(person_intro_cont,
-                      style: TextStyle(
-                          color: Colors.black54, fontSize: 10)),
+                      style: TextStyle(color: Colors.black54, fontSize: 10)),
                 ),
               ],
             ),
@@ -434,25 +403,4 @@ class _ProfileHomeState extends State<ProfileHome> {
           ],
         ));
   }
-}
-
-Future<bool> isConsumer(userId) async {
-  late bool result;
-  await FirebaseFirestore.instance
-      .collection('customers')
-      .where('uid', isEqualTo: userId)
-      .get()
-      .then(
-        (querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        print('it is consumer');
-        result = true;
-      } else {
-        print('it is tradie');
-        result = false;
-      }
-    },
-    onError: (e) => print("Error completing: $e"),
-  );
-  return result;
 }
