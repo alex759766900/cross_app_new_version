@@ -111,6 +111,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                   ? IconButton(
                       onPressed: () {
                         if (_statusNames[_selectedStatusIndex] == 'Rating') {
+                          //TODO go to rating
                           GoRouter.of(context).pushNamed(RouterName.Rate,
                               params: {'bookingId': selectedKey});
                         }
@@ -129,24 +130,10 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         color: _colorCollection[_selectedStatusIndex],
                       ),
                       onPressed: () {
-                        GoRouter.of(context)
-                            .pushNamed(RouterName.Checkout, params: {
-                          'bookingId': selectedKey,
-                          'userId':_consumerId,
-                        });
+                        //TODO go to stripe checkout
                         bookingRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),
-
-              /*onTap: () {
-                showDialog<Widget>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return _ColorPicker();
-                  },
-                ).then((dynamic value) => setState(() {}));
-              }*/
             ),
             const Divider(
               height: 1.0,
