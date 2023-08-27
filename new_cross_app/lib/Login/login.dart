@@ -60,6 +60,11 @@ class _LoginState extends State<LoginPage> {
             User? user = FirebaseAuth.instance.currentUser;
             // Check if user is not null
             if (user != null) {
+              // 保存用户数据到 HelperFunctions
+              await HelperFunctions.saveUserLoggedInStatus(true);
+              await HelperFunctions.saveUserEmailSF(user.email!);
+              await HelperFunctions.saveUserNameSF(user.displayName!);
+              await HelperFunctions.saveUserIdSF(user.uid);
               // Navigate to the home page
               GoRouter.of(context)
                   .pushNamed(RouterName.homePage, params: {'userId': user.uid});
