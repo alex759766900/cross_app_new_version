@@ -9,6 +9,7 @@ import 'package:new_cross_app/Login/utils/constants.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 import 'package:new_cross_app/Login/widgets/login/input_fields.dart';
 import 'package:new_cross_app/Login/widgets/login/signup_row.dart';
+import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:logger/logger.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
 import 'package:new_cross_app/Home%20Page/home.dart';
@@ -47,6 +48,60 @@ class _LoginState extends State<LoginPage> {
   );
 
   final _formKey = GlobalKey<FormState>();
+
+  Widget googleSignInButton() {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 300), // 设置最大宽度为300
+      child: GestureDetector(
+        onTap: () async {
+          bool isSignedIn = await authService.signInWithGoogle();
+          if (isSignedIn && mounted) {
+            // 获取当前登录的用户
+            User? user = FirebaseAuth.instance.currentUser;
+            // Check if user is not null
+            if (user != null) {
+              // 保存用户数据到 HelperFunctions
+              await HelperFunctions.saveUserLoggedInStatus(true);
+              await HelperFunctions.saveUserEmailSF(user.email!);
+              await HelperFunctions.saveUserNameSF(user.displayName!);
+              await HelperFunctions.saveUserIdSF(user.uid);
+              // Navigate to the home page
+              GoRouter.of(context)
+                  .pushNamed(RouterName.homePage, params: {'userId': user.uid});
+            } else {
+              // Handle the case where user is null (this should not happen if isSignedIn is true)
+              print("User is null");
+            }
+          }
+        },
+        child: Container(
+          width: double.infinity, // 使容器尽可能宽
+          height: 45,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Image.asset('assets/images/google.png'),
+              ),
+              const Text(
+                'Continue with Google',
+                style: TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +158,10 @@ class _LoginState extends State<LoginPage> {
 
                       SizedBox(height: max(1.75.ph(size), 10)),
 
-                      SignupForgotRow(size: size)
+                      SignupForgotRow(size: size),
+                      SizedBox(
+                          height: max(1.75.ph(size), 10)), // Add some spacing
+                      googleSignInButton(),
                     ]),
                   ),
                 ),
@@ -140,11 +198,10 @@ class _LoginState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(emailController.text);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
           await HelperFunctions.saveUserIdSF(snapshot.docs[0]['uid']);
-          String userId=snapshot.docs[0]['uid'];
+          String userId = snapshot.docs[0]['uid'];
           print(userId);
-          GoRouter.of(context).pushNamed(RouterName.homePage,params: {
-            'userId': userId
-          });
+          GoRouter.of(context)
+              .pushNamed(RouterName.homePage, params: {'userId': userId});
         } else {
           showSnackbar(context, kMenuColor, value);
           setState(() {

@@ -15,8 +15,9 @@ import 'package:new_cross_app/stripe/screens/mainStripe2.dart';
 //import 'package:new_cross_app/main.dart';
 
 import '../Calendar/Consumer/TradieDemo.dart';
-import '../Profile/info_edit_test.dart';
+import '../Profile/customer_info_edit.dart';
 import '../Profile/profile_home.dart';
+import '../Profile/customer_info_edit.dart';
 import 'ErrorPage.dart';
 import '../Home Page/home.dart';
 import '../chat/screens/chat_screen.dart';
@@ -156,13 +157,6 @@ class MyRouter {
           pageBuilder: (context, state) {
             return MaterialPage(
                 child: Rate(bookingId: state.params['bookingId']!));
-          },
-        ),
-        GoRoute(
-          name: RouterName.InfoEdit,
-          path: '/profile/infoEdit',
-          pageBuilder: (context, state) {
-            return MaterialPage(child: InfoEditTest());
           },
         ),
       ],
