@@ -56,10 +56,17 @@ class _LoginState extends State<LoginPage> {
         onTap: () async {
           bool isSignedIn = await authService.signInWithGoogle();
           if (isSignedIn && mounted) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SignupComstomer()));
+            // 获取当前登录的用户
+            User? user = FirebaseAuth.instance.currentUser;
+            // Check if user is not null
+            if (user != null) {
+              // Navigate to the home page
+              GoRouter.of(context)
+                  .pushNamed(RouterName.homePage, params: {'userId': user.uid});
+            } else {
+              // Handle the case where user is null (this should not happen if isSignedIn is true)
+              print("User is null");
+            }
           }
         },
         child: Container(

@@ -49,8 +49,10 @@ class _ProfileHomeState extends State<ProfileHome> {
     Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
     setState(() {
-      name = data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
-      address = data['address']?.isEmpty ? 'No Address Information' : data['address'];
+      name =
+          data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
+      address =
+          data['address']?.isEmpty ? 'No Address Information' : data['address'];
       email = data['email']?.isEmpty ? 'No Mail Information' : data['email'];
       phone = data['Phone']?.isEmpty ? 'No Phone Information' : data['Phone'];
     });
@@ -58,9 +60,7 @@ class _ProfileHomeState extends State<ProfileHome> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery
-        .of(context)
-        .size;
+    final size = MediaQuery.of(context).size;
     var scrollController = ScrollController();
 
     return Scaffold(
@@ -148,43 +148,36 @@ class _ProfileHomeState extends State<ProfileHome> {
               ),
               TextButton(
                   onPressed: () {},
-                  child: Text(strip_acc,
-                      style: TextStyle(color: Colors.black87))),
+                  child:
+                      Text(strip_acc, style: TextStyle(color: Colors.black87))),
             ],
           ),
           // Personal Info
-          SizedBox(
-              width: 5.pw(size)
-          ),
+          SizedBox(width: 5.pw(size)),
           Stack(clipBehavior: Clip.none, children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(name,
-                    style: TextStyle(color: Colors.black87,
+                    style: TextStyle(
+                        color: Colors.black87,
                         fontSize: 20,
                         fontWeight: FontWeight.w600)),
-                SizedBox(
-                    height: 6.ph(size)
-                ),
+                SizedBox(height: 6.ph(size)),
                 Text(
                   email,
                   style: TextStyle(color: Colors.black87),
                 ),
-                SizedBox(
-                    height: 3.ph(size)
-                ),
+                SizedBox(height: 3.ph(size)),
                 Container(
-                      width: 25.pw(size),
-                      constraints: const BoxConstraints(minWidth: 150),
+                  width: 25.pw(size),
+                  constraints: const BoxConstraints(minWidth: 150),
                   child: Text(
                     address,
                     style: TextStyle(color: Colors.black87),
                   ),
                 ),
-                SizedBox(
-                    height: 3.ph(size)
-                ),
+                SizedBox(height: 3.ph(size)),
                 Text(
                   phone,
                   style: TextStyle(color: Colors.black87),
@@ -215,7 +208,11 @@ class _ProfileHomeState extends State<ProfileHome> {
                 right: 0,
                 child: IconButton(
                   onPressed: () {
-                    GoRouter.of(context).pushNamed(RouterName.InfoEdit);
+                    try {
+                      GoRouter.of(context).pushNamed(RouterName.InfoEdit);
+                    } catch (e) {
+                      print("Error navigating: $e");
+                    }
                   },
                   icon: Icon(Icons.edit, size: 20),
                 ))
@@ -242,13 +239,12 @@ class _ProfileHomeState extends State<ProfileHome> {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
                 'Certification',
-                style: TextStyle(color: kTextColor,
+                style: TextStyle(
+                    color: kTextColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
               ),
-              SizedBox(
-                  height: 2.ph(size)
-              ),
+              SizedBox(height: 2.ph(size)),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -256,9 +252,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                     image: AssetImage("images/certificate.png"),
                     width: 100,
                   ),
-                  SizedBox(
-                      width: 4.pw(size)
-                  ),
+                  SizedBox(width: 4.pw(size)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -299,9 +293,7 @@ class _ProfileHomeState extends State<ProfileHome> {
           style: TextStyle(
               color: kTextColor, fontSize: 16, fontWeight: FontWeight.w600),
         ),
-        SizedBox(
-            height: 2.ph(size)
-        ),
+        SizedBox(height: 2.ph(size)),
         Image(
           image: AssetImage("images/five_star.png"),
           width: 150,
@@ -329,28 +321,24 @@ class _ProfileHomeState extends State<ProfileHome> {
               children: [
                 Text(
                   'Working Time',
-                  style: TextStyle(color: kTextColor,
+                  style: TextStyle(
+                      color: kTextColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
-                    height: 2.ph(size)
-                ),
+                SizedBox(height: 2.ph(size)),
                 Container(
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
-                  constraints: const BoxConstraints(
-                      minWidth: 240, maxHeight: 50),
+                  constraints:
+                      const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
                   child: Text(person_intro_cont,
-                      style: TextStyle(
-                          color: Colors.black54, fontSize: 10)),
+                      style: TextStyle(color: Colors.black54, fontSize: 10)),
                 ),
-                SizedBox(
-                    height: 2.ph(size)
-                ),
+                SizedBox(height: 2.ph(size)),
                 Row(
                   children: [
                     Icon(
@@ -397,24 +385,22 @@ class _ProfileHomeState extends State<ProfileHome> {
               children: [
                 Text(
                   'Work Description',
-                  style: TextStyle(color: kTextColor,
+                  style: TextStyle(
+                      color: kTextColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
-                    height: 2.ph(size)
-                ),
+                SizedBox(height: 2.ph(size)),
                 Container(
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
-                  constraints: const BoxConstraints(
-                      minWidth: 240, maxHeight: 50),
+                  constraints:
+                      const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
                   child: Text(person_intro_cont,
-                      style: TextStyle(
-                          color: Colors.black54, fontSize: 10)),
+                      style: TextStyle(color: Colors.black54, fontSize: 10)),
                 ),
               ],
             ),
@@ -437,7 +423,7 @@ Future<bool> isConsumer(userId) async {
       .where('uid', isEqualTo: userId)
       .get()
       .then(
-        (querySnapshot) {
+    (querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
         print('it is consumer');
         result = true;

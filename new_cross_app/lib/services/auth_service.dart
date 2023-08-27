@@ -68,7 +68,17 @@ class AuthService {
         // Sign in the user with the credentials
         await auth.signInWithCredential(credential);
 
-        return true; // Return true on successful authentication
+        // Sign in the user with the credentials
+        UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+        User? user = userCredential.user;
+
+        if (user != null) {
+          // Save user data to CustomerCollection
+          await DatabaseService(uid: user.uid)
+              .savingCustomerData(user.displayName ?? '', user.email ?? '');
+          return true; // Return true on successful authentication
+        }
       }
     } catch (error) {
       // Handle any errors that might occur during the sign-in process
