@@ -159,6 +159,7 @@ class MyRouter {
                 child: Rate(bookingId: state.params['bookingId']!));
           },
         ),
+
       ],
       errorPageBuilder: (context, state) {
         return MaterialPage(child: ErrorPage());

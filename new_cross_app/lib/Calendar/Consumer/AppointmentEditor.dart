@@ -62,34 +62,6 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                             DateFormat('EEE, MMM dd yyyy').format(_endDate),
                             textAlign: TextAlign.left,
                           ),
-                          /*onTap: () async {
-                              final DateTime? date = await showDatePicker(
-                                context: context,
-                                initialDate: _endDate,
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2100),
-                              );
-
-                              if (date != null && date != _endDate) {
-                                setState(() {
-                                  final Duration difference =
-                                  _endDate.difference(_startDate);
-                                  _endDate = DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      _endTime.hour,
-                                      _endTime.minute,
-                                      0);
-                                  if (_endDate.isBefore(_startDate)) {
-                                    _startDate = _endDate.subtract(difference);
-                                    _startTime = TimeOfDay(
-                                        hour: _startDate.hour,
-                                        minute: _startDate.minute);
-                                  }
-                                });
-                              }
-                            }*/
                         ),
                       ),
                       Expanded(
@@ -162,7 +134,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                           'bookingId': selectedKey,
                           'userId':_consumerId,
                         });
-                        colRef.doc(selectedKey).update({'status': 'Working'});
+                        bookingRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),
 
@@ -268,8 +240,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         key: selectedKey,
                         consumerId: _consumerId,
                         tradieId: _tradieId,
-                        quote: quote
-
+                        quote: quote,
+                        rating: _rating,
+                        comment: '',
                         ///eventName: _subject =_subject,
                         ));
 
@@ -277,7 +250,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
                     _events.notifyListeners(
                         CalendarDataSourceAction.add, meetings);
-                    colRef.doc(_selectedAppointment?.key).update({
+                    bookingRef.doc(_selectedAppointment?.key).update({
                       'eventName': _subject,
                       'from': _startDate.toString(),
                       'to': _endDate.toString(),
@@ -289,6 +262,8 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       'tradieId': _tradieId,
                       'consumerId': _consumerId,
                       'quote': quote,
+                      'rating':0,
+                      'comment':'',
                     });
                     _selectedAppointment = null;
 
@@ -313,7 +288,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       _events.notifyListeners(CalendarDataSourceAction.remove,
                           <Booking>[]..add(_selectedAppointment!));
                       try {
-                        colRef.doc(_selectedAppointment?.key).delete();
+                        bookingRef.doc(_selectedAppointment?.key).delete();
                       } catch (e) {}
                       _selectedAppointment = null;
                       Navigator.pop(context);

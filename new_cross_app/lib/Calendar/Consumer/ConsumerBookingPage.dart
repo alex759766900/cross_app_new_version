@@ -8,6 +8,8 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
 
 import '../../Routes/route_const.dart';
+import '../../stripe/check_out.dart';
+import 'Booking.dart';
 part 'BookingEditor.dart';
 
 class ConsumerBooking extends StatefulWidget {
@@ -45,12 +47,15 @@ late DateTime _startDate;
 late TimeOfDay _startTime;
 late DateTime _endDate;
 late TimeOfDay _endTime;
+late num workStart;
+late num workEnd;
+late bool weekend;
 bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
 final db = FirebaseFirestore.instance;
-final consumerRef = db.collection('customers');
-final tradieRef = db.collection('tradeperson');
+final usersRef = db.collection('users');
+final bookingRef = db.collection('bookings');
 class ConsumerBookingState extends State<ConsumerBooking> {
 
   late Stream<QuerySnapshot> _usersStream;
@@ -59,24 +64,26 @@ class ConsumerBookingState extends State<ConsumerBooking> {
   ConsumerBookingState(this.tradie, this.userId) {
     user_tradieId=tradie;
     user_consumerId=userId;
-    colRef.where('tradieId', isEqualTo: user_tradieId).snapshots().listen(
+    //monitor bookings
+    bookingRef.where('tradieId', isEqualTo: user_tradieId).snapshots().listen(
           (event) => print("get query"+_tradieId),
 
       onError: (error) => print("Listen failed: $error"),
     );
-    _usersStream = colRef.where('tradieId', isEqualTo: user_tradieId).snapshots();
+    // setup Stream for realtime update
+    _usersStream = bookingRef.where('tradieId', isEqualTo: user_tradieId).snapshots();
     getName(user_tradieId, user_consumerId);
   }
+  // get tradie name, job title and consumer's name
   Future<void> getName(tradieId, consumerId)async {
-    await tradieRef.where('uid', isEqualTo: tradieId).get().then((value) => {
+    await usersRef.where('uid', isEqualTo: tradieId).get().then((value) => {
       user_tradieName=value.docs[0]['fullName'],
-      user_subject = value.docs[0]['job']
+      user_subject = value.docs[0]['workTitle']
     });
-    await consumerRef.where('uid', isEqualTo: consumerId).get().then((value) => user_consumerName=value.docs[0]['fullName']);
+    await usersRef.where('uid', isEqualTo: consumerId).get().then((value) => user_consumerName=value.docs[0]['fullName']);
 
   }
-
-
+  //TODO: get working time from firebase
 
   late List<Booking> appointments;
   CalendarController calendarController = CalendarController();
@@ -100,11 +107,10 @@ class ConsumerBookingState extends State<ConsumerBooking> {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
-
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-
+        // Get Bookings from firebase and stored into list
         List<Booking>? list = snapshot.data?.docs
             .map((e) => Booking(
           eventName: e['eventName'] ?? '',
@@ -118,21 +124,10 @@ class ConsumerBookingState extends State<ConsumerBooking> {
           consumerId: e['consumerId'] ?? '',
           tradieId: e['tradieId'] ?? '',
           quote: e['quote'] ?? '',
+          rating: e['rating']?? '',
+          comment: e['comment']?? '',
         ))
             .toList();
-        /*for (var v in list!){
-          if(v.tradieId==user_tradieId){
-            user_tradieName=v.tradieName;
-            user_subject=v.eventName;
-            break;
-          }
-        }
-        for (var v in list!){
-          if(v.consumerId==user_consumerId){
-            user_consumerName=v.consumerName;
-            break;
-          }
-        }*/
         _bookings = DataSource(list!);
 
         return Scaffold(
@@ -206,6 +201,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
             final Booking meetingDetails = calendarTapDetails.appointments![0];
             _selectedAppointment = meetingDetails;
             if (meetingDetails.consumerId == user_consumerId) {
+              //set up variables
               _startDate = meetingDetails.from;
               _endDate = meetingDetails.to;
               _selectedStatusIndex =
@@ -218,7 +214,7 @@ class ConsumerBookingState extends State<ConsumerBooking> {
               _consumerId=meetingDetails.consumerId;
               _tradieId=meetingDetails.tradieId;
               quote=meetingDetails.quote;
-
+              // Goto Editor
               Navigator.push<Widget>(
                 context,
                 MaterialPageRoute(
@@ -279,32 +275,7 @@ class DataSource extends CalendarDataSource {
   DateTime getEndTime(int index) => appointments![index].to;
 }
 
-class Booking {
-  Booking(
-      {required this.from,
-      required this.to,
-      this.status = '',
-      this.eventName = '',
-      this.tradieName = '',
-      this.consumerName = '',
-      this.description = '',
-      this.key='',
-      this.consumerId='',
-      this.tradieId='',
-      this.quote=0});
 
-  final String tradieName;
-  final String consumerName;
-  final String eventName;
-  DateTime from;
-  DateTime to;
-  String status;
-  String description;
-  String key;
-  String consumerId;
-  String tradieId;
-  num quote;
-}
 
 void setUpBooking() {
   _statusNames.add('Pending');
