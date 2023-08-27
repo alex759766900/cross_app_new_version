@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Home%20Page/responsive.dart';
+import 'package:new_cross_app/Profile/register_tradie.dart';
 import '../Home Page/constants.dart';
 import '../Home Page/decorations.dart';
 import '../Home Page/home.dart';
-import '../Routes/route_const.dart';
+import 'customer_info_edit.dart';
 
 class ProfileHome extends StatefulWidget {
   String userId;
@@ -16,7 +16,7 @@ class ProfileHome extends StatefulWidget {
   _ProfileHomeState createState() => _ProfileHomeState(userId: userId);
 }
 
-late bool _isConsumer = true;
+bool _isConsumer = true;
 final databaseReference = FirebaseFirestore.instance;
 final CollectionReference colRef = databaseReference.collection('customers');
 
@@ -37,10 +37,6 @@ class _ProfileHomeState extends State<ProfileHome> {
   @override
   void initState() {
     super.initState();
-    isConsumer(userId).then((value) {
-      print(value);
-      _isConsumer = false; //value;
-    });
     getUserProfile(userId);
   }
 
@@ -55,6 +51,7 @@ class _ProfileHomeState extends State<ProfileHome> {
           data['address']?.isEmpty ? 'No Address Information' : data['address'];
       email = data['email']?.isEmpty ? 'No Mail Information' : data['email'];
       phone = data['Phone']?.isEmpty ? 'No Phone Information' : data['Phone'];
+      _isConsumer = !data['Is_Tradie'];
     });
   }
 
@@ -78,7 +75,13 @@ class _ProfileHomeState extends State<ProfileHome> {
               SizedBox(height: 2.5.ph(size)),
               if (_isConsumer)
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterTradiePage()),
+                      );
+                    },
                     child: Text('Register as a tradie',
                         style: TextStyle(color: Colors.black87))),
               if (!_isConsumer)
@@ -182,36 +185,22 @@ class _ProfileHomeState extends State<ProfileHome> {
                   phone,
                   style: TextStyle(color: Colors.black87),
                 ),
-                // Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                //   Text(
-                //     person_intro,
-                //     style: TextStyle(color: Colors.black87),
-                //   ),
-                //   Container(
-                //     padding: EdgeInsets.all(4.0),
-                //     margin: const EdgeInsets.fromLTRB(0, 4, 0, 0),
-                //     width: 25.pw(size),
-                //     constraints: const BoxConstraints(
-                //         minWidth: 150, maxHeight: 50),
-                //     decoration: BoxDecoration(
-                //         border: Border.all(color: Colors.grey),
-                //         color: Colors.grey.withOpacity(0.15)),
-                //     child: Text(person_intro_cont,
-                //         style: TextStyle(
-                //             color: Colors.black54, fontSize: 10)),
-                //   ),
-                // ]),
               ],
             ),
             Positioned(
                 top: -5,
                 right: 0,
                 child: IconButton(
-                  onPressed: () {
-                    try {
-                      GoRouter.of(context).pushNamed(RouterName.InfoEdit);
-                    } catch (e) {
-                      print("Error navigating: $e");
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CustomerInfoEdit(userID: userId)),
+                    );
+                    if (result.toString() == 'update') {
+                      await getUserProfile(userId);
+                      setState(() {}); // 更新状态
                     }
                   },
                   icon: Icon(Icons.edit, size: 20),
@@ -414,25 +403,4 @@ class _ProfileHomeState extends State<ProfileHome> {
           ],
         ));
   }
-}
-
-Future<bool> isConsumer(userId) async {
-  late bool result;
-  await FirebaseFirestore.instance
-      .collection('customers')
-      .where('uid', isEqualTo: userId)
-      .get()
-      .then(
-    (querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        print('it is consumer');
-        result = true;
-      } else {
-        print('it is tradie');
-        result = false;
-      }
-    },
-    onError: (e) => print("Error completing: $e"),
-  );
-  return result;
 }

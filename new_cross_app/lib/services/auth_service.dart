@@ -99,4 +99,19 @@ class AuthService {
       return null;
     }
   }
+
+  // update user password
+  Future<bool> updatePassword(String newPassword) async {
+    User? user = firebaseAuth.currentUser;
+
+    try {
+      await user!.updatePassword(newPassword);
+      await user.reload();
+      user = firebaseAuth.currentUser;
+      return true;
+    } catch (e) {
+      print("An error occurred while trying to update password: $e");
+      return false;
+    }
+  }
 }
