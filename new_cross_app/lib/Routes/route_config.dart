@@ -15,6 +15,9 @@ import 'package:new_cross_app/stripe/screens/mainStripe2.dart';
 //import 'package:new_cross_app/main.dart';
 
 import '../Calendar/Consumer/TradieDemo.dart';
+import '../Profile/customer_info_edit.dart';
+import '../Profile/profile_home.dart';
+import '../Profile/customer_info_edit.dart';
 import 'ErrorPage.dart';
 import '../Home Page/home.dart';
 import '../chat/screens/chat_screen.dart';
@@ -42,7 +45,8 @@ class MyRouter {
           path: '/profile/:userId',
           pageBuilder: (context, state) {
             return MaterialPage(
-                child: Profile(userId: state.params['userId']!));
+                // child: Profile(userId: state.params['userId']!));
+              child: ProfileHome(userId: state.params['userId']!));
           },
         ),
         GoRoute(
