@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../Calendar/Consumer/Booking.dart';
 import '../Routes/route_const.dart';
 import 'card_form_screen.dart';
 
@@ -120,32 +121,7 @@ class StripeApp extends StatelessWidget {
   }
 }
 
-class Booking {
-  Booking(
-      {required this.from,
-      required this.to,
-      this.status = 'Pending',
-      this.eventName = '',
-      this.tradieName = '',
-      this.consumerName = '',
-      this.description = '',
-      this.key = '',
-      this.consumerId = '',
-      this.tradieId = '',
-      this.quote=0});
 
-  final String tradieName;
-  final String consumerName;
-  final String eventName;
-  DateTime from;
-  DateTime to;
-  String status;
-  String description;
-  String key;
-  num quote;
-  String consumerId;
-  String tradieId;
-}
 /*
 List<Booking> getBookingDetails(String tradie) {
 
