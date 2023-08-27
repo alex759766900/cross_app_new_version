@@ -107,6 +107,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                               fontSize: 20,
                               fontWeight: FontWeight.w600)),
                       certificateInfo(size),
+                      stripeAccount(size),
                       ratingInfo(size),
                       workingTimeInfo(size),
                       workDescriptionIno(size),
@@ -140,20 +141,9 @@ class _ProfileHomeState extends State<ProfileHome> {
       child: Row(
         children: [
           // avatar and contact
-          Column(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage("images/Tom.jpg"),
-                radius: 55,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextButton(
-                  onPressed: () {},
-                  child:
-                      Text(strip_acc, style: TextStyle(color: Colors.black87))),
-            ],
+          CircleAvatar(
+            backgroundImage: AssetImage("images/Tom.jpg"),
+            radius: 55,
           ),
           // Personal Info
           SizedBox(width: 5.pw(size)),
@@ -263,6 +253,45 @@ class _ProfileHomeState extends State<ProfileHome> {
                 ))
           ],
         ));
+  }
+
+  Container stripeAccount(Size size) {
+    return Container(
+      width: 40.pw(size),
+      constraints: const BoxConstraints(minWidth: 320),
+      margin: EdgeInsets.fromLTRB(1.pw(size), 30, 1.pw(size), 0),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: defaultShadows,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Stripe Account',
+            style: TextStyle(
+                color: kTextColor, fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 2.ph(size)),
+          Row(
+            children: [
+              Icon(
+                Icons.account_box,
+                color: Colors.green.shade500,
+              ),
+              TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Go to your stripe account",
+                    style: TextStyle(color: Colors.black87),
+                  ))
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Container ratingInfo(Size size) {
