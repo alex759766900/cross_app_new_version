@@ -6,7 +6,7 @@ class AppointmentEditor extends StatefulWidget {
   @override
   AppointmentEditorState createState() => AppointmentEditorState();
 }
-
+late int amount;
 class AppointmentEditorState extends State<AppointmentEditor> {
   Widget _getAppointmentEditor(BuildContext context) {
     return Container(
@@ -129,8 +129,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         Icons.check_circle,
                         color: _colorCollection[_selectedStatusIndex],
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         //TODO go to stripe checkout
+                        await createPaymentIntent(body);
                         bookingRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),
@@ -293,5 +294,31 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
+  }
+
+
+}
+Future<String> createPaymentIntent(Map<String,String> body) async{
+  await http.post(
+    Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/StripeCheckOut'),
+    body:body,
+  ).then((res){
+    if(res.statusCode == 200){
+      print('success');
+      Map<String, dynamic> responseMap = json.decode(res.body);
+      amount = int.parse(responseMap['amount']!.toString());
+      _launchURL(responseMap['url']!.toString());
+    }else{
+      print('failed: ${res.body}');
+    }
+  });
+  return '';
+
+}
+void _launchURL(String url) async {
+  if (await canLaunchUrlString(url)) {
+    await launchUrlString(url);
+  } else {
+    throw 'could not open $url';
   }
 }

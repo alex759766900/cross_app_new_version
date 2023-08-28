@@ -12,8 +12,14 @@ import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../Routes/route_const.dart';
 import '../../stripe/check_out.dart';
+import '../../stripe/stripe_web/stripe_payment_web.dart';
 import 'Booking.dart';
 import 'ConsumerBookingPage.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
+
 
 part 'StatusPicker.dart';
 
