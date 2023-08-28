@@ -35,6 +35,8 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
 
   @override
   void dispose() {
+    workTitleController.dispose();
+    workDescriptionController.dispose();
     postcodeController.dispose();
     super.dispose();
   }
@@ -89,21 +91,27 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Work title
             attributeEdit(size, workTitleController, 'work title', 'Put your work title here'),
             SizedBox(height: 2.5.ph(size)),
 
+            // work description
             attributeEdit(size, workDescriptionController, 'work description', 'Put your work description here'),
             SizedBox(height: 2.5.ph(size)),
 
+            // work on weekends or not
             workWeekendDropdownButton(size),
             SizedBox(height: 2.5.ph(size)),
 
+            // work start and end time
             startEndTimeDropDownButton(context, size),
             SizedBox(height: 2.5.ph(size)),
 
+            // postcode of work area
             postcodeBuildForm(size),
             SizedBox(height: 2.5.ph(size)),
 
+            // publish work button
             ElevatedButton(
               onPressed: () async {
                 // the tradies can only publish work after they already have a Stripe accout
