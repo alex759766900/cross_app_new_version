@@ -29,6 +29,7 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
     _getUserData();
   }
 
+  @override
   void dispose() {
     nameController.dispose();
     phoneController.dispose();
@@ -95,23 +96,23 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // name
-            attributeEdit(size,nameController,'name','Enter your new name here'),
+            attributeEdit(size,nameController,'name','Enter your new name here',false),
             SizedBox(height: 2.5.ph(size)),
 
             // phone number
-            attributeEdit(size,phoneController,'phone','Enter your new phone number here'),
+            attributeEdit(size,phoneController,'phone','Enter your new phone number here',false),
             SizedBox(height: 2.5.ph(size)),
 
             // new password (leave it empty if not change)
-            passwordEdit(size,passwordController,'new password','Enter your new password here. Leave it empty if not change.'),
+            attributeEdit(size,passwordController,'new password','Enter your new password here. Leave it empty if not change.',true),
             SizedBox(height: 2.5.ph(size)),
 
             // confirm the new password (leave it empty if not change)
-            passwordEdit(size,confirmPasswordController,'confirm new password','Confirm your new password. Leave it empty if not change.'),
+            attributeEdit(size,confirmPasswordController,'confirm new password','Confirm your new password. Leave it empty if not change.',true),
             SizedBox(height: 2.5.ph(size)),
 
             // address
-            attributeEdit(size,addressController,'address','Put your new address here'),
+            attributeEdit(size,addressController,'address','Put your new address here',false),
             SizedBox(height: 2.5.ph(size)),
 
             // update information button
@@ -142,7 +143,7 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
   }
 
   // Each input text field
-  Container attributeEdit(Size size, TextEditingController controller, String labelText, String hintText) {
+  Container attributeEdit(Size size, TextEditingController controller, String labelText, String hintText, bool obscure) {
     return Container(
             width: 50.pw(size),
             constraints: const BoxConstraints(minWidth: 400),
@@ -156,28 +157,8 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
                   borderSide: const BorderSide(color: kLogoColor, width: 1.0),
                 ),
               ),
+              obscureText: obscure, // Hide password input
             ),
           );
   }
-
-  // new password input field
-  Container passwordEdit(Size size, TextEditingController controller, String labelText, String hintText) {
-    return Container(
-      width: 50.pw(size),
-      constraints: const BoxConstraints(minWidth: 400),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: labelText,
-          hintText: hintText,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(color: kLogoColor, width: 1.0),
-          ),
-        ),
-        obscureText: true, // Hide password input
-      ),
-    );
-  }
-
 }
