@@ -7,6 +7,9 @@ import '../Home Page/constants.dart';
 import '../Home Page/decorations.dart';
 import '../Home Page/home.dart';
 import 'customer_info_edit.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfileHome extends StatefulWidget {
   String userId;
@@ -310,7 +313,9 @@ class _ProfileHomeState extends State<ProfileHome> {
                 color: Colors.green.shade500,
               ),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    createStripeConnectAccount();
+                  },
                   child: Text(
                     "Go to your stripe account",
                     style: TextStyle(color: Colors.black87),
@@ -482,5 +487,35 @@ class _ProfileHomeState extends State<ProfileHome> {
                 ))
           ],
         ));
+  }
+
+  Future<void> createStripeConnectAccount() async {
+    await http.get(
+      Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/createConnectAccount'),
+    ).then((response){
+      if (response.statusCode == 200) {
+        print('请求成功：${response.body}');
+        Map<String, dynamic> responseMap = json.decode(response.body);
+        String accountId = responseMap['id']!.toString();
+
+        FirebaseFirestore.instance.collection('stripeId').add({
+          'account_id': accountId,
+        });
+        _launchURL(responseMap['url']!.toString());
+      } else {
+        print('请求失败：${response.statusCode}');
+      }
+    }).catchError((error){
+      print(error.toString());
+    });
+  }
+
+  void _launchURL(String url) async{
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'could not open $url';
+    }
+
   }
 }
