@@ -40,8 +40,8 @@ class _ProfileHomeState extends State<ProfileHome> {
   String lincensePic = "";
   String workType = "";
   String workTitle = "";
-  String workStart = "";
-  String workEnd = "";
+  num workStart = 0;
+  num workEnd = 0;
   bool workWeekend = false;
   String rate = "";
   String workDescription = "";
@@ -73,8 +73,8 @@ class _ProfileHomeState extends State<ProfileHome> {
         workTitle = data['workTitle']?.isEmpty ? 'No Information' : data['workTitle'];
         workDescription = data['workDescription']?.isEmpty ? 'No Information' : data['workDescription'];
         workWeekend = data['workWeekend'];
-        workStart = data['workStart']?.isEmpty ? 'No Information' : data['workStart'];
-        workEnd = data['workEnd']?.isEmpty ? 'No Information' : data['workEnd'];
+        workStart = data['workStart'];
+        workEnd = data['workEnd'];
       });
       }
     }
@@ -355,17 +355,17 @@ class _ProfileHomeState extends State<ProfileHome> {
 
   Container workingDetails(Size size) {
     String workTime = "";
-    if(workStart.isEmpty || workEnd.isEmpty){
+    if(workStart == 0 && workEnd == 0){
       workTime = "No information";
     }
     else {
-      String workStartSuffix = int.parse(workStart) >= 12 && int.parse(workStart) < 24 ? ":00 PM" : ":00 AM";
-      String workEndSuffix = int.parse(workEnd) >= 12 && int.parse(workEnd) < 24 ? ":00 PM" : ":00 AM";
+      String workStartSuffix = workStart >= 12 && workStart < 24 ? ":00 PM" : ":00 AM";
+      String workEndSuffix = workEnd >= 12 && workEnd < 24 ? ":00 PM" : ":00 AM";
       if (workWeekend){
-        workTime = 'Monday to Sunday: '+ workStart + workStartSuffix + ' to ' + workEnd + workEndSuffix;
+        workTime = 'Monday to Sunday: '+ workStart.toString() + workStartSuffix + ' to ' + workEnd.toString() + workEndSuffix;
       }
       if (!workWeekend){
-        workTime = 'Monday to Friday: '+ workStart + workStartSuffix + ' to ' + workEnd + workEndSuffix + '\nNo Work on Weekends';
+        workTime = 'Monday to Friday: '+ workStart.toString() + workStartSuffix + ' to ' + workEnd.toString() + workEndSuffix + '\nNo Work on Weekends';
       }
     }
     return Container(

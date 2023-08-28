@@ -19,8 +19,8 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
   TextEditingController workTitleController = TextEditingController();
   TextEditingController workDescriptionController = TextEditingController();
   bool? workWeekendValue;
-  String? startTime;
-  String? endTime;
+  num? startTime;
+  num? endTime;
   String stripeId ='';
 
   @override
@@ -39,8 +39,8 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
       setState(() {
         stripeId = values['stripeId'];
         workWeekendValue = values['workWeekend'];
-        startTime = values['workStart'] ?? '';
-        endTime = values['workEnd'] ?? '';
+        startTime = values['workStart'];
+        endTime = values['workEnd'];
       });
     }
   }
@@ -128,17 +128,17 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
                       fontSize: 16),
                 ),
                 SizedBox(width: 5.pw(size)),
-                DropdownButton<String>(
+                DropdownButton<num>(
                 value: startTime,
                 items: List.generate(24, (index) {
-                  return DropdownMenuItem<String>(
-                    value: index < 10 ? '0$index' : '$index',
+                  return DropdownMenuItem<num>(
+                    value: index,
                     child: Text(index < 10 ? '0$index' : '$index'),
                   );
                 }),
                 hint: Text('Select start time'),
-                onChanged: (String? value) {
-                  if (endTime != null && int.parse(value!) >= int.parse(endTime!)) {
+                onChanged: (num? value) {
+                  if (endTime != null && value! >= endTime!) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Start time cannot be later than end time'),
@@ -164,17 +164,17 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
                       fontSize: 16),
                 ),
                 SizedBox(width: 5.pw(size)),
-                DropdownButton<String>(
+                DropdownButton<num>(
                 value: endTime,
                 items: List.generate(24, (index) {
-                  return DropdownMenuItem<String>(
-                    value: index < 10 ? '0$index' : '$index',
+                  return DropdownMenuItem<num>(
+                    value: index,
                     child: Text(index < 10 ? '0$index' : '$index'),
                   );
                 }),
                 hint: Text('Select end time'),
-                onChanged: (String? value) {
-                  if (startTime != null && int.parse(value!) <= int.parse(startTime!)) {
+                onChanged: (num? value) {
+                  if (startTime != null && value! <= startTime!) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('End time cannot be earlier than start time'),
