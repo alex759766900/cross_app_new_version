@@ -18,6 +18,10 @@ final CollectionReference colRef = databaseReference.collection('customers');
 class _TradieWorkPublishState extends State<TradieWorkPublish> {
   TextEditingController workTitleController = TextEditingController();
   TextEditingController workDescriptionController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController postcodeController = TextEditingController();
+
   bool? workWeekendValue;
   num? startTime;
   num? endTime;
@@ -29,6 +33,12 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
     _getUserData();
   }
 
+  @override
+  void dispose() {
+    postcodeController.dispose();
+    super.dispose();
+  }
+
   _getUserData() async {
     DocumentSnapshot docSnapshot = await colRef.doc(widget.userID).get();
     Map<String, dynamic> values = docSnapshot.data() as Map<String, dynamic>;
@@ -36,6 +46,7 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
     if (values != null) {
       workTitleController.text = values['workTitle'] ?? '';
       workDescriptionController.text = values['workDescription'] ?? '';
+      postcodeController.text = values['postcode'] ?? '';
       setState(() {
         stripeId = values['stripeId'];
         workWeekendValue = values['workWeekend'];
@@ -48,6 +59,7 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
   _updateData() async {
     String workTitle = workTitleController.text;
     String workDescription = workDescriptionController.text;
+    String postcode = postcodeController.text;
 
     Map<String, dynamic> updatedInfo = {
       'workTitle': workTitle,
@@ -55,6 +67,7 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
       'workStart': startTime,
       'workEnd': endTime,
       'workWeekend': workWeekendValue,
+      'postcode': postcode,
     };
 
     // update information
@@ -88,8 +101,12 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
             startEndTimeDropDownButton(context, size),
             SizedBox(height: 2.5.ph(size)),
 
+            postcodeBuildForm(size),
+            SizedBox(height: 2.5.ph(size)),
+
             ElevatedButton(
               onPressed: () async {
+                // the tradies can only publish work after they already have a Stripe accout
                 if (stripeId.isEmpty){
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -100,8 +117,11 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
                   );
                 }
                 else {
-                  await _updateData();
-                  Navigator.pop(context, 'update'); // 返回到前一个页面，并传递参数，表示信息有更新
+                  // if the postcode is invalid, the work can't be published
+                  if (_formKey.currentState!.validate()) {
+                    await _updateData();
+                    Navigator.pop(context, 'update'); // return to the former page, with a parameter to indicate the information has been updated
+                  }
                 }
               },
               child: Text('Publish Work'),
@@ -109,6 +129,44 @@ class _TradieWorkPublishState extends State<TradieWorkPublish> {
           ],
         ),
       ),
+    );
+  }
+
+  // Enter the postcode of the working area, postcode can only be 4 digits and will be validated
+  Container postcodeBuildForm(Size size) {
+    return Container(
+      width: 50.pw(size),
+      constraints: const BoxConstraints(minWidth: 400),
+      child: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: postcodeController,
+              decoration: InputDecoration(
+                labelText: 'working postcode',
+                hintText: 'Put your working postcode here',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(color: kLogoColor, width: 1.0),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+              maxLength: 4,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a postcode';
+                }
+                final isDigitsOnly = int.tryParse(value);
+                if (isDigitsOnly == null) {
+                  return 'Please enter only numeric characters';
+                }
+                if (value.length != 4) {
+                  return 'Postcode must be exactly 4 digits';
+                }
+                return null;
+              },
+            ),
+
+          ),
     );
   }
 
