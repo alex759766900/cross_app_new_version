@@ -6,7 +6,7 @@ class HelperFunctions {
   static final CollectionReference tradieRef =
       FirebaseFirestore.instance.collection('tradeperson');
   static final CollectionReference consumerRef =
-      FirebaseFirestore.instance.collection('customers');
+      FirebaseFirestore.instance.collection('users');
   static String userLoggedInKey = "LOGGEDINKEY";
   static String userNameKey = "USERNAMEKEY";
   static String userEmailKey = "USEREMAILKEY";
@@ -58,14 +58,15 @@ class HelperFunctions {
   }
 
   static Future<String?> getUserNameFromId(String userId) async {
-    String userName='';
-    tradieRef.get().then((querySnapshot) {
+    String userName = '';
+    tradieRef.get().then(
+      (querySnapshot) {
         print("Successfully completed");
         for (var docSnapshot in querySnapshot.docs) {
-          if(docSnapshot.id==userId){
-            if(docSnapshot.data()!=null){
+          if (docSnapshot.id == userId) {
+            if (docSnapshot.data() != null) {
               var data = docSnapshot.data() as Map<String, dynamic>;
-              userName=data['fullName'];
+              userName = data['fullName'];
 
               return userName;
             }
@@ -74,23 +75,20 @@ class HelperFunctions {
       },
       onError: (e) => print("Error completing: $e"),
     );
-    consumerRef.get().then((querySnapshot) {
-      print("Successfully completed");
-      for (var docSnapshot in querySnapshot.docs) {
-        if(docSnapshot.id==userId){
-          if(docSnapshot.data()!=null){
-            userName=docSnapshot['fullName'];
+    consumerRef.get().then(
+      (querySnapshot) {
+        print("Successfully completed");
+        for (var docSnapshot in querySnapshot.docs) {
+          if (docSnapshot.id == userId) {
+            if (docSnapshot.data() != null) {
+              userName = docSnapshot['fullName'];
 
-            return userName;
+              return userName;
+            }
           }
         }
-      }
-
-    },
+      },
       onError: (e) => print("Error completing: $e"),
     );
-
-
-
   }
 }

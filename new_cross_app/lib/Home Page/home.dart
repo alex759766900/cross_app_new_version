@@ -31,7 +31,7 @@ import '../Calendar/Tradie/TradieProfilePage.dart';
 import '../Login/login.dart';
 import '../Login/utils/constants.dart';
 import '../Profile/profile.dart';
-import '../Sign_up/signup.dart';
+//import '../Sign_up/signup.dart';
 import '../chat/screens/chat_home_screen.dart';
 import '../helper/helper_function.dart';
 import '../stripe/card_form_screen.dart';
@@ -327,7 +327,7 @@ class HomeState extends State<Home> {
 Future<bool> isConsumer(userId) async {
   late bool result;
   await FirebaseFirestore.instance
-      .collection('customers')
+      .collection('users')
       .where('uid', isEqualTo: userId)
       .get()
       .then(
