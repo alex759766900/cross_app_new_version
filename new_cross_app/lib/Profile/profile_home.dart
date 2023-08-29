@@ -104,7 +104,9 @@ class _ProfileHomeState extends State<ProfileHome> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegisterTradiePage()),
+                          builder: (context) => RegisterTradiePage(uid: userId),
+                          // builder: (context) => TestPage(uid: userId),
+                        ),// 传递的 uid
                       );
                     },
                     child: Text('Register as a tradie',
