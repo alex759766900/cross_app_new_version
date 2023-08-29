@@ -7,12 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../Routes/route_const.dart';
+import '../../stripe/check_out.dart';
+import '../../stripe/stripe_web/stripe_payment_web.dart';
+import 'Booking.dart';
 import 'ConsumerBookingPage.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
+
 
 part 'StatusPicker.dart';
 
@@ -49,22 +56,22 @@ late TimeOfDay _endTime;
 bool _isAllDay = false;
 String _subject = '';
 String _notes = '';
+late num _rating;
 final databaseReference = FirebaseFirestore.instance;
-final CollectionReference colRef=databaseReference.collection('bookings');
+final CollectionReference bookingRef=databaseReference.collection('bookings');
 class ConsumerProfileState extends State<ConsumerProfilePage> {
   String consumer;
   late Stream<QuerySnapshot> _usersStream;
   ConsumerProfileState(String this.consumer){
     _consumerId=this.consumer;
     print(_consumerId);
-    colRef.where('consumerId', isEqualTo: _consumerId).snapshots().listen(
+    bookingRef.where('consumerId', isEqualTo: _consumerId).snapshots().listen(
           (event) => print("get query"+_consumerId),
 
       onError: (error) => print("Listen failed: $error"),
     );
     print("this"+_consumerId);
-    _usersStream = colRef.where('consumerId', isEqualTo: _consumerId).snapshots();
-
+    _usersStream = bookingRef.where('consumerId', isEqualTo: _consumerId).snapshots();
   }
 
   late List<String> eventNameCollection;
@@ -106,6 +113,8 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
           consumerId: e['consumerId'] ?? '',
           tradieId: e['tradieId'] ?? '',
           quote: e['quote'] ?? '',
+          rating: e['quote'] ?? '',
+          comment: e['comment']?? '',
         ))
             .toList();
         _events = DataSource(list!);
@@ -189,6 +198,7 @@ class ConsumerProfileState extends State<ConsumerProfilePage> {
             _tradieId=meetingDetails.tradieId;
             _selectedAppointment = meetingDetails;
             quote=meetingDetails.quote;
+            _rating=meetingDetails.rating;
 
             //如果返回appointments 为null，则说明是新的meeting,根据点击的时间点设置信息，并且跳转到appointment editor
           } else {

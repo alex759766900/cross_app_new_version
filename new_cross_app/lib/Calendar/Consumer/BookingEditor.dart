@@ -239,7 +239,7 @@ class BookingEditorState extends State<BookingEditor> {
                             .pushNamed(RouterName.Checkout, params: {
                           'bookingId': selectedKey,'userId':_consumerId
                         });
-                        colRef.doc(selectedKey).update({'status': 'Working'});
+                        bookingRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),
             ),
@@ -372,6 +372,8 @@ class BookingEditorState extends State<BookingEditor> {
                           tradieId: _tradieId,
                           key: selectedKey,
                           quote: quote,
+                          rating: 0,
+                          comment: '',
                         ));
                         _bookings.appointments!.add(meetings[0]);
                         _bookings.notifyListeners(
@@ -386,7 +388,7 @@ class BookingEditorState extends State<BookingEditor> {
                             keys.add(b.key);
                           }
                         }
-                        colRef.doc().set({
+                        bookingRef.doc().set({
                           'eventName': _subject,
                           'from': _startDate.toString(),
                           'to': _endDate.toString(),
@@ -398,10 +400,12 @@ class BookingEditorState extends State<BookingEditor> {
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
                           'quote': quote,
+                          'rating':0,
+                          'comment':'',
                         });
 
                         var k = await getKey(keys);
-                        colRef.doc(k).update({'key': k});
+                        bookingRef.doc(k).update({'key': k});
                       } else {
                         print('old booking');
                         final meetings = <Booking>[];
@@ -420,7 +424,7 @@ class BookingEditorState extends State<BookingEditor> {
                         _bookings.notifyListeners(
                             CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
-                        colRef.doc(_selectedAppointment?.key).update({
+                        bookingRef.doc(_selectedAppointment?.key).update({
                           'eventName': _subject,
                           'from': _startDate.toString(),
                           'to': _endDate.toString(),
@@ -432,6 +436,8 @@ class BookingEditorState extends State<BookingEditor> {
                           'tradieId': _tradieId,
                           'consumerId': _consumerId,
                           'quote': quote,
+                          'rating':0,
+                          'comment': '',
                         });
                         meetings.add(Booking(
                           from: _startDate,
@@ -445,6 +451,8 @@ class BookingEditorState extends State<BookingEditor> {
                           tradieId: _tradieId,
                           key: selectedKey,
                           quote: quote,
+                          rating: 0,
+                          comment: '',
                         ));
                         _bookings.appointments!.add(meetings[0]);
                         _bookings.notifyListeners(
@@ -485,7 +493,7 @@ class BookingEditorState extends State<BookingEditor> {
                             CalendarDataSourceAction.remove,
                             <Booking>[]..add(_selectedAppointment!));
                         try {
-                          colRef.doc(_selectedAppointment?.key).delete();
+                          bookingRef.doc(_selectedAppointment?.key).delete();
                         } catch (e) {}
                         _selectedAppointment = null;
                         Navigator.pop(context);
@@ -502,7 +510,7 @@ class BookingEditorState extends State<BookingEditor> {
 
   Future<String> getKey(List<String> oldkeys) async {
     String newKey = '';
-    await colRef.where('key', isEqualTo: '').get().then(
+    await bookingRef.where('key', isEqualTo: '').get().then(
       (QuerySnapshot snapshot) {
         if (snapshot.docs.length > 1) {
           for (var b in snapshot.docs) {

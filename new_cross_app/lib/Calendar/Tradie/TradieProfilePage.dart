@@ -3,10 +3,11 @@ library tradie_calendar;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:new_cross_app/Calendar/Consumer/Consumer.dart';
 import 'package:new_cross_app/Calendar/Consumer/TradieDemo.dart';
 import 'package:new_cross_app/main.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+
+import '../Consumer/Booking.dart';
 
 part 'BookingEditor.dart';
 
@@ -344,33 +345,6 @@ class DataSource extends CalendarDataSource {
 
   @override
   DateTime getEndTime(int index) => appointments![index].to;
-}
-
-class Booking {
-  Booking(
-      {required this.from,
-      required this.to,
-      this.status = 'Pending',
-      this.eventName = '',
-      this.tradieName = '',
-      this.consumerName = '',
-      this.description = '',
-      this.key = '',
-      this.consumerId = '',
-      this.tradieId = '',
-      this.quote = 0});
-
-  final String tradieName;
-  final String consumerName;
-  final String eventName;
-  DateTime from;
-  DateTime to;
-  String status;
-  String description;
-  String key;
-  String consumerId;
-  String tradieId;
-  num quote;
 }
 
 Future<String> getName(userId) async {
