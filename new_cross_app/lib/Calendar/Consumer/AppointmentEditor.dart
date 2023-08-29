@@ -6,7 +6,7 @@ class AppointmentEditor extends StatefulWidget {
   @override
   AppointmentEditorState createState() => AppointmentEditorState();
 }
-
+late int amount;
 class AppointmentEditorState extends State<AppointmentEditor> {
   Widget _getAppointmentEditor(BuildContext context) {
     return Container(
@@ -62,34 +62,6 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                             DateFormat('EEE, MMM dd yyyy').format(_endDate),
                             textAlign: TextAlign.left,
                           ),
-                          /*onTap: () async {
-                              final DateTime? date = await showDatePicker(
-                                context: context,
-                                initialDate: _endDate,
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime(2100),
-                              );
-
-                              if (date != null && date != _endDate) {
-                                setState(() {
-                                  final Duration difference =
-                                  _endDate.difference(_startDate);
-                                  _endDate = DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      _endTime.hour,
-                                      _endTime.minute,
-                                      0);
-                                  if (_endDate.isBefore(_startDate)) {
-                                    _startDate = _endDate.subtract(difference);
-                                    _startTime = TimeOfDay(
-                                        hour: _startDate.hour,
-                                        minute: _startDate.minute);
-                                  }
-                                });
-                              }
-                            }*/
                         ),
                       ),
                       Expanded(
@@ -139,6 +111,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                   ? IconButton(
                       onPressed: () {
                         if (_statusNames[_selectedStatusIndex] == 'Rating') {
+                          //TODO go to rating
                           GoRouter.of(context).pushNamed(RouterName.Rate,
                               params: {'bookingId': selectedKey});
                         }
@@ -156,25 +129,12 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         Icons.check_circle,
                         color: _colorCollection[_selectedStatusIndex],
                       ),
-                      onPressed: () {
-                        GoRouter.of(context)
-                            .pushNamed(RouterName.Checkout, params: {
-                          'bookingId': selectedKey,
-                          'userId':_consumerId,
-                        });
-                        colRef.doc(selectedKey).update({'status': 'Working'});
+                      onPressed: () async {
+                        //TODO go to stripe checkout
+                        await createPaymentIntent(body);
+                        bookingRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),
-
-              /*onTap: () {
-                showDialog<Widget>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return _ColorPicker();
-                  },
-                ).then((dynamic value) => setState(() {}));
-              }*/
             ),
             const Divider(
               height: 1.0,
@@ -268,8 +228,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                         key: selectedKey,
                         consumerId: _consumerId,
                         tradieId: _tradieId,
-                        quote: quote
-
+                        quote: quote,
+                        rating: _rating,
+                        comment: '',
                         ///eventName: _subject =_subject,
                         ));
 
@@ -277,7 +238,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
                     _events.notifyListeners(
                         CalendarDataSourceAction.add, meetings);
-                    colRef.doc(_selectedAppointment?.key).update({
+                    bookingRef.doc(_selectedAppointment?.key).update({
                       'eventName': _subject,
                       'from': _startDate.toString(),
                       'to': _endDate.toString(),
@@ -289,6 +250,8 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       'tradieId': _tradieId,
                       'consumerId': _consumerId,
                       'quote': quote,
+                      'rating':0,
+                      'comment':'',
                     });
                     _selectedAppointment = null;
 
@@ -313,7 +276,7 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       _events.notifyListeners(CalendarDataSourceAction.remove,
                           <Booking>[]..add(_selectedAppointment!));
                       try {
-                        colRef.doc(_selectedAppointment?.key).delete();
+                        bookingRef.doc(_selectedAppointment?.key).delete();
                       } catch (e) {}
                       _selectedAppointment = null;
                       Navigator.pop(context);
@@ -331,5 +294,31 @@ class AppointmentEditorState extends State<AppointmentEditor> {
 
   String getTile() {
     return _subject.isEmpty ? 'New event' : 'Event details';
+  }
+
+
+}
+Future<String> createPaymentIntent(Map<String,String> body) async{
+  await http.post(
+    Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/StripeCheckOut'),
+    body:body,
+  ).then((res){
+    if(res.statusCode == 200){
+      print('success');
+      Map<String, dynamic> responseMap = json.decode(res.body);
+      amount = int.parse(responseMap['amount']!.toString());
+      _launchURL(responseMap['url']!.toString());
+    }else{
+      print('failed: ${res.body}');
+    }
+  });
+  return '';
+
+}
+void _launchURL(String url) async {
+  if (await canLaunchUrlString(url)) {
+    await launchUrlString(url);
+  } else {
+    throw 'could not open $url';
   }
 }

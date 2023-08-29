@@ -23,7 +23,6 @@ import 'package:new_cross_app/Home Page/about_jemma.dart';
 import 'package:new_cross_app/Home Page/why_jemma.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
 
-import '../Calendar/Consumer/Consumer.dart';
 import '../Calendar/Consumer/ConsumerProfilePage.dart';
 import '../Calendar/Consumer/TradieDemo.dart';
 import '../Calendar/RatePage.dart';

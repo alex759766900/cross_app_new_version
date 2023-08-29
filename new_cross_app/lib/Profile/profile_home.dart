@@ -2,10 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_cross_app/Home%20Page/responsive.dart';
 import 'package:new_cross_app/Profile/register_tradie.dart';
+import 'package:new_cross_app/Profile/tradie_work_publish.dart';
 import '../Home Page/constants.dart';
 import '../Home Page/decorations.dart';
 import '../Home Page/home.dart';
 import 'customer_info_edit.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfileHome extends StatefulWidget {
   String userId;
@@ -25,14 +29,22 @@ class _ProfileHomeState extends State<ProfileHome> {
 
   _ProfileHomeState({required this.userId});
 
-  late String name = "";
-  late String address = "";
-  late String email = "";
-  late String phone = "";
-  String person_intro = 'Personal Introduction';
-  String person_intro_cont =
-      'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-  String strip_acc = 'Stripe Account';
+  // General customer information
+  String name = "";
+  String address = "";
+  String email = "";
+  String phone = "";
+
+  // Tradie information
+  String licenseNumber = "";
+  String lincensePic = "";
+  String workType = "";
+  String workTitle = "";
+  num workStart = 0;
+  num workEnd = 0;
+  bool workWeekend = false;
+  String rate = "";
+  String workDescription = "";
 
   @override
   void initState() {
@@ -44,16 +56,28 @@ class _ProfileHomeState extends State<ProfileHome> {
     DocumentSnapshot docSnapshot = await colRef.doc(userId).get();
     Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
 
+    // Set general customer info
     setState(() {
-      name =
-          data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
-      address =
-          data['address']?.isEmpty ? 'No Address Information' : data['address'];
+      _isConsumer = !data['Is_Tradie'];
+      name = data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
+      address = data['address']?.isEmpty ? 'No Address Information' : data['address'];
       email = data['email']?.isEmpty ? 'No Mail Information' : data['email'];
       phone = data['Phone']?.isEmpty ? 'No Phone Information' : data['Phone'];
-      _isConsumer = !data['Is_Tradie'];
     });
-  }
+
+    // Set tradie info
+    if(data['Is_Tradie']){
+      setState(() {
+        licenseNumber = data['licenseNumber']?.isEmpty ? 'No Information' : data['licenseNumber'];
+        workType = data['workType']?.isEmpty ? 'No Information' : data['workType'];
+        workTitle = data['workTitle']?.isEmpty ? 'No Information' : data['workTitle'];
+        workDescription = data['workDescription']?.isEmpty ? 'No Information' : data['workDescription'];
+        workWeekend = data['workWeekend'];
+        workStart = data['workStart'];
+        workEnd = data['workEnd'];
+      });
+      }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +97,7 @@ class _ProfileHomeState extends State<ProfileHome> {
               // General customer information part
               customerInfo(size),
               SizedBox(height: 2.5.ph(size)),
+              // Tradie register button
               if (_isConsumer)
                 TextButton(
                     onPressed: () {
@@ -84,6 +109,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                     },
                     child: Text('Register as a tradie',
                         style: TextStyle(color: Colors.black87))),
+              // Tradie information part
               if (!_isConsumer)
                 Container(
                   width: 50.pw(size),
@@ -107,9 +133,9 @@ class _ProfileHomeState extends State<ProfileHome> {
                               fontSize: 20,
                               fontWeight: FontWeight.w600)),
                       certificateInfo(size),
+                      stripeAccount(size),
                       ratingInfo(size),
-                      workingTimeInfo(size),
-                      workDescriptionIno(size),
+                      workingDetails(size),
                     ],
                   ),
                 ),
@@ -140,20 +166,9 @@ class _ProfileHomeState extends State<ProfileHome> {
       child: Row(
         children: [
           // avatar and contact
-          Column(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage("images/Tom.jpg"),
-                radius: 55,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextButton(
-                  onPressed: () {},
-                  child:
-                      Text(strip_acc, style: TextStyle(color: Colors.black87))),
-            ],
+          CircleAvatar(
+            backgroundImage: AssetImage("images/Tom.jpg"),
+            radius: 55,
           ),
           // Personal Info
           SizedBox(width: 5.pw(size)),
@@ -226,6 +241,7 @@ class _ProfileHomeState extends State<ProfileHome> {
           clipBehavior: Clip.none,
           children: [
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              // Title
               Text(
                 'Certification',
                 style: TextStyle(
@@ -234,9 +250,11 @@ class _ProfileHomeState extends State<ProfileHome> {
                     fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 2.ph(size)),
+              // Display information
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Certificate image
                   Image(
                     image: AssetImage("images/certificate.png"),
                     width: 100,
@@ -246,14 +264,17 @@ class _ProfileHomeState extends State<ProfileHome> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 1.5.ph(size)),
-                      Text('Electrician', style: TextStyle(fontSize: 12)),
+                      // Work type information
+                      Text(workType, style: TextStyle(fontSize: 12)),
                       SizedBox(height: 1.5.ph(size)),
-                      Text('EL02343458ASDFA8', style: TextStyle(fontSize: 12)),
+                      // License number information
+                      Text(licenseNumber, style: TextStyle(fontSize: 12)),
                     ],
                   ),
                 ],
               ),
             ]),
+            // Button to edit the certification information
             Positioned(
                 top: -10,
                 right: 10,
@@ -263,6 +284,47 @@ class _ProfileHomeState extends State<ProfileHome> {
                 ))
           ],
         ));
+  }
+
+  Container stripeAccount(Size size) {
+    return Container(
+      width: 40.pw(size),
+      constraints: const BoxConstraints(minWidth: 320),
+      margin: EdgeInsets.fromLTRB(1.pw(size), 30, 1.pw(size), 0),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: defaultShadows,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Stripe Account',
+            style: TextStyle(
+                color: kTextColor, fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(height: 2.ph(size)),
+          Row(
+            children: [
+              Icon(
+                Icons.account_box,
+                color: Colors.green.shade500,
+              ),
+              TextButton(
+                  onPressed: () {
+                    createStripeConnectAccount();
+                  },
+                  child: Text(
+                    "Go to your stripe account",
+                    style: TextStyle(color: Colors.black87),
+                  ))
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Container ratingInfo(Size size) {
@@ -291,7 +353,21 @@ class _ProfileHomeState extends State<ProfileHome> {
     );
   }
 
-  Container workingTimeInfo(Size size) {
+  Container workingDetails(Size size) {
+    String workTime = "";
+    if(workStart == 0 && workEnd == 0){
+      workTime = "No information";
+    }
+    else {
+      String workStartSuffix = workStart >= 12 && workStart < 24 ? ":00 PM" : ":00 AM";
+      String workEndSuffix = workEnd >= 12 && workEnd < 24 ? ":00 PM" : ":00 AM";
+      if (workWeekend){
+        workTime = 'Monday to Sunday: '+ workStart.toString() + workStartSuffix + ' to ' + workEnd.toString() + workEndSuffix;
+      }
+      if (!workWeekend){
+        workTime = 'Monday to Friday: '+ workStart.toString() + workStartSuffix + ' to ' + workEnd.toString() + workEndSuffix + '\nNo Work on Weekends';
+      }
+    }
     return Container(
         width: 40.pw(size),
         constraints: const BoxConstraints(minWidth: 320),
@@ -305,9 +381,32 @@ class _ProfileHomeState extends State<ProfileHome> {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
+            // Display information
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Work Title
+                Text(
+                  'Work Title',
+                  style: TextStyle(
+                      color: kTextColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 2.ph(size)),
+                Container(
+                  padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
+                  width: 36.pw(size),
+                  constraints:
+                  const BoxConstraints(minWidth: 240, maxHeight: 50),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      color: Colors.grey.withOpacity(0.15)),
+                  child: Text(workTitle,
+                      style: TextStyle(color: Colors.black54, fontSize: 10)),
+                ),
+                SizedBox(height: 3.ph(size)),
+                // Working Time
                 Text(
                   'Working Time',
                   style: TextStyle(
@@ -324,7 +423,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
-                  child: Text(person_intro_cont,
+                  child: Text(workTime,
                       style: TextStyle(color: Colors.black54, fontSize: 10)),
                 ),
                 SizedBox(height: 2.ph(size)),
@@ -342,36 +441,8 @@ class _ProfileHomeState extends State<ProfileHome> {
                         ))
                   ],
                 ),
-              ],
-            ),
-            Positioned(
-                top: -18,
-                right: 10,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.edit, size: 20),
-                ))
-          ],
-        ));
-  }
-
-  Container workDescriptionIno(Size size) {
-    return Container(
-        width: 40.pw(size),
-        constraints: const BoxConstraints(minWidth: 320),
-        margin: EdgeInsets.fromLTRB(1.pw(size), 30, 1.pw(size), 0),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: defaultShadows,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                SizedBox(height: 3.ph(size)),
+                // Work Description
                 Text(
                   'Work Description',
                   style: TextStyle(
@@ -384,23 +455,67 @@ class _ProfileHomeState extends State<ProfileHome> {
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
                   constraints:
-                      const BoxConstraints(minWidth: 240, maxHeight: 50),
+                  const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
-                  child: Text(person_intro_cont,
+                  child: Text(workDescription,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(color: Colors.black54, fontSize: 10)),
                 ),
               ],
             ),
+            // Edit information button
             Positioned(
                 top: -18,
                 right: 10,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              TradieWorkPublish(userID: userId)),
+                    );
+                    if (result.toString() == 'update') {
+                      await getUserProfile(userId);
+                      setState(() {}); // 更新状态
+                    }
+                  },
                   icon: Icon(Icons.edit, size: 20),
                 ))
           ],
         ));
+  }
+
+  Future<void> createStripeConnectAccount() async {
+    await http.get(
+      Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/createConnectAccount'),
+    ).then((response){
+      if (response.statusCode == 200) {
+        print('请求成功：${response.body}');
+        Map<String, dynamic> responseMap = json.decode(response.body);
+        String accountId = responseMap['id']!.toString();
+
+        FirebaseFirestore.instance.collection('stripeId').add({
+          'account_id': accountId,
+        });
+        _launchURL(responseMap['url']!.toString());
+      } else {
+        print('请求失败：${response.statusCode}');
+      }
+    }).catchError((error){
+      print(error.toString());
+    });
+  }
+
+  void _launchURL(String url) async{
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    } else {
+      throw 'could not open $url';
+    }
+
   }
 }

@@ -20,12 +20,23 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getUserData();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    addressController.dispose();
+    super.dispose();
   }
 
   _getUserData() async {
@@ -36,6 +47,7 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
       nameController.text = values['fullName'] ?? '';
       phoneController.text = values['Phone'] ?? '';
       passwordController.text = '';
+      confirmPasswordController.text = '';
       addressController.text = values['address'] ?? '';
     }
   }
@@ -83,22 +95,44 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            attributeEdit(size,nameController,'name','Put your new name here'),
+            // name
+            attributeEdit(size,nameController,'name','Enter your new name here',false),
             SizedBox(height: 2.5.ph(size)),
 
-            attributeEdit(size,phoneController,'phone','Put your new phone number here'),
+            // phone number
+            attributeEdit(size,phoneController,'phone','Enter your new phone number here',false),
             SizedBox(height: 2.5.ph(size)),
 
-            attributeEdit(size,passwordController,'password','Put your new password here'),
+            // new password (leave it empty if not change)
+            attributeEdit(size,passwordController,'new password','Enter your new password here. Leave it empty if not change.',true),
             SizedBox(height: 2.5.ph(size)),
 
-            attributeEdit(size,addressController,'address','Put your new address here'),
+            // confirm the new password (leave it empty if not change)
+            attributeEdit(size,confirmPasswordController,'confirm new password','Confirm your new password. Leave it empty if not change.',true),
             SizedBox(height: 2.5.ph(size)),
 
+            // address
+            attributeEdit(size,addressController,'address','Put your new address here',false),
+            SizedBox(height: 2.5.ph(size)),
+
+            // update information button
             ElevatedButton(
               onPressed: () async {
-                await _updateData();
-                Navigator.pop(context, 'update');  // 返回到前一个页面，并传递参数，表示信息有更新
+                // before update information, check if the new password has been confirmed
+                if (passwordController.text == confirmPasswordController.text){
+                  await _updateData();
+                  Navigator.pop(context, 'update');  //return to the former page, with a parameter to indicate the information has been updated
+                }
+                else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Passwords do not match'),
+                    ),
+                  );
+                }
+
+                // await _updateData();
+                // Navigator.pop(context, 'update');  //return to the former page, with a parameter to indicate the information has been updated
               },
               child: Text('Update'),
             ),
@@ -109,7 +143,7 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
   }
 
   // Each input text field
-  Container attributeEdit(Size size, TextEditingController controller, String labelText, String hintText) {
+  Container attributeEdit(Size size, TextEditingController controller, String labelText, String hintText, bool obscure) {
     return Container(
             width: 50.pw(size),
             constraints: const BoxConstraints(minWidth: 400),
@@ -123,6 +157,7 @@ class _CustomerInfoEditState extends State<CustomerInfoEdit> {
                   borderSide: const BorderSide(color: kLogoColor, width: 1.0),
                 ),
               ),
+              obscureText: obscure, // Hide password input
             ),
           );
   }

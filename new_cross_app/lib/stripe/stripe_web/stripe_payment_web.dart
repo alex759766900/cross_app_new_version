@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() {
   runApp(MyApp());
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//TODO: store accountId to firebase
+
 Future<void> createStripeConnectAccount() async {
   await http.get(
     Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/createConnectAccount'),
@@ -67,7 +68,11 @@ Future<void> createStripeConnectAccount() async {
     if (response.statusCode == 200) {
       print('请求成功：${response.body}');
       Map<String, dynamic> responseMap = json.decode(response.body);
-      //TODO store account id to firebase
+      String accountId = responseMap['id']!.toString();
+
+      FirebaseFirestore.instance.collection('stripeId').add({
+        'account_id': accountId,
+      });
       _launchURL(responseMap['url']!.toString());
     } else {
       print('请求失败：${response.statusCode}');
