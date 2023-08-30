@@ -41,7 +41,7 @@ class _SearchState extends State<Search> {
           .searchByName(searchEditingController.text)
           .then((snapshot) {
         searchResultSnapshot = snapshot;
-        print("$searchResultSnapshot");
+        print("搜索用户的列表长度为：");
         print(searchResultSnapshot.docs.length);
         setState(() {
           isLoading = false;
@@ -60,16 +60,17 @@ class _SearchState extends State<Search> {
               return userTile(
                 searchResultSnapshot.docs[index]['fullName'],
                 searchResultSnapshot.docs[index]['email'],
+                searchResultSnapshot.docs[index]['uid'],
               );
             })
         : Container();
   }
 
   /// 1.create a chatroom, send user to the chatroom, other userdetails
-  sendMessage(String userName) {
-    List<String> users = [Constants.myName, userName];
+  sendMessage(String SearcheduserId) {
+    List<String> users = [Constants.MyId, SearcheduserId];
 
-    String chatRoomId = getChatRoomId(Constants.myName, userName);
+    String chatRoomId = getChatRoomId(Constants.MyId, SearcheduserId);
 
     Map<String, dynamic> chatRoom = {
       "users": users,
@@ -78,12 +79,14 @@ class _SearchState extends State<Search> {
 
     databaseservice.addChatRoom(chatRoom, chatRoomId);
 
-    GoRouter.of(context).pushNamed(RouterName.chat, params: {
+    GoRouter.of(context).pushNamed(RouterName.ChatRoom, params: {
       'userId': userId,
+      'chatRoomId': chatRoomId,
     });
   }
 
-  Widget userTile(String userName, String userEmail) {
+  Widget userTile(String SearcheduserName, String SearcheduserEmail,
+      String SearchedUserId) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -92,11 +95,11 @@ class _SearchState extends State<Search> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userName,
+                SearcheduserName,
                 style: const TextStyle(color: Colors.black, fontSize: 16),
               ),
               Text(
-                userEmail,
+                SearcheduserEmail,
                 style: const TextStyle(color: Colors.black, fontSize: 16),
               )
             ],
@@ -104,7 +107,7 @@ class _SearchState extends State<Search> {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              sendMessage(userName);
+              sendMessage(SearchedUserId);
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -122,6 +125,9 @@ class _SearchState extends State<Search> {
   }
 
   getChatRoomId(String a, String b) {
+    // 打印字符串 a 和 b 的长度
+    print("Length of string a: ${a.length}");
+    print("Length of string b: ${b.length}");
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
       return "$b\_$a";
     } else {

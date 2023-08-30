@@ -21,7 +21,9 @@ class Chat extends StatefulWidget {
   @override
   _ChatState createState() => _ChatState();
 }
-final chatRef=FirebaseFirestore.instance.collection('chatRoom');
+
+final chatRef = FirebaseFirestore.instance.collection('chatRoom');
+
 class _ChatState extends State<Chat> {
   Stream<QuerySnapshot>? chats;
   TextEditingController messageEditingController = TextEditingController();
@@ -33,7 +35,7 @@ class _ChatState extends State<Chat> {
         onError: (error) => print("Listen failed: $error"));
     chats=chatRef.where('users',arrayContains: userId).snapshots();
   }*/
-  String userName='';
+  String userName = 'Test_User';
   Widget chatMessages() {
     if (chats == null) {
       return Container();
@@ -57,7 +59,7 @@ class _ChatState extends State<Chat> {
                   final bool Isread = messageData?['Isread'];
                   return MessageTile(
                     message: messageData?['message'],
-                    sendByMe: Constants.myName == messageData?['sendBy'],
+                    sendByMe: Constants.MyId == messageData?['sendBy'],
                     sendTime: formattedTime,
                     Isread: Isread,
                     chatRoomId: widget.chatRoomId,
@@ -72,7 +74,7 @@ class _ChatState extends State<Chat> {
   addMessage() {
     if (messageEditingController.text.isNotEmpty) {
       Map<String, dynamic> chatMessageMap = {
-        "sendBy": Constants.myName,
+        "sendBy": Constants.MyId,
         "message": messageEditingController.text,
         'time': DateTime.now().millisecondsSinceEpoch,
         'Isread': false,
@@ -95,12 +97,11 @@ class _ChatState extends State<Chat> {
         chats = val;
       });
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
-    String userId =widget.userId;
+    String userId = widget.userId;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

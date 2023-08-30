@@ -10,7 +10,7 @@ class DatabaseService {
 
   // reference for our collections
   final CollectionReference CostumerCollection =
-      FirebaseFirestore.instance.collection("customers");
+      FirebaseFirestore.instance.collection("users");
   final CollectionReference TradieCollection =
       FirebaseFirestore.instance.collection("tradeperson");
   final CollectionReference ChatListCollection =

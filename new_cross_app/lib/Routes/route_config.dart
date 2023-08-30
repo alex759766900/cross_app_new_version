@@ -7,7 +7,7 @@ import 'package:new_cross_app/Calendar/Tradie/TradieProfilePage.dart';
 import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Profile/profile.dart';
 import 'package:new_cross_app/Routes/route_const.dart';
-import 'package:new_cross_app/Sign_up/signup.dart';
+//import 'package:new_cross_app/Sign_up/signup.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
 import 'package:new_cross_app/chat/screens/chat_home_screen.dart';
 import 'package:new_cross_app/chat/screens/search_page.dart';
@@ -46,7 +46,7 @@ class MyRouter {
           pageBuilder: (context, state) {
             return MaterialPage(
                 // child: Profile(userId: state.params['userId']!));
-              child: ProfileHome(userId: state.params['userId']!));
+                child: ProfileHome(userId: state.params['userId']!));
           },
         ),
         GoRoute(
