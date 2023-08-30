@@ -301,9 +301,11 @@ class _RegisterTradiePage extends State<RegisterTradiePage> { // 实现_State
         floatingActionButton: FloatingActionButton( // 悬浮按钮
           backgroundColor: Colors.white, // 背景颜色
           onPressed: () { // 点击事件
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileHome(userId: widget.uid))); // 跳转到另一个页面
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(builder: (context) => ProfileHome(userId: widget.uid))); // 跳转到另一个页面
+            // 返回profile页面,并传递未更新信息的参数
+            Navigator.pop(context, 'notupdate');
           },
           child: const Icon(Icons.arrow_back, color: Colors.black87), // 按钮图标
         ));
