@@ -160,30 +160,43 @@ class _RegisterTradiePage extends State<RegisterTradiePage> { // 实现_State
                                     // 在Firebase Storage引用路径中包括userId，这样每个用户都将在其自己的文件夹中有文件。
                                     UploadTask task = storage.ref('users/${widget.uid}/$fileName').putFile(file);
 
-                                    task.whenComplete(() async {  // 当上传任务完成时
-                                      final String downloadUrl = await task.snapshot.ref.getDownloadURL();  // 获取文件的下载URL
-
-                                      await FirebaseFirestore.instance  // 使用Firestore数据库
-                                          .collection('users')
-                                          .doc(widget.uid)// 指定一个集合
-                                          .update({'lincensePic': downloadUrl});  // 添加证书的图片和编号
-
-                                      ScaffoldMessenger.of(context).showSnackBar(  // 显示一个SnackBar以提示用户
+                                    task.snapshotEvents.listen((TaskSnapshot snapshot) {
+                                      double progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                      print('Upload progress: $progress%');
+                                      // You can update UI with progress here if needed
+                                    }, onError: (Object e) {
+                                      // Handle error during upload
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
-                                          content: Text("图片上传成功"),  // 提示的内容
-                                        ),
-                                      );
-                                    }).catchError((error) {  // 捕获任何错误
-                                      ScaffoldMessenger.of(context).showSnackBar(  // 显示一个SnackBar以提示用户
-                                        SnackBar(
-                                          content: Text("图片上传失败"),  // 提示的内容
+                                          content: Text("图片上传失败"),
                                         ),
                                       );
                                     });
-                                  } else {  // 如果用户取消了文件选择
-                                    ScaffoldMessenger.of(context).showSnackBar(  // 显示一个SnackBar以提示用户
+
+                                    try {
+                                      await task;  // 等待任务完成
+                                      final String downloadUrl = await task.snapshot.ref.getDownloadURL();
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(widget.uid)
+                                          .update({'lincensePic': downloadUrl});
+
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("图片上传成功"),
+                                        ),
+                                      );
+                                    } catch (error) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text("图片上传失败"),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text("没有选取文件"),  // 提示的内容
+                                        content: Text("没有选取文件"),
                                       ),
                                     );
                                   }
@@ -234,6 +247,14 @@ class _RegisterTradiePage extends State<RegisterTradiePage> { // 实现_State
                                           'postcode': postcode,
                                           'licenseNumber': tradieLicense,
                                           'Is_Tradie': true,
+                                          'stripeId' : "",
+                                          'workTitle' : "",
+                                          'workStart' : 0,
+                                          'workEnd' : 0,
+                                          'workWeekend' : false,
+                                          'rate' : 0,
+                                          'workDescription' : "",
+                                          'tOrders' : 0,
                                         });
 
                                         ScaffoldMessenger.of(context).showSnackBar(
