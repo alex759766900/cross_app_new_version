@@ -20,6 +20,7 @@ import 'package:new_cross_app/helper/helper_function.dart';
 import 'package:new_cross_app/services/auth_service.dart';
 import 'package:new_cross_app/services/database_service.dart';
 import 'package:sizer/sizer.dart';
+import '../../helper/constants.dart';
 
 import '../main.dart';
 
@@ -65,6 +66,9 @@ class _LoginState extends State<LoginPage> {
               await HelperFunctions.saveUserEmailSF(user.email!);
               await HelperFunctions.saveUserNameSF(user.displayName!);
               await HelperFunctions.saveUserIdSF(user.uid);
+              // Initialize Constants.myName
+              Constants.myName = user.displayName!;
+              Constants.MyId = user.uid;
               // Navigate to the home page
               GoRouter.of(context)
                   .pushNamed(RouterName.homePage, params: {'userId': user.uid});
@@ -198,6 +202,9 @@ class _LoginState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(emailController.text);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
           await HelperFunctions.saveUserIdSF(snapshot.docs[0]['uid']);
+
+          // Initialize Constants.myName
+          Constants.myName = snapshot.docs[0]['fullName'];
           String userId = snapshot.docs[0]['uid'];
           print(userId);
           GoRouter.of(context)

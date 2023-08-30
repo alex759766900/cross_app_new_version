@@ -32,10 +32,12 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
   late Stream<QuerySnapshot> chatRooms;
   _ChatRoomState(String id) {
     this.userId = id;
-    print(userId);
+    print("User ID: $userId"); // 修改这里以显示userId
     chatRef.where('user', arrayContains: userId).snapshots().listen(
-        (event) => print("get query"+"chatroom"),
-        onError: (error) => print("Listen failed: $error"));
+        (event) =>
+            print("get query for userId: $userId in chatroom"), // 修改这里以显示userId
+        onError: (error) => print(
+            "Listen failed for userId: $userId, Error: $error")); // 修改这里以显示userId
     chatRooms = chatRef.where('users', arrayContains: userId).snapshots();
   }
 
@@ -62,11 +64,11 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
         if (!snapshot.hasData || snapshot.data?.docs.length == 0) {
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Center(
+            child: const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   SizedBox(
                     height: 20,
                   ),
@@ -86,16 +88,16 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
               itemCount: snapshot.data?.docs.length ?? 0,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                var ulist=snapshot.data!.docs[index]['users'];
-                var talkerId='';
-                for(var u in ulist){
-                  if(u!=userId){
-                    talkerId=u;
+                var ulist = snapshot.data!.docs[index]['users'];
+                var talkerId = '';
+                for (var u in ulist) {
+                  if (u != userId) {
+                    talkerId = u;
                     break;
                   }
                 }
                 return ChatRoomsTile(
-                  userId: talkerId,
+                  TalkerId: talkerId,
                   chatRoomId: snapshot.data!.docs[index]["chatRoomId"],
                 );
               });
@@ -112,7 +114,7 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
       onTabChange();
     });
     super.initState();
-    //getUserInfogetChats();
+    getUserInfogetChats();
   }
 
   @override
@@ -128,12 +130,12 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
 
   getUserInfogetChats() async {
     Constants.MyId = (await HelperFunctions.getUserIdFromSF())!;
-    print(Constants.MyId);
+    //print(Constants.MyId);
     DatabaseService().getUserChats(Constants.MyId).then((snapshots) {
       setState(() {
         chatRooms = snapshots;
         print(
-            "we got the data + ${chatRooms.toString()} this is name  ${Constants.MyId}");
+            "we got the data + ${chatRooms.toString()} this is name  ${Constants.myName}");
       });
     });
   }
@@ -198,18 +200,19 @@ class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
 }
 
 class ChatRoomsTile extends StatelessWidget {
-  final String userId;
+  final String TalkerId;
   final String chatRoomId;
 
-  ChatRoomsTile({Key? key, required this.userId, required this.chatRoomId})
+  ChatRoomsTile({Key? key, required this.TalkerId, required this.chatRoomId})
       : super(key: key);
-  String userName='';
+  String userName = 'Test_User';
 
   Stream<Map<String, dynamic>> GetLastMessage() async* {
     final controller = StreamController<Map<String, dynamic>>();
     controller.onListen = () async {
       try {
-        userName=(await HelperFunctions.getUserNameFromId(userId))!;
+        userName = (await HelperFunctions.getUserNameFromId(TalkerId))!;
+        print("聊天的对象是");
         print(userName);
         FirebaseFirestore.instance
             .collection('chatRoom')
@@ -241,10 +244,8 @@ class ChatRoomsTile extends StatelessWidget {
     controller.onCancel = () {};
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<Map<String, dynamic>>(
       stream: GetLastMessage(),
       builder: (context, snapshot) {
@@ -258,8 +259,8 @@ class ChatRoomsTile extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             GoRouter.of(context).pushNamed(RouterName.ChatRoom, params: {
-              'userId': userId,
-              'chatRoomId':chatRoomId,
+              'userId': Constants.MyId,
+              'chatRoomId': chatRoomId,
             });
           },
           child: Container(
@@ -299,7 +300,6 @@ class ChatRoomsTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            //TODO
                             userName,
                             textAlign: TextAlign.start,
                             style: const TextStyle(

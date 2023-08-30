@@ -12,7 +12,7 @@ import 'package:new_cross_app/Login/login.dart';
 import 'package:new_cross_app/Login/utils/constants.dart';
 //import 'package:new_cross_app/Login/utils/notification.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
-import 'package:new_cross_app/Sign_up/signup.dart';
+//import 'package:new_cross_app/Sign_up/signup.dart';
 import 'package:new_cross_app/Home Page/home.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/decoration_image_container.dart';
 import 'package:new_cross_app/Sign_up/widgets/signup/input_fields.dart';

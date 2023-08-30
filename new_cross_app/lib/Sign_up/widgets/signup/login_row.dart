@@ -5,7 +5,7 @@ import 'package:new_cross_app/Login/login.dart';
 //import 'package:flutter/widgets.dart';
 //import 'package:jemma/routes.dart';
 import 'package:new_cross_app/Sign_up/signup_customer.dart';
-import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
+//import 'package:new_cross_app/Sign_up/signup_tradeperson.dart';
 import 'package:new_cross_app/Login/utils/responsive.dart';
 
 ///  Login
