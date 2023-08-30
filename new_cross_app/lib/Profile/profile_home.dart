@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:new_cross_app/Home%20Page/responsive.dart';
 import 'package:new_cross_app/Profile/register_tradie.dart';
 import 'package:new_cross_app/Profile/tradie_work_publish.dart';
 import '../Home Page/constants.dart';
 import '../Home Page/decorations.dart';
 import '../Home Page/home.dart';
+import '../Routes/route_const.dart';
 import 'customer_info_edit.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -59,25 +61,33 @@ class _ProfileHomeState extends State<ProfileHome> {
     // Set general customer info
     setState(() {
       _isConsumer = !data['Is_Tradie'];
-      name = data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
-      address = data['address']?.isEmpty ? 'No Address Information' : data['address'];
+      name =
+          data['fullName']?.isEmpty ? 'No Name Information' : data['fullName'];
+      address =
+          data['address']?.isEmpty ? 'No Address Information' : data['address'];
       email = data['email']?.isEmpty ? 'No Mail Information' : data['email'];
       phone = data['Phone']?.isEmpty ? 'No Phone Information' : data['Phone'];
     });
 
     // Set tradie info
-    if(data['Is_Tradie']){
+    if (data['Is_Tradie']) {
       setState(() {
-        licenseNumber = data['licenseNumber']?.isEmpty ? 'No Information' : data['licenseNumber'];
-        workType = data['workType']?.isEmpty ? 'No Information' : data['workType'];
-        workTitle = data['workTitle']?.isEmpty ? 'No Information' : data['workTitle'];
-        workDescription = data['workDescription']?.isEmpty ? 'No Information' : data['workDescription'];
+        licenseNumber = data['licenseNumber']?.isEmpty
+            ? 'No Information'
+            : data['licenseNumber'];
+        workType =
+            data['workType']?.isEmpty ? 'No Information' : data['workType'];
+        workTitle =
+            data['workTitle']?.isEmpty ? 'No Information' : data['workTitle'];
+        workDescription = data['workDescription']?.isEmpty
+            ? 'No Information'
+            : data['workDescription'];
         workWeekend = data['workWeekend'];
         workStart = data['workStart'];
         workEnd = data['workEnd'];
       });
-      }
     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +122,6 @@ class _ProfileHomeState extends State<ProfileHome> {
                         setState(() {}); // 更新状态
                       }
                     },
-
                     child: Text('Register as a tradie',
                         style: TextStyle(color: Colors.black87))),
               // Tradie information part
@@ -361,17 +370,29 @@ class _ProfileHomeState extends State<ProfileHome> {
 
   Container workingDetails(Size size) {
     String workTime = "";
-    if(workStart == 0 && workEnd == 0){
+    if (workStart == 0 && workEnd == 0) {
       workTime = "No information";
-    }
-    else {
-      String workStartSuffix = workStart >= 12 && workStart < 24 ? ":00 PM" : ":00 AM";
-      String workEndSuffix = workEnd >= 12 && workEnd < 24 ? ":00 PM" : ":00 AM";
-      if (workWeekend){
-        workTime = 'Monday to Sunday: '+ workStart.toString() + workStartSuffix + ' to ' + workEnd.toString() + workEndSuffix;
+    } else {
+      String workStartSuffix =
+          workStart >= 12 && workStart < 24 ? ":00 PM" : ":00 AM";
+      String workEndSuffix =
+          workEnd >= 12 && workEnd < 24 ? ":00 PM" : ":00 AM";
+      if (workWeekend) {
+        workTime = 'Monday to Sunday: ' +
+            workStart.toString() +
+            workStartSuffix +
+            ' to ' +
+            workEnd.toString() +
+            workEndSuffix;
       }
-      if (!workWeekend){
-        workTime = 'Monday to Friday: '+ workStart.toString() + workStartSuffix + ' to ' + workEnd.toString() + workEndSuffix + '\nNo Work on Weekends';
+      if (!workWeekend) {
+        workTime = 'Monday to Friday: ' +
+            workStart.toString() +
+            workStartSuffix +
+            ' to ' +
+            workEnd.toString() +
+            workEndSuffix +
+            '\nNo Work on Weekends';
       }
     }
     return Container(
@@ -404,7 +425,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
                   constraints:
-                  const BoxConstraints(minWidth: 240, maxHeight: 50),
+                      const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
@@ -440,7 +461,10 @@ class _ProfileHomeState extends State<ProfileHome> {
                       color: Colors.green.shade500,
                     ),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          GoRouter.of(context).pushNamed(RouterName.CalendarTradie,
+                              params: {'userId': userId});
+                        },
                         child: Text(
                           "Go to Tradie's Calendar",
                           style: TextStyle(color: Colors.black87),
@@ -461,7 +485,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   padding: EdgeInsets.fromLTRB(1.pw(size), 4, 1.pw(size), 4),
                   width: 36.pw(size),
                   constraints:
-                  const BoxConstraints(minWidth: 240, maxHeight: 50),
+                      const BoxConstraints(minWidth: 240, maxHeight: 50),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       color: Colors.grey.withOpacity(0.15)),
@@ -497,10 +521,12 @@ class _ProfileHomeState extends State<ProfileHome> {
 
   Future<void> createStripeConnectAccount(String userId) async {
     Map<String, String> body = {'userId': userId};
-    await http.post(
-      Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/createConnectAccount'),
-      body: body
-    ).then((response){
+    await http
+        .post(
+            Uri.parse(
+                'https://us-central1-jemma-b0fcd.cloudfunctions.net/createConnectAccount'),
+            body: body)
+        .then((response) {
       if (response.statusCode == 200) {
         print('请求成功：${response.body}');
         Map<String, dynamic> responseMap = json.decode(response.body);
@@ -513,17 +539,16 @@ class _ProfileHomeState extends State<ProfileHome> {
       } else {
         print('请求失败：${response.statusCode}');
       }
-    }).catchError((error){
+    }).catchError((error) {
       print(error.toString());
     });
   }
 
-  void _launchURL(String url) async{
+  void _launchURL(String url) async {
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
       throw 'could not open $url';
     }
-
   }
 }
