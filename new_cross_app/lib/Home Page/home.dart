@@ -58,7 +58,7 @@ final logger = Logger(
   printer: PrettyPrinter(),
 );
 bool _isLoggedIn = false;
-late bool _isConsumer;
+late bool _isConsumer = true;
 
 class HomeState extends State<Home> {
   String userId;
@@ -73,7 +73,6 @@ class HomeState extends State<Home> {
     super.initState();
     _checkLoginStatus();
     isConsumer(userId).then((value) {
-      print(value);
       _isConsumer = value;
     });
   }

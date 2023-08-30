@@ -23,8 +23,8 @@ exports.createConnectAccount = functions.https.onRequest(async (req, res) => {co
         });
         const accountLinks = await stripe.accountLinks.create({
             account: account.id,
-            refresh_url: 'https://jemma-b0fcd.web.app/#/profile/${userId}',
-            return_url: 'https://jemma-b0fcd.web.app/#/profile/${userId}',
+            refresh_url: 'https://jemma-b0fcd.web.app/#/',
+            return_url: 'https://jemma-b0fcd.web.app/#/',
             type: 'account_onboarding',
         });
         return res.send({
@@ -57,8 +57,8 @@ exports.StripeCheckOut = functions.https.onRequest(async (req, res) => {
             quantity: 1
           }
         ],
-        success_url: 'https://jemma-b0fcd.web.app/#/calendar_consumer/${userId}',
-        cancel_url: 'https://jemma-b0fcd.web.app/#/calendar_consumer/${userId}',
+        success_url: 'https://jemma-b0fcd.web.app/#/',
+        cancel_url: 'https://jemma-b0fcd.web.app/#/',
       });
 
       // 返回 session.url 和 session.amount_total
@@ -78,7 +78,7 @@ exports.Transfer = functions.https.onRequest(async (req, res)=>{cors(req, res, a
     const {accountId, amount}= req.body;
     try{
         const transfer = await stripe.transfers.create({
-          amount: parseInt(amount)*0.95,
+          amount: parseInt(amount),
           currency: 'aud',
           destination: accountId,
         });

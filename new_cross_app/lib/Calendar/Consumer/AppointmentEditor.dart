@@ -131,7 +131,9 @@ class AppointmentEditorState extends State<AppointmentEditor> {
                       ),
                       onPressed: () async {
                         //TODO go to stripe checkout
-                        await createPaymentIntent(body);
+                        await createPaymentIntent({'price': quote.toString(),
+                        'userId':_consumerId,
+                        'product_name':_subject});
                         bookingRef.doc(selectedKey).update({'status': 'Working'});
                       },
                     ),

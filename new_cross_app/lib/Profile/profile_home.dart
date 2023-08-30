@@ -505,9 +505,9 @@ class _ProfileHomeState extends State<ProfileHome> {
         print('请求成功：${response.body}');
         Map<String, dynamic> responseMap = json.decode(response.body);
         String accountId = responseMap['id']!.toString();
-
+        print(accountId);
         FirebaseFirestore.instance.collection('users').doc(userId).update({
-          'account_id': accountId,
+          'stripeId': accountId,
         });
         _launchURL(responseMap['url']!.toString());
       } else {
