@@ -22,7 +22,7 @@ class ProfileHome extends StatefulWidget {
 
 bool _isConsumer = true;
 final databaseReference = FirebaseFirestore.instance;
-final CollectionReference colRef = databaseReference.collection('customers');
+final CollectionReference colRef = databaseReference.collection('users');
 
 class _ProfileHomeState extends State<ProfileHome> {
   String userId;
@@ -100,15 +100,19 @@ class _ProfileHomeState extends State<ProfileHome> {
               // Tradie register button
               if (_isConsumer)
                 TextButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegisterTradiePage(uid: userId),
-                          // builder: (context) => TestPage(uid: userId),
-                        ),// 传递的 uid
+                            builder: (context) =>
+                                RegisterTradiePage(uid: userId)),
                       );
+                      if (result.toString() == 'update') {
+                        await getUserProfile(userId);
+                        setState(() {}); // 更新状态
+                      }
                     },
+
                     child: Text('Register as a tradie',
                         style: TextStyle(color: Colors.black87))),
               // Tradie information part

@@ -263,12 +263,14 @@ class _RegisterTradiePage extends State<RegisterTradiePage> { // 实现_State
                                           ),
                                         );
                                         // 导航到新页面并传递用户的 uid
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ProfileHome(userId: widget.uid),
-                                          ),
-                                        );
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) => ProfileHome(userId: widget.uid),
+                                        //   ),
+                                        // );
+                                        // 返回profile页面,并传递更新信息的参数
+                                        Navigator.pop(context, 'update');
                                       } catch (error) {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(
