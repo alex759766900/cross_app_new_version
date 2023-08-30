@@ -15,6 +15,7 @@ const cors = require('cors')({ origin: true });
 //TODO: pass user id and return url to redirect
 //NOTE: This is function for onboarding tradies
 exports.createConnectAccount = functions.https.onRequest(async (req, res) => {cors(req, res,async () => {
+    const userId = req.body
     try {
         // 使用 Stripe API 创建 Connect 账号
         const account = await stripe.accounts.create({
@@ -22,11 +23,10 @@ exports.createConnectAccount = functions.https.onRequest(async (req, res) => {co
         });
         const accountLinks = await stripe.accountLinks.create({
             account: account.id,
-            refresh_url: 'https://jemma-b0fcd.web.app/#/refresh',
-            return_url: 'https://jemma-b0fcd.web.app/#/',
+            refresh_url: 'https://jemma-b0fcd.web.app/#/profile/${userId}',
+            return_url: 'https://jemma-b0fcd.web.app/#/profile/${userId}',
             type: 'account_onboarding',
         });
-        // TODO: return account id
         return res.send({
             url:accountLinks.url,
             id: account.id
@@ -57,8 +57,8 @@ exports.StripeCheckOut = functions.https.onRequest(async (req, res) => {
             quantity: 1
           }
         ],
-        success_url: 'http://localhost:3000/success',
-        cancel_url: 'https://jemma-b0fcd.web.app/#/cancel',
+        success_url: 'https://jemma-b0fcd.web.app/#/calendar_consumer/${userId}',
+        cancel_url: 'https://jemma-b0fcd.web.app/#/calendar_consumer/${userId}',
       });
 
       // 返回 session.url 和 session.amount_total

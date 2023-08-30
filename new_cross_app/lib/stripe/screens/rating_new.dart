@@ -7,11 +7,6 @@ import 'package:intl/intl.dart';
 
 import '../../Calendar/Consumer/Booking.dart';
 
-
-void main()  {
-  runApp(Rating(bookingId: 'iUoFuyuElDvDfam3b2RL',));
-}
-
 class Rating extends StatefulWidget {
   String bookingId;
   Rating({required this.bookingId});

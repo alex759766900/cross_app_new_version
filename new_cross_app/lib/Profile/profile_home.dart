@@ -320,7 +320,7 @@ class _ProfileHomeState extends State<ProfileHome> {
               ),
               TextButton(
                   onPressed: () {
-                    createStripeConnectAccount();
+                    createStripeConnectAccount(userId);
                   },
                   child: Text(
                     "Go to your stripe account",
@@ -495,16 +495,18 @@ class _ProfileHomeState extends State<ProfileHome> {
         ));
   }
 
-  Future<void> createStripeConnectAccount() async {
-    await http.get(
+  Future<void> createStripeConnectAccount(String userId) async {
+    Map<String, String> body = {'userId': userId};
+    await http.post(
       Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/createConnectAccount'),
+      body: body
     ).then((response){
       if (response.statusCode == 200) {
         print('请求成功：${response.body}');
         Map<String, dynamic> responseMap = json.decode(response.body);
         String accountId = responseMap['id']!.toString();
 
-        FirebaseFirestore.instance.collection('stripeId').add({
+        FirebaseFirestore.instance.collection('users').doc(userId).update({
           'account_id': accountId,
         });
         _launchURL(responseMap['url']!.toString());
