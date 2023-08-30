@@ -3,9 +3,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 
 import '../../Calendar/Consumer/Booking.dart';
+import '../stripe_web/stripe_payment_web.dart';
 
 
 void main()  {
@@ -145,6 +147,7 @@ class _RatingState extends State<Rating> {
                       'rating': serviceRating,
                       // Update the service rating field
                     });
+                    confirmWork();
                   },
                   child: Text('Submit'),
                 ),
@@ -156,6 +159,19 @@ class _RatingState extends State<Rating> {
         ),
       ),
     );
+  }
+}
+Future<void> confirmWork() async{
+  final res =await http.post(
+    Uri.parse('https://us-central1-jemma-b0fcd.cloudfunctions.net/Transfer'),
+    body:transfer,
+  );
+  print(res.body);
+  if(res.statusCode == 200){
+    print(res.body);
+    print('success');
+  }else if (res.statusCode == 400){
+    print('failed: ${res.body}');
   }
 }
 
